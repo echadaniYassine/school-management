@@ -5,14 +5,18 @@ import Home from '../pages/Home';
 import Users from '../pages/users';
 import NotFound from '../pages/Not Found';
 import Layout from '../Layouts/Layout';
-import Login from '../components/Student/StudentLogin';
+import UserLogin from '../components/Auth/UserLogin';
 //import Register from '../components/Student/StudentRegister';
-import StudentDashboardLayout from '../Layouts/Student/StudentDashboardLayout';
+import StudentDashboardLayout from '../Layouts/StudentDashboardLayout';
 import StudentDahboard from '../components/Student/StudentDahboard';
 import GuestLayout from '../Layouts/GuestLayout';
+import AdminDashboardLayout from '../Layouts/AdminDashboardLayout';
+import AdminDashboard from '../components/Admin/AdminDashboard';
 
 export const STUDENT_LOGIN = '/login'
 export const STUDENT_DASHBOARD = '/Student/Dashboard'
+export const ADMIN_DASHBOARD = '/admin/Dashboard'
+
 
 export const router = createBrowserRouter([
     {
@@ -35,11 +39,11 @@ export const router = createBrowserRouter([
         ]
     },
     {
-        element: <GuestLayout/>,
+        element: <GuestLayout />,
         children: [
             {
                 path: STUDENT_LOGIN,
-                element: <Login />,
+                element: <UserLogin />,
             },
         ]
     },
@@ -48,7 +52,16 @@ export const router = createBrowserRouter([
         children: [
             {
                 path: STUDENT_DASHBOARD,
-                element: <StudentDahboard/>,
+                element: <StudentDahboard />,
+            },
+        ]
+    },
+    {
+        element: <AdminDashboardLayout />,
+        children: [
+            {
+                path: ADMIN_DASHBOARD,
+                element: <AdminDashboard />,
             },
         ]
     }

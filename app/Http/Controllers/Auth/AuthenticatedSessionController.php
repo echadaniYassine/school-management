@@ -7,20 +7,33 @@ use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\JsonResponse;
 
 class AuthenticatedSessionController extends Controller
 {
     /**
      * Handle an incoming authentication request.
      */
-    public function store(LoginRequest $request): Response
+    public function store(LoginRequest $request): JsonResponse
     {
         $request->authenticate();
+        $guards = ['web', 'teacher', 'admin'];
 
+        $user = null;
+        foreach ($guards as $guard) {
+            $currentGuard = Auth::guard($guard);
+            if ($currentGuard->check()) {
+                $user = $currentGuard->user();
+                break;
+            }
+        };
         $request->session()->regenerate();
-
-        return response()->noContent();
+        return response()->json([
+            'user' => $user,
+            'token' => $user->createToken('api', [$user->getRoleAttribute()])->plainTextToken
+        ]);
     }
+
 
     /**
      * Destroy an authenticated session.

@@ -1,8 +1,8 @@
 import React from 'react'
-import { StudentApi } from "../../Services/Api/Student/Student";
-import { useUserContext } from "../../context/StudentContext";
+import { StudentApi } from "../Services/Api/Student/Student";
+import { useUserContext } from "../context/StudentContext";
 import { useNavigate } from "react-router-dom";
-import { STUDENT_LOGIN } from "../../router";
+import { STUDENT_LOGIN } from "../router";
 
 import {
     DropdownMenu,
@@ -17,7 +17,7 @@ import {
     DropdownMenuSubContent,
     DropdownMenuSubTrigger,
     DropdownMenuTrigger,
-} from "../../components/ui/dropdown-menu"
+} from "../components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button";
 
 // Lucide Icons

@@ -17,7 +17,7 @@ const formSchema = z.object({
     password: z.string().min(8, "Minimum 8 characters"),
 });
 
-export default function Login() {
+export default function UserLogin() {
     const { login, setAuthenticated } = useUserContext();
     const navigate = useNavigate();
 
@@ -31,8 +31,9 @@ export default function Login() {
     const onSubmit = async (values) => {
         await login(values.email, values.password).then(
             (value) => {
-                if (value.status === 204) {
+                if (value.status === 200) {
                     setAuthenticated(true)
+                    console.log(value.data.user)
                     navigate(STUDENT_DASHBOARD)
                 }
             }).catch(({ response }) => {

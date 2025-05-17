@@ -44,14 +44,22 @@ class LoginRequest extends FormRequest
 
         $credentials = $this->only('email', 'password');
         $remember = $this->boolean('remember');
+        $guards = ['web', 'teacher', 'admin'];
+        $authenticated = false;
 
-        if (Auth::attempt($credentials, $remember)) {
-            Log::info('Authenticated with default guard (web)');
-        } elseif (Auth::guard('teacher')->attempt($credentials, $remember)) {
-            Log::info('Authenticated with teacher guard');
-        } elseif (Auth::guard('admin')->attempt($credentials, $remember)) {
-            Log::info('Authenticated with admin guard');
-        } else {
+        foreach ($guards as $guard) {
+            if (Auth::guard($guard)->attempt($credentials, $remember)) {
+                $authenticated = true;
+
+                Log::info("Authenticated with {$guard} guard");
+
+                // Set the guard if needed for future usage
+                Auth::shouldUse($guard);
+                break;
+            }
+        }
+
+        if (!$authenticated) {
             Log::warning('Authentication failed for email: ' . $credentials['email']);
             RateLimiter::hit($this->throttleKey());
 
@@ -62,6 +70,7 @@ class LoginRequest extends FormRequest
 
         RateLimiter::clear($this->throttleKey());
     }
+
 
 
     /**
@@ -86,7 +95,7 @@ class LoginRequest extends FormRequest
             ]),
         ]);
     }
-
+  
     /**
      * Get the rate limiting throttle key for the request.
      */
