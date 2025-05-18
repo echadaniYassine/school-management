@@ -9,8 +9,9 @@ import { StudentAdministrationSideBar } from "./Administration/StudentAdministra
 import { ModeToggle } from "../components/mode-toggle";
 import { AdminAdministrationSideBar } from "./Administration/AdminAdministrationSideBar";
 import { TeacherAdministrationSideBar } from "./Administration/TeacherAdministrationSideBar";
+import { ParentAdministrationSideBar } from "./Administration/ParentAdministrationSideBar";
 
-export default function TeacherDashboardLayout() {
+export default function ParentDashboardLayout() {
     const { logout, setUser, setAuthenticated, authenticated } = useUserContext();
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(true)
@@ -72,7 +73,7 @@ export default function TeacherDashboardLayout() {
                 {/* Sidebar */}
                 <aside className="hidden md:block md:w-64 border-r bg-white dark:bg-gray-800 dark:border-gray-700 shadow-sm">
                     <div className="h-full p-4 overflow-y-auto">
-                        <TeacherAdministrationSideBar/>
+                        <ParentAdministrationSideBar />
                     </div>
                 </aside>
 

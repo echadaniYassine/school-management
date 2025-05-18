@@ -13,13 +13,12 @@ return new class extends Migration
     {
         Schema::create('student_parents', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('name',50);
             $table->dateTime('date_of_birth');
             $table->enum('gender', ['male', 'female']);
             $table->string('address', 255);
             $table->string('phone', 20)->unique();
-            $table->string('email', 100)->unique();
-            $table->string('password');
+            $table->string('email', 60)->unique();
             $table->dateTime('last_login_date');
             $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();

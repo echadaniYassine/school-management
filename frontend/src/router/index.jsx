@@ -1,21 +1,26 @@
 import { createBrowserRouter } from 'react-router-dom';
 import Home from '../pages/Home';
-//import Login from '../pages/login';
-//import Registre from '../pages/Registre';
 import Users from '../pages/users';
 import NotFound from '../pages/Not Found';
 import Layout from '../Layouts/Layout';
 import UserLogin from '../components/Auth/UserLogin';
-//import Register from '../components/Student/StudentRegister';
 import StudentDashboardLayout from '../Layouts/StudentDashboardLayout';
 import StudentDahboard from '../components/Student/StudentDahboard';
 import GuestLayout from '../Layouts/GuestLayout';
 import AdminDashboardLayout from '../Layouts/AdminDashboardLayout';
 import AdminDashboard from '../components/Admin/AdminDashboard';
+import TeacherDashboardLayout from '../Layouts/TeacherDashboardLayout';
+import TeacherDahboard from '../components/Teacher/TeacherDahboard';
+import ParentDashboardLayout from '../Layouts/ParentDashboardLayout';
+import ParentDashboard from '../components/Parent/ParentDashboard';
 
 export const STUDENT_LOGIN = '/login'
 export const STUDENT_DASHBOARD = '/Student/Dashboard'
 export const ADMIN_DASHBOARD = '/admin/Dashboard'
+export const TEACHER_DASHBOARD = '/teacher/Dashboard'
+export const PARENT_DASHBOARD = '/parent/Dashboard'
+
+
 
 
 export const router = createBrowserRouter([
@@ -64,6 +69,25 @@ export const router = createBrowserRouter([
                 element: <AdminDashboard />,
             },
         ]
+    },
+    {
+        element: <TeacherDashboardLayout />,
+        children: [
+            {
+                path: TEACHER_DASHBOARD,
+                element: <TeacherDahboard />,
+            },
+        ]
     }
+    ,
+    // {
+    //     element: <ParentDashboardLayout />,
+    //     children: [
+    //         {
+    //             path: PARENT_DASHBOARD,
+    //             element: <ParentDashboard />,
+    //         },
+    //     ]
+    // }
 
 ]);

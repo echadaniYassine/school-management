@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\StudentParent;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use App\Http\Resources\StudentParentResource;
+use App\Http\Requests\StoreStudentParentRequest;
+use App\Http\Requests\UpdateStudentParentRequest;
 
 class StudentParentController extends Controller
 {
@@ -18,10 +21,21 @@ class StudentParentController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreStudentParentRequest $request)
     {
-        //
+        $formFields = $request->validated();
+
+        // Ajoute le champ last_login_date
+        $formFields['last_login_date'] = now();
+
+        // Hasher le mot de passe (à ajouter si tu veux un champ 'password' aussi)
+        // $formFields['password'] = Hash::make($formFields['password']);
+
+        $parent = StudentParent::create($formFields);
+
+        return new StudentParentResource($parent);
     }
+
 
     /**
      * Display the specified resource.
@@ -34,7 +48,7 @@ class StudentParentController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, StudentParent $studentParent)
+    public function update(UpdateStudentParentRequest $request, StudentParent $studentParent)
     {
         //
     }

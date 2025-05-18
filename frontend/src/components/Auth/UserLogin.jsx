@@ -9,7 +9,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Loader } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { STUDENT_DASHBOARD } from "../../router";
+import { ADMIN_DASHBOARD, STUDENT_DASHBOARD, TEACHER_DASHBOARD } from "../../router";
 import { useUserContext } from "../../context/StudentContext";
 
 const formSchema = z.object({
@@ -33,8 +33,20 @@ export default function UserLogin() {
             (value) => {
                 if (value.status === 200) {
                     setAuthenticated(true)
+                    const { role } = value.data.user
+                    switch (role) {
+                        case 'student':
+                            navigate(STUDENT_DASHBOARD);
+                            break;
+                        case 'admin':
+                            navigate(ADMIN_DASHBOARD)
+                            break;
+                        case 'teacher':
+                            navigate(TEACHER_DASHBOARD)
+                            break;
+                    }
                     console.log(value.data.user)
-                    navigate(STUDENT_DASHBOARD)
+                    //navigate(STUDENT_DASHBOARD)
                 }
             }).catch(({ response }) => {
                 const errors = response?.data?.errors || {};

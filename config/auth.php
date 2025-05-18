@@ -50,6 +50,10 @@ return [
             'driver' => 'session',
             'provider' => 'admins',
         ],
+        'parent' => [
+            'driver' => 'session',
+            'provider' => 'parents',
+        ],
     ],
     /*
   |--------------------------------------------------------------------------
@@ -81,6 +85,10 @@ return [
         'admins' => [
             'driver' => 'eloquent',
             'model' => App\Models\Admin::class,
+        ],
+        'parents' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\StudentParent::class,
         ],
     ],
 
@@ -118,6 +126,12 @@ return [
         ],
         'teachers' => [
             'provider' => 'teachers',
+            'table' => 'password_reset_tokens',
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+        'parents' => [
+            'provider' => 'parents',
             'table' => 'password_reset_tokens',
             'expire' => 60,
             'throttle' => 60,

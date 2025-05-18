@@ -2,12 +2,11 @@
 
 namespace App\Http\Requests\Auth;
 
-use Illuminate\Support\Str;
 use Illuminate\Auth\Events\Lockout;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
 class LoginRequest extends FormRequest
@@ -23,7 +22,7 @@ class LoginRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, \Illuminate\Contracts\Validation\Rule|array|string>
      */
     public function rules(): array
     {
@@ -41,26 +40,19 @@ class LoginRequest extends FormRequest
     public function authenticate(): void
     {
         $this->ensureIsNotRateLimited();
-
-        $credentials = $this->only('email', 'password');
-        $remember = $this->boolean('remember');
-        $guards = ['web', 'teacher', 'admin'];
-        $authenticated = false;
+        $guards = ['web','teacher', 'parent', 'admin'];
+        $isLogged = false;
 
         foreach ($guards as $guard) {
-            if (Auth::guard($guard)->attempt($credentials, $remember)) {
-                $authenticated = true;
-
-                Log::info("Authenticated with {$guard} guard");
-
-                // Set the guard if needed for future usage
-                Auth::shouldUse($guard);
+            if (Auth::guard($guard)->attempt($this->only('email', 'password'), $this->boolean('remember'))) {
+                $isLogged = true;
                 break;
             }
         }
-
-        if (!$authenticated) {
-            Log::warning('Authentication failed for email: ' . $credentials['email']);
+        // 1000 students
+        // 20 Teacher
+        // 3 Admin
+        if (!$isLogged) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
@@ -71,8 +63,6 @@ class LoginRequest extends FormRequest
         RateLimiter::clear($this->throttleKey());
     }
 
-
-
     /**
      * Ensure the login request is not rate limited.
      *
@@ -80,7 +70,7 @@ class LoginRequest extends FormRequest
      */
     public function ensureIsNotRateLimited(): void
     {
-        if (! RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
+        if (!RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
             return;
         }
 
@@ -95,7 +85,7 @@ class LoginRequest extends FormRequest
             ]),
         ]);
     }
-  
+
     /**
      * Get the rate limiting throttle key for the request.
      */

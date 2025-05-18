@@ -2,7 +2,7 @@ import {cn} from "@/lib/utils"
 import {Button} from "../../components/ui/button.js";
 import {ScrollArea} from "../../components/ui/scroll-area.js";
 
-export function StudentAdministrationSideBar({className}) {
+export function TeacherAdministrationSideBar({className}) {
   const playlists = [
     'Playlist 1',
     'Playlist 2',
@@ -12,7 +12,7 @@ export function StudentAdministrationSideBar({className}) {
       <div>
         <div className="px-3 py-2">
           <h2 className="mb-2 px-4 text-lg font-semibold tracking-tight">
-            Student Administration
+            Teacher Administration
           </h2>
           <div className="space-y-1">
             <Button variant="secondary" className="w-full justify-start">

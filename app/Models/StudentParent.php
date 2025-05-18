@@ -11,11 +11,16 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class StudentParent extends Authenticatable
 {
-        use HasApiTokens, Notifiable, SoftDeletes, HasFactory;
-        protected $appends = ['role'];
+        use HasFactory;
 
-        public function getRoleAttribute()
-        {
-                return 'parent';
-        }
+
+        protected $fillable = [
+                'name',
+                'date_of_birth',
+                'last_login_date',
+                'gender',
+                'address',
+                'phone',
+                'email',
+        ];
 }
