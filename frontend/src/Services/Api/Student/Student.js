@@ -11,5 +11,5 @@ export const StudentApi = {
     return await axiosClient.post('/logout')
   },
 
-  getUser: () => axiosClient.get('/user'),
+  getUser: () => axiosClient.get('/admin'),
 };

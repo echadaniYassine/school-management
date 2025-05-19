@@ -18,7 +18,7 @@ const formSchema = z.object({
 });
 
 export default function UserLogin() {
-    const { login, setAuthenticated } = useUserContext();
+    const { login, setAuthenticated, setToken } = useUserContext();
     const navigate = useNavigate();
 
     const form = useForm({
@@ -28,36 +28,31 @@ export default function UserLogin() {
 
     const { setError, formState: { isSubmitting } } = form;
 
-    const onSubmit = async (values) => {
-        await login(values.email, values.password).then(
-            (value) => {
-                if (value.status === 200) {
-                    setAuthenticated(true)
-                    const { role } = value.data.user
-                    switch (role) {
-                        case 'student':
-                            navigate(STUDENT_DASHBOARD);
-                            break;
-                        case 'admin':
-                            navigate(ADMIN_DASHBOARD)
-                            break;
-                        case 'teacher':
-                            navigate(TEACHER_DASHBOARD)
-                            break;
-                    }
-                    console.log(value.data.user)
-                    //navigate(STUDENT_DASHBOARD)
-                }
-            }).catch(({ response }) => {
-                const errors = response?.data?.errors || {};
-                for (const key in errors) {
-                    setError(key, {
-                        message: errors[key].join(", ")
-                    });
-                }
-            });
-
-    };
+    const onSubmit = async values => {
+    await login(values.email, values.password).then(
+      ({status, data}) => {
+        if (status === 200) {
+          setToken(data.token)
+          setAuthenticated(true)
+          const {role} = data.user
+          switch (role) {
+            case 'student':
+              navigate(STUDENT_DASHBOARD);
+              break;
+            case 'admin':
+              navigate(ADMIN_DASHBOARD)
+              break;
+            case 'teacher':
+              navigate(TEACHER_DASHBOARD)
+              break;
+          }
+        }
+      }).catch(({response}) => {
+      setError('email', {
+        message: response.data.errors.email.join()
+      })
+    })
+  }
 
     return (
         <Form {...form}>

@@ -8,6 +8,8 @@ export const StudentStateContext = createContext({
     authenticated: false,
     logout: () => { },
     setAuthenticated: () => { },
+    setToken: () => { },
+
 });
 
 export default function StudentContext({ children }) {
@@ -32,8 +34,12 @@ export default function StudentContext({ children }) {
         localStorage.setItem('AUTHENTICATED', isAuthenticated);
     };
 
+    const setToken = (token) => {
+        window.localStorage.setItem('token', token)
+    }
+
     return (
-        <StudentStateContext.Provider value={{ user, login, logout, authenticated, setAuthenticated, setUser }}>
+        <StudentStateContext.Provider value={{ user, login, logout, authenticated, setAuthenticated, setUser, setToken }}>
             {children}
         </StudentStateContext.Provider>
     );
