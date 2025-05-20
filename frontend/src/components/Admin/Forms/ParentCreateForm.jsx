@@ -8,12 +8,27 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Loader } from "lucide-react";
-import { ParentApi } from "../../Services/Api/Parent/Parent.js";
-import { RadioGroup, RadioGroupItem } from "../ui/radio-group.jsx";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select.jsx";
-import { Textarea } from "../ui/textarea.jsx";
+import ParentApi from "../../../Services/Api/Parent/Parent.js";
+import { RadioGroup, RadioGroupItem } from "../../ui/radio-group.js";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../ui/select.js";
+import { Textarea } from "../../ui/textarea.js";
 import { toast } from "sonner";
 
+// Updated phone normalization function
+const normalizePhone = (phone) => {
+    // If it starts with 0, replace with +212
+    if (phone.startsWith("0") && phone.length === 10) {
+        return "+212" + phone.slice(1);
+    }
+    
+    // If it's already in international format, keep as is
+    if (phone.startsWith("+212") && phone.length === 13) {
+        return phone;
+    }
+    
+    // Return as-is for other cases (the validation will catch invalid formats)
+    return phone;
+};
 
 const formSchema = z.object({
     name: z.string().min(1, "Name is required").max(50),
@@ -25,8 +40,18 @@ const formSchema = z.object({
     gender: z.enum(["male", "female"], { errorMap: () => ({ message: "Gender is required" }) }),
     address: z.string().min(1, "Address is required").max(255),
     phone: z.string()
-        .min(1, "Phone is required")
-        .regex(/^(\+212|0)([5-7]\d{8})$/, "Invalid phone number, we accept only Morocco phone numbers"),
+        .regex(
+            /^(0[5-7]\d{8}|\+212[5-7]\d{8})$/,
+            "Invalid phone number. Must be 10 digits starting with 0 or 13 digits starting with +212"
+        )
+        .refine((val) => {
+            return (
+                (val.startsWith("0") && val.length === 10) ||
+                (val.startsWith("+212") && val.length === 13)
+            );
+        }, {
+            message: "Phone number length is invalid for the given format",
+        }),
     email: z.string()
         .min(1, "Email is required")
         .email("Invalid email format")
@@ -37,12 +62,7 @@ const formSchema = z.object({
         .max(30, "Password must not exceed 30 characters")
 });
 
-
-
 export default function ParentCreateForm() {
-
-
-
     const form = useForm({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -56,33 +76,47 @@ export default function ParentCreateForm() {
         }
     });
 
-    const { setError, formState: { isSubmitting }, reset } = form
+    const { setError, formState: { isSubmitting }, reset } = form;
 
     const onSubmit = async values => {
-        console.log(values)
-        await ParentApi.create(values)
-            .then(({ status }) => {
-                if (status === 201) {
-                    // Use Sonner's toast function correctly
-                    toast.success("Parent created successfully!");
-                    reset();
-                }
-            })
-            .catch((error) => {
-                const { response } = error;
-                if (response?.data?.errors) {
-                    Object.entries(response.data.errors).forEach(([field, messages]) => {
+        try {
+            // Normalize the phone number to the international format (+212XXXXXXXXX)
+            const payload = {
+                ...values,
+                phone: normalizePhone(values.phone),
+            };
+            
+            console.log("Submitting with payload:", payload);
+            
+            const response = await ParentApi.create(payload);
+            
+            if (response.status === 201) {
+                toast.success("Parent created successfully!");
+                reset();
+            }
+        } catch (error) {
+            const { response } = error;
+            if (response?.data?.errors) {
+                Object.entries(response.data.errors).forEach(([field, messages]) => {
+                    // Special handling for phone errors
+                    if (field === "phone" && messages.some(msg => msg.includes("greater than"))) {
+                        toast.error("There's an issue with the phone validation on the server");
+                        console.error("Server expected 10 characters but received 13. Check your API validation rules.");
+                        setError(field, {
+                            message: "Server validation error: The phone number format conflicts with server requirements"
+                        });
+                    } else {
                         setError(field, {
                             message: messages.join(', ')
                         });
-                    });
-                } else {
-                    // Use Sonner's error toast
-                    toast.error("Unexpected error occurred.");
-                    console.error(error);
-                }
-            });
-    }
+                    }
+                });
+            } else {
+                toast.error("Unexpected error occurred.");
+                console.error("API Error:", error);
+            }
+        }
+    };
 
     return (
         <Form {...form}>
@@ -176,8 +210,16 @@ export default function ParentCreateForm() {
                         <FormItem>
                             <FormLabel>Phone</FormLabel>
                             <FormControl>
-                                <Input type="tel" placeholder="Phone" {...field} value={field.value ?? ""} />
+                                <Input 
+                                    type="tel" 
+                                    placeholder="Phone (0XXXXXXXXX or +212XXXXXXXXX)" 
+                                    {...field} 
+                                    value={field.value ?? ""} 
+                                />
                             </FormControl>
+                            <p className="text-sm text-gray-500 mt-1">
+                                Format: 0XXXXXXXXX or +212XXXXXXXXX (both will be stored in international format)
+                            </p>
                             <FormMessage />
                         </FormItem>
                     )}

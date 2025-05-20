@@ -1,8 +1,9 @@
 // import { useUserContext } from "../../context/StudentContext.jsx";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs.js";
-import { Separator } from "../ui/separator.jsx";
-import { ScrollArea, ScrollBar } from "../ui/scroll-area.jsx";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../ui/tabs.js";
+import { Separator } from "../../ui/separator.js";
+import { ScrollArea, ScrollBar } from "../../ui/scroll-area.js";
 import ParentCreateForm from "../Forms/ParentCreateForm.jsx";
+import AdminParentList from "../DataTable/AdminParentList.jsx";
 
 // Uncomment when using the components
 // import ParentUpsertForm from "../Forms/ParentUpsertForm.jsx";
@@ -40,7 +41,7 @@ export default function AdminManageParents() {
                 <p className="text-sm text-gray-600 dark:text-gray-400">A list of all registered parents.</p>
               </div>
               <Separator className="my-4" />
-              {/* <AdminParentList /> */}
+              <AdminParentList />
               <div className="relative">
                 <ScrollArea className="whitespace-nowrap">
                   <div className="flex space-x-4 pb-4">

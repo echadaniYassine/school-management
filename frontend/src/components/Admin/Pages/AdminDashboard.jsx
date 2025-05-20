@@ -1,4 +1,4 @@
-import { useUserContext } from "../../context/StudentContext";
+import { useUserContext } from "../../../context/StudentContext";
 
 export default function AdminDashboard() {
     const { user } = useUserContext();

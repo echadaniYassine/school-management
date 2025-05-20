@@ -8,12 +8,12 @@ import StudentDashboardLayout from '../Layouts/StudentDashboardLayout';
 import StudentDahboard from '../components/Student/StudentDahboard';
 import GuestLayout from '../Layouts/GuestLayout';
 import AdminDashboardLayout from '../Layouts/AdminDashboardLayout';
-import AdminDashboard from '../components/Admin/AdminDashboard';
+import AdminDashboard from '../components/Admin/Pages/AdminDashboard';
 import TeacherDashboardLayout from '../Layouts/TeacherDashboardLayout';
 import TeacherDahboard from '../components/Teacher/TeacherDahboard';
 import ParentDashboardLayout from '../Layouts/ParentDashboardLayout';
 import ParentDashboard from '../components/Parent/ParentDashboard';
-import AdminManageParents from '../components/Admin/AdminManageParents';
+import AdminManageParents from '../components/Admin/Pages/AdminManageParents';
 
 
 export const ADMIN_BASE_ROUTE = '/admin/'
