@@ -50,7 +50,7 @@ class StudentParentController extends Controller
      */
     public function update(UpdateStudentParentRequest $request, StudentParent $studentParent)
     {
-        //
+        //tt
     }
 
     /**
