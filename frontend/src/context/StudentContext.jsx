@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState } from 'react';
-import { StudentApi } from '../Services/Api/Student/Student';
+import { UserApi } from '../Services/Api/UserApi';
 
 export const StudentStateContext = createContext({
     user: {},
@@ -19,8 +19,8 @@ export default function StudentContext({ children }) {
     );
 
     const login = async (email, password) => {
-        await StudentApi.getCsrfToken();
-        return StudentApi.login(email, password);
+        await UserApi.getCsrfToken();
+        return UserApi.login(email, password);
     };
 
     const logout = async () => {

@@ -27,7 +27,7 @@ class StoreStudentParentRequest extends FormRequest
             'date_of_birth' => 'required|date',
             'gender' => ['required', Rule::in(['male', 'female'])],
             'address' => 'required|max:255',
-            'phone' => 'required|max:10|unique:student_parents',
+            'phone' => 'required|max:13|unique:student_parents',
             'email' => 'required|email|unique:student_parents',
             'password' => 'required',
 

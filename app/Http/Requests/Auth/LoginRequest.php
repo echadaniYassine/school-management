@@ -40,7 +40,7 @@ class LoginRequest extends FormRequest
     public function authenticate(): void
     {
         $this->ensureIsNotRateLimited();
-        $guards = ['web', 'teacher', 'admin'];
+        $guards = ['web', 'teacher', 'parent', 'admin'];
         $isLogged = false;
 
         foreach ($guards as $guard) {
@@ -49,9 +49,6 @@ class LoginRequest extends FormRequest
                 break;
             }
         }
-        // 1000 students
-        // 20 Teacher
-        // 3 Admin
         if (!$isLogged) {
             RateLimiter::hit($this->throttleKey());
 

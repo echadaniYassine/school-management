@@ -2,13 +2,14 @@ import React, { useEffect, useState } from "react";
 import { Outlet, useNavigate, Link } from "react-router-dom";
 import { STUDENT_DASHBOARD, STUDENT_LOGIN } from "../router";
 import { useUserContext } from "../context/StudentContext";
-import { StudentApi } from "../Services/Api/Student/Student";
-import DropDownMenuStudent from "./DropDownMenuStudent";
+import { UserApi } from "../Services/Api/UserApi";
+import DropDownMenuStudent from "./DropDownMenu/DropDownMenuStudent";
 import { GaugeIcon } from 'lucide-react';
 import { StudentAdministrationSideBar } from "./Administration/StudentAdministrationSideBar";
 import { ModeToggle } from "../components/mode-toggle";
 import { AdminAdministrationSideBar } from "./Administration/AdminAdministrationSideBar";
 import { TeacherAdministrationSideBar } from "./Administration/TeacherAdministrationSideBar";
+import DropDownMenuTeacher from "./DropDownMenu/DropDownMenuTeacher";
 
 export default function TeacherDashboardLayout() {
     const { logout, setUser, setAuthenticated, authenticated } = useUserContext();
@@ -20,7 +21,7 @@ export default function TeacherDashboardLayout() {
     useEffect(() => {
         if (authenticated === true) {
             setIsLoading(false)
-            StudentApi.getUser().then(({ data }) => {
+            UserApi.getUser().then(({ data }) => {
                 setUser(data)
                 setAuthenticated(true)
             }).catch(() => {
@@ -60,7 +61,7 @@ export default function TeacherDashboardLayout() {
                             <GaugeIcon className="mr-2 h-5 w-5" />
                             Dashboard
                         </Link>
-                        <DropDownMenuStudent />
+                        <DropDownMenuTeacher />
                         <ModeToggle />
 
                     </div>

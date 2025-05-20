@@ -1,178 +1,164 @@
-import { DataTable } from "./DataTable.jsx";
 import { useEffect, useState } from "react";
 import ParentApi from "../../../services/Api/Parent/Parent.js";
+import { DataTable } from "./DataTable.jsx";
 import { DataTableColumnHeader } from "./DataTableColumnHeader.jsx";
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel,
   AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger
+  AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger
 } from "../../ui/alert-dialog.jsx";
 import { toast } from "sonner";
 import { Trash2Icon } from "lucide-react";
 import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger
+  Sheet, SheetContent, SheetDescription, SheetHeader,
+  SheetTitle, SheetTrigger
 } from "../../ui/sheet.jsx";
-//import parentApi from "../../../services/Api/Parent/Parent.js";
-import ParentCreateForm from "../Forms/ParentCreateForm.jsx";
+import ParentCreateForm from "../Forms/ParentUpsertForm.jsx";
 
 export default function AdminParentList() {
-  const [data, setData] = useState([])
+  const [data, setData] = useState([]);
+  const [openUpdateId, setOpenUpdateId] = useState(null); // Track which sheet is open
+
+  const handleUpdateSubmit = (id, values) => {
+    const promise = ParentApi.update(id, values);
+    promise.then((response) => {
+      const { parent } = response.data;
+      const updated = data.map((item) => (item.id === id ? parent : item));
+      setData(updated);
+      setOpenUpdateId(null);
+    });
+    return promise;
+  };
+
+  const handleDelete = async (id) => {
+    const deletingLoader = toast.loading("Deleting in progress.");
+    const { data: deletedParent, status } = await ParentApi.delete(id);
+    toast.dismiss(deletingLoader);
+    if (status === 200) {
+      setData(data.filter((parent) => parent.id !== id));
+      toast.success("Parent deleted", {
+        description: `Successfully deleted ${deletedParent.data.name}`,
+        icon: <Trash2Icon />,
+      });
+    }
+  };
 
   const AdminParentColumns = [
     {
       accessorKey: "id",
-      header: ({ column }) => {
-        return <DataTableColumnHeader column={column} title="#ID" />
-      },
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="#ID" />
+      ),
     },
     {
       accessorKey: "name",
-      header: ({ column }) => {
-        return <DataTableColumnHeader column={column} title="name" />
-      },
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Name" />
+      ),
     },
     {
       accessorKey: "date_of_birth",
-      header: ({ column }) => {
-        return <DataTableColumnHeader column={column} title="Date of birth" />
-      },
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Date of Birth" />
+      ),
     },
     {
       accessorKey: "gender",
-      header: ({ column }) => {
-        return <DataTableColumnHeader column={column} title="Gender" />
-      },
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Gender" />
+      ),
       cell: ({ row }) => {
-        const value = row.getValue("gender")
-        const gender = value === 'male' ? 'Male' : 'Female'
-        return <>{gender}</>
+        const value = row.getValue("gender");
+        return value === "male" ? "Male" : "Female";
       },
     },
     {
       accessorKey: "address",
-      header: ({ column }) => {
-        return <DataTableColumnHeader column={column} title="Address" />
-      },
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Address" />
+      ),
     },
     {
       accessorKey: "phone",
-      header: ({ column }) => {
-        return <DataTableColumnHeader column={column} title="Phone" />;
-      },
-      cell: ({ row }) => {
-        let phone = row.getValue("phone");
-
-        // Convert to string and remove leading zero if it exists
-        phone = String(phone);
-        if (phone.startsWith("0")) {
-          phone = phone.substring(1);
-        }
-
-        return <div className="text-right font-medium">+212-{phone}</div>;
-      },
-    }
-    ,
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Phone" />
+      ),
+    },
     {
       accessorKey: "email",
-      header: ({ column }) => {
-        return <DataTableColumnHeader column={column} title="Email" />
-      },
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Email" />
+      ),
     },
     {
-      accessorKey: "formatted_updated_at",
-      header: ({ column }) => {
-        return <DataTableColumnHeader column={column} title="Updated at" />
-      },
+      accessorKey: "updated_at", // This should match the actual key in your data
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Updated At" />
+      ),
       cell: ({ row }) => {
-        const date = (row.getValue("formatted_updated_at"))
-        return <div className="text-right font-medium">{date}</div>
+        const rawDate = row.getValue("updated_at");
+        const date = new Date(rawDate);
+        const formattedDate = date.toLocaleString(); // Customize as needed
+        return <div className="text-right font-medium">{formattedDate}</div>;
       },
     },
+
     {
       id: "actions",
       cell: ({ row }) => {
+        const { id, name } = row.original;
+        const isOpen = openUpdateId === id;
 
-        const { id, firstname, lastname } = row.original
-        const [openUpdateDialog, setOpenUpdateDialog] = useState(false)
+        return (
 
-        return (<div className={'flex gap-x-1'}>
-          <Sheet open={openUpdateDialog} onOpenChange={setOpenUpdateDialog}>
-            <SheetTrigger>
-              <Button size={'sm'}>Update</Button>
-            </SheetTrigger>
-            <SheetContent>
-              <SheetHeader>
-                <SheetTitle>Update parent {firstname} {lastname}</SheetTitle>
-                <SheetDescription>
-                  Make changes to your parent here. Click save when you're done.
-                  <ParentCreateForm values={row.original} handleSubmit={(values) => {
-                    const promise = ParentApi.update(id, values)
-                    promise.then((response) => {
-                      const { parent } = response.data
-                      const elements = data.map((item) => {
-                        if (item.id === id) {
-                          return parent
-                        }
-                        return item
-                      })
-                      setData(elements)
-                      setOpenUpdateDialog(false);
-                    });
+          <div className="flex gap-x-1">
+            <Sheet open={isOpen} onOpenChange={(open) => setOpenUpdateId(open ? id : null)}>
+              <SheetTrigger asChild>
+                <Button size="sm">Update</Button>
+              </SheetTrigger>
+              <SheetContent>
+                <SheetHeader>
+                  <SheetTitle>Update Parent: {name}</SheetTitle>
+                  <SheetDescription>
+                    Modify parent details below and click save.
+                  </SheetDescription>
+                </SheetHeader>
+                <ParentCreateForm
+                  values={row.original}
+                  handleSubmit={(values) => handleUpdateSubmit(id, values)}
+                />
+              </SheetContent>
+            </Sheet>
 
-                    return promise
-                  }} />
-                </SheetDescription>
-              </SheetHeader>
-            </SheetContent>
-          </Sheet>
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button size={'sm'} variant={'destructive'}>Delete</Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Are you absolutely sure to delete
-                  <span className={'font-bold'}> {firstname} {lastname}</span> ?
-                </AlertDialogTitle>
-                <AlertDialogDescription>
-                  This action cannot be undone. This will permanently delete your
-                  account and remove your data from our servers.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction onClick={async () => {
-                  const deletingLoader = toast.loading('Deleting in progress.')
-                  const { data: deletedParent, status } = await ParentApi.delete(id)
-                  toast.dismiss(deletingLoader)
-                  if (status === 200) {
-                    setData(data.filter((parent) => parent.id !== id))
-                    toast.success('Parent deleted', {
-                      description: `Parent deleted successfully ${deletedParent.data.firstname} ${deletedParent.data.lastname}`,
-                      icon: <Trash2Icon />
-                    })
-                  }
-                }}>Delete</AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-        </div>
-        )
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button size="sm" variant="destructive">Delete</Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>
+                    Are you sure you want to delete <span className="font-bold">{name}</span>?
+                  </AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This action cannot be undone. It will permanently delete this parent.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction onClick={() => handleDelete(id, name)}>Delete</AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </div>
+        );
       },
     },
-  ]
+  ];
+
   useEffect(() => {
-    ParentApi.all().then(({ data }) => setData(data.data))
+    ParentApi.all().then(({ data }) => setData(data.data));
   }, []);
-  return <>
-    <DataTable columns={AdminParentColumns} data={data} />
-  </>
+
+  return <DataTable columns={AdminParentColumns} data={data} />;
 }

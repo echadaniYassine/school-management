@@ -1,6 +1,6 @@
-import { axiosClient } from "../../../Api/axios";
+import { axiosClient } from "../../Api/axios";
 
-export const StudentApi = {
+export const UserApi = {
   getCsrfToken: () => axiosClient.get('/sanctum/csrf-cookie', {
     baseURL: import.meta.env.VITE_BACKEND_URL,
   }),
@@ -11,5 +11,5 @@ export const StudentApi = {
     return await axiosClient.post('/logout')
   },
 
-  getUser: () => axiosClient.get('/admin'),
+  getUser: () => axiosClient.get('/me'),
 };

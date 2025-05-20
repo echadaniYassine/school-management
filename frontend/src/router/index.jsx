@@ -88,14 +88,14 @@ export const router = createBrowserRouter([
         ]
     }
     ,
-    // {
-    //     element: <ParentDashboardLayout />,
-    //     children: [
-    //         {
-    //             path: PARENT_DASHBOARD,
-    //             element: <ParentDashboard />,
-    //         },
-    //     ]
-    // }
+    {
+        element: <ParentDashboardLayout />,
+        children: [
+            {
+                path: PARENT_DASHBOARD,
+                element: <AdminDashboard />,
+            },
+        ]
+    }
 
 ]);

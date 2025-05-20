@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateStudentParentRequest extends FormRequest
@@ -11,7 +12,7 @@ class UpdateStudentParentRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +23,13 @@ class UpdateStudentParentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => 'required|max:50',
+            'date_of_birth' => 'required|date',
+            'gender' => ['required', Rule::in(['male', 'female'])],
+            'address' => 'required|max:255',
+            'phone' =>  Rule::unique('student_parents')->ignore($this->id),
+            'email' => Rule::unique('student_parents')->ignore($this->id),
+            'password' => 'required',
         ];
     }
 }

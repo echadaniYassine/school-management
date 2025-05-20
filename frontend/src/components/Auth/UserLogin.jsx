@@ -9,7 +9,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Loader } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { ADMIN_DASHBOARD, STUDENT_DASHBOARD, TEACHER_DASHBOARD } from "../../router";
+import { ADMIN_DASHBOARD, PARENT_DASHBOARD, STUDENT_DASHBOARD, TEACHER_DASHBOARD } from "../../router";
 import { useUserContext } from "../../context/StudentContext";
 
 const formSchema = z.object({
@@ -44,6 +44,9 @@ export default function UserLogin() {
               break;
             case 'teacher':
               navigate(TEACHER_DASHBOARD)
+              break;
+            case 'parent':
+              navigate(PARENT_DASHBOARD)
               break;
           }
         }
