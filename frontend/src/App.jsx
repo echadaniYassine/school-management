@@ -3,6 +3,7 @@ import { RouterProvider } from 'react-router-dom';
 import { router } from './router/index';
 import StudentContext from './context/StudentContext';
 import { ThemeProvider } from "./components/theme-provider"
+import { Toaster } from "./components/ui/sonner";
 
 function App() {
   return (
@@ -13,6 +14,9 @@ function App() {
           <RouterProvider router={router} />
         </ThemeProvider>
       </StudentContext>
+      <Toaster />
+
+
 
     </>
   );

@@ -22,5 +22,6 @@ class StudentParent extends Authenticatable
                 'address',
                 'phone',
                 'email',
+                'password',
         ];
 }

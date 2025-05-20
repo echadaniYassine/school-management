@@ -23,7 +23,8 @@ class AuthenticatedSessionController extends Controller
     foreach ($guards as $guard) {
       $currentGuard = Auth::guard($guard);
       if ($currentGuard->check()) {
-        $user = $currentGuard->user();break;
+        $user = $currentGuard->user();
+        break;
       }
     };
     $request->session()->regenerate();
@@ -47,8 +48,10 @@ class AuthenticatedSessionController extends Controller
         break;
       }
     }
-    $user->tokens()->delete();
-    Auth::guard('web')->logout();
+    $request->user()->currentAccessToken()->delete();
+    if ($user) {
+      Auth::guard($guard)->logout(); // Use the matched guard
+    }
 
     $request->session()->invalidate();
 

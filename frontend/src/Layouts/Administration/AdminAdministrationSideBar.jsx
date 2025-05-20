@@ -1,6 +1,8 @@
 import { cn } from "@/lib/utils"
 import { Button } from "../../components/ui/button.js";
 import { ScrollArea } from "../../components/ui/scroll-area.js";
+import { ADMIN_MANAGE_PARENTS } from "../../router/index.jsx";
+import { Link } from "react-router-dom";
 
 export function AdminAdministrationSideBar({ className }) {
   const playlists = [
@@ -142,24 +144,26 @@ export function AdminAdministrationSideBar({ className }) {
               </svg>
               Artists
             </Button>
-            <Button variant="ghost" className="w-full justify-start">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="mr-2 h-4 w-4"
-              >
-                <path d="m16 6 4 14" />
-                <path d="M12 6v14" />
-                <path d="M8 8v12" />
-                <path d="M4 4v16" />
-              </svg>
-              Albums
-            </Button>
+            <Link to={ADMIN_MANAGE_PARENTS}>
+              <Button variant="ghost" className="w-full justify-start">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="mr-2 h-4 w-4"
+                >
+                  <path d="m16 6 4 14" />
+                  <path d="M12 6v14" />
+                  <path d="M8 8v12" />
+                  <path d="M4 4v16" />
+                </svg>
+                Create Parent
+              </Button>
+            </Link>
           </div>
         </div>
         <div className="py-2">
