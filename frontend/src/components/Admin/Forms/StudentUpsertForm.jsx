@@ -1,101 +1,83 @@
-import { Textarea } from "@/components/ui/textarea.jsx";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader } from "lucide-react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 import * as z from "zod";
-import { Button } from "../../ui/button.jsx";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
-    Form, FormControl, FormField, FormItem, FormLabel, FormMessage
+    Form, FormControl, FormField, FormItem, FormLabel, FormMessage,
 } from "../../ui/form.jsx";
 import { Input } from "../../ui/input.jsx";
+import { Button } from "../../ui/button.jsx";
+import { Loader } from "lucide-react";
 import { RadioGroup, RadioGroupItem } from "../../ui/radio-group.jsx";
+import { Textarea } from "../../ui/textarea.jsx";
+import { toast } from "sonner";
 
-const formSchema = z.object({
-    name: z.string().min(1, "Name is required").max(50),
-    date_of_birth: z.string()
-        .min(1, "Date of birth is required")
-        .refine(val => !isNaN(Date.parse(val)), { message: "Invalid date" }),
-    gender: z.enum(["male", "female"], { errorMap: () => ({ message: "Gender is required" }) }),
-    address: z.string().min(1, "Address is required").max(255),
-    phone: z.string()
+const baseSchema = z.object({
+    name: z.string().max(50, "Name is too long"),
+    date_of_birth: z.string().nonempty("Date of birth is required"),
+    gender: z.enum(["male", "female"], {
+        errorMap: () => ({ message: "Gender is required" }),
+    }),
+    address: z.string().max(255, "Address is too long"),
+    phone: z
+        .string()
         .regex(
-            /^(0[5-7]\d{8}|\+212[5-7]\d{8})$/,
-            "Invalid phone number. Must be 10 digits starting with 0 or 13 digits starting with +212"
-        )
-        .refine(val =>
-            (val.startsWith("0") && val.length === 10) ||
-            (val.startsWith("+212") && val.length === 13),
-            { message: "Phone number length is invalid for the given format" }
+            /^(?:\+212|0)(5|6|7)\d{8}$/,
+            "Invalid Moroccan phone number"
         ),
-    email: z.string()
-        .min(1, "Email is required")
-        .email("Invalid email format")
-        .max(60),
-    password: z.string()
-        .min(1, "Password is required")
-        .min(8, "Password must be at least 8 characters")
-        .max(30, "Password must not exceed 30 characters"),
-    student_parent_id: z.string().max(20),
-
+    email: z.string().email("Invalid email").min(2).max(30),
 });
 
-export default function StudentUpsertForm({ handleSubmit, values }) {
+const createSchema = baseSchema.extend({
+    password: z.string().min(8, "Minimum 8 characters").max(30),
+});
 
-    const form = useForm({
-        resolver: zodResolver(formSchema),
-        defaultValues: values || {
-            name: "",
-            date_of_birth: "",
-            gender: "",
-            address: "",
-            phone: "",
-            email: "",
-            password: ""
-        }
-    });
+const updateSchema = baseSchema.extend({
+    password: z.string().optional(),
+});
 
-    const { setError, formState: { isSubmitting }, reset } = form;
+export default function StudentUpsertForm({ handleSubmit, values, onSuccess }) {
     const isUpdate = values !== undefined;
 
-    const onSubmit = async (values) => {
-        const loaderMsg = isUpdate ? 'Updating in progress.' : 'Adding student...';
+    const form = useForm({
+        resolver: zodResolver(isUpdate ? updateSchema : createSchema),
+        defaultValues: values || {},
+    });
+
+    const {
+        setError,
+        formState: { isSubmitting },
+        reset,
+    } = form;
+
+    const onSubmit = async (formValues) => {
+        const loaderMsg = isUpdate ? "Updating in progress..." : "Adding Student...";
         const loader = toast.loading(loaderMsg);
 
-        try {
-            const { status, data } = await handleSubmit(values);
+        if (isUpdate && !formValues.password) {
+            delete formValues.password;
+        }
 
+        try {
+            const { status, data } = await handleSubmit(formValues);
             if (status === 200) {
                 toast.success(data.message);
                 reset();
-            } else {
-                toast.error("Operation failed. Please check your input.");
+                if (onSuccess) onSuccess(); // ⬅️ Trigger tab switch
             }
         } catch (error) {
-            const response = error?.response;
-
+            const response = error.response;
             if (response?.data?.errors) {
-                Object.entries(response.data.errors).forEach(([field, messages]) => {
-                    const errorMessage = messages.join(', ');
-
-                    if (field === "phone" && messages.some(msg => msg.toLowerCase().includes("greater than"))) {
-                        toast.error("Invalid phone number length. Please check the format.");
-                        console.error("Phone validation error: Expected 10 characters, got a different format.");
-                        setError(field, {
-                            message: "The phone number must contain 10 digits or match +212 format."
-                        });
-                    } else {
-                        setError(field, { message: errorMessage });
-                    }
+                Object.entries(response.data.errors).forEach(([fieldName, errorMessages]) => {
+                    setError(fieldName, { message: errorMessages.join(", ") });
                 });
             } else {
-                toast.error("Unexpected error occurred. Please try again.");
-                console.error("Unhandled API Error:", error);
+                toast.error("An unexpected error occurred.");
             }
         } finally {
             toast.dismiss(loader);
         }
     };
+
 
     return (
         <Form {...form}>
@@ -107,7 +89,7 @@ export default function StudentUpsertForm({ handleSubmit, values }) {
                         <FormItem>
                             <FormLabel>Name</FormLabel>
                             <FormControl>
-                                <Input placeholder="Full Name" {...field} />
+                                <Input placeholder="Full name" {...field} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -137,16 +119,16 @@ export default function StudentUpsertForm({ handleSubmit, values }) {
                             <FormControl>
                                 <RadioGroup
                                     onValueChange={field.onChange}
-                                    value={field.value}
-                                    className="flex space-x-4"
+                                    defaultValue={field.value}
+                                    className="flex flex-col space-y-1"
                                 >
-                                    <FormItem className="flex items-center space-x-2">
+                                    <FormItem className="flex items-center space-x-3 space-y-0">
                                         <FormControl>
                                             <RadioGroupItem value="male" />
                                         </FormControl>
                                         <FormLabel className="font-normal">Male</FormLabel>
                                     </FormItem>
-                                    <FormItem className="flex items-center space-x-2">
+                                    <FormItem className="flex items-center space-x-3 space-y-0">
                                         <FormControl>
                                             <RadioGroupItem value="female" />
                                         </FormControl>
@@ -194,29 +176,31 @@ export default function StudentUpsertForm({ handleSubmit, values }) {
                         <FormItem>
                             <FormLabel>Email</FormLabel>
                             <FormControl>
-                                <Input type="email" placeholder="example@mail.com" {...field} />
+                                <Input type="email" placeholder="Email" {...field} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
                     )}
                 />
 
-                <FormField
-                    control={form.control}
-                    name="password"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Password</FormLabel>
-                            <FormControl>
-                                <Input type="password" placeholder="********" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
+                {!isUpdate && (
+                    <FormField
+                        control={form.control}
+                        name="password"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Password</FormLabel>
+                                <FormControl>
+                                    <Input type="password" placeholder="Password" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                )}
 
-                <Button className="mt-4 w-full" type="submit" disabled={isSubmitting}>
-                    {isSubmitting && <Loader className="mr-2 h-4 w-4 animate-spin" />}
+                <Button type="submit" className="mt-2">
+                    {isSubmitting && <Loader className="mx-2 animate-spin" />}
                     {isUpdate ? "Update" : "Create"}
                 </Button>
             </form>

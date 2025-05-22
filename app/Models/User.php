@@ -21,7 +21,8 @@ class User extends Authenticatable
     'date_of_birth',
     'last_login_date',
     'gender',
-    'student_parent_id',
+    'address',
+    'phone',
     'email',
     'password',
   ];

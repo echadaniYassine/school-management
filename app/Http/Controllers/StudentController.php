@@ -8,8 +8,8 @@ use App\Models\StudentParent;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Resources\StudentResource;
 use App\Http\Resources\StudentParentResource;
-use App\Http\Requests\StoreStudentParentRequest;
-use App\Http\Requests\UpdateStudentParentRequest;
+use App\Http\Requests\StoreStudentRequest;
+use App\Http\Requests\UpdateStudentRequest;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class StudentController extends Controller
@@ -26,45 +26,45 @@ class StudentController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreStudentParentRequest $request)
+    public function store(StoreStudentRequest $request)
     {
         $formFields = $request->validated();
         $formFields['password'] = Hash::make($formFields['password']);
         $formFields['last_login_date'] = new \DateTime();
         $student = User::create($formFields);
-        $response = new StudentParentResource($student);
+        $response = new StudentResource($student);
         return response()->json([
             'student' => $response,
-            'message' => __('Parent created successfully')
+            'message' => __('Student created successfully')
         ]);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(StudentParent $studentParent)
+    public function show(StudentParent $student)
     {
-        //
+        return new StudentResource($student);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateStudentParentRequest $request, StudentParent $student)
+    public function update(UpdateStudentRequest $request, User $student)
     {
         $formFields = $request->validated();
         $formFields['password'] = Hash::make($formFields['password']);
         $student->update($formFields);
         return response()->json([
-            'student' => $student,
-            'message' => __('Parent updated successfully')
+            'student' => new StudentResource($student),
+            'message' => __('Student updated successfully')
         ]);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(StudentParent $student)
+    public function destroy(User $student)
     {
         $student->delete();
 
