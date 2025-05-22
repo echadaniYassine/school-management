@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Outlet, useNavigate, Link } from "react-router-dom";
-import { STUDENT_DASHBOARD, STUDENT_LOGIN } from "../router";
+import { STUDENT_DASHBOARD, STUDENT_LOGIN, TEACHER_DASHBOARD } from "../router";
 import { useUserContext } from "../context/StudentContext";
 import { UserApi } from "../Services/Api/UserApi";
 import DropDownMenuStudent from "./DropDownMenu/DropDownMenuStudent";
@@ -43,7 +43,7 @@ export default function TeacherDashboardLayout() {
             {/* Header */}
             <header className="bg-white shadow-md dark:bg-gray-800 dark:border-gray-700">
                 <nav className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-                    <Link to={STUDENT_DASHBOARD} className="flex items-center">
+                    <Link to={TEACHER_DASHBOARD} className="flex items-center">
                         <img
                             src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600"
                             className="h-8 w-auto"
@@ -54,16 +54,8 @@ export default function TeacherDashboardLayout() {
                         </span>
                     </Link>
                     <div className="hidden md:flex space-x-6 items-center">
-                        <Link
-                            to={STUDENT_DASHBOARD}
-                            className="flex items-center text-gray-700 dark:text-gray-200 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium transition-colors"
-                        >
-                            <GaugeIcon className="mr-2 h-5 w-5" />
-                            Dashboard
-                        </Link>
                         <DropDownMenuTeacher />
                         <ModeToggle />
-
                     </div>
                 </nav>
             </header>

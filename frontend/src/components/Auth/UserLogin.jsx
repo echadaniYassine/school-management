@@ -1,16 +1,15 @@
-import React from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import {
   Form, FormControl, FormField, FormItem, FormLabel, FormMessage
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader } from "lucide-react";
+import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { ADMIN_DASHBOARD, PARENT_DASHBOARD, STUDENT_DASHBOARD, TEACHER_DASHBOARD } from "../../router";
+import { z } from "zod";
 import { useUserContext } from "../../context/StudentContext";
+import { ADMIN_DASHBOARD, PARENT_DASHBOARD, STUDENT_DASHBOARD, TEACHER_DASHBOARD } from "../../router";
 
 const formSchema = z.object({
   email: z.string().email("Enter a valid email"),

@@ -1,14 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { Outlet, useNavigate, Link } from "react-router-dom";
-import { STUDENT_DASHBOARD, STUDENT_LOGIN } from "../router";
-import { useUserContext } from "../context/StudentContext";
-import { UserApi } from "../Services/Api/UserApi";
-import DropDownMenuStudent from "./DropDownMenu/DropDownMenuStudent";
-import { GaugeIcon } from 'lucide-react';
-import { StudentAdministrationSideBar } from "./Administration/StudentAdministrationSideBar";
+import { useEffect, useState } from "react";
+import { Link, Outlet, useNavigate } from "react-router-dom";
 import { ModeToggle } from "../components/mode-toggle";
-import { AdminAdministrationSideBar } from "./Administration/AdminAdministrationSideBar";
-import { TeacherAdministrationSideBar } from "./Administration/TeacherAdministrationSideBar";
+import { useUserContext } from "../context/StudentContext";
+import { PARENT_DASHBOARD, STUDENT_LOGIN } from "../router";
+import { UserApi } from "../Services/Api/UserApi";
 import { ParentAdministrationSideBar } from "./Administration/ParentAdministrationSideBar";
 import DropDownMenuParent from "./DropDownMenu/DropDownMenuParent";
 
@@ -44,27 +39,19 @@ export default function ParentDashboardLayout() {
             {/* Header */}
             <header className="bg-white shadow-md dark:bg-gray-800 dark:border-gray-700">
                 <nav className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-                    <Link to={STUDENT_DASHBOARD} className="flex items-center">
+                    <Link to={PARENT_DASHBOARD} className="flex items-center">
                         <img
                             src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600"
                             className="h-8 w-auto"
                             alt="Logo"
                         />
                         <span className="ml-2 font-bold text-xl text-indigo-600 dark:text-indigo-400">
-                            YourCompany
+                            School-management
                         </span>
                     </Link>
                     <div className="hidden md:flex space-x-6 items-center">
-                        <Link
-                            to={STUDENT_DASHBOARD}
-                            className="flex items-center text-gray-700 dark:text-gray-200 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium transition-colors"
-                        >
-                            <GaugeIcon className="mr-2 h-5 w-5" />
-                            Dashboard
-                        </Link>
                         <DropDownMenuParent />
                         <ModeToggle />
-
                     </div>
                 </nav>
             </header>

@@ -5,12 +5,12 @@ import { ScrollArea, ScrollBar } from "../../ui/scroll-area.jsx";
 
 import ParentUpsertForm from "../Forms/ParentUpsertForm.jsx";
 import AdminParentList from "../DataTable/AdminParentList.jsx";
-import ParentApi from "../../../services/Api/Parent/Parent.js";
+import ParentApi from "../../../Services/Api/Admin/ParentApi.js";
 
 export default function ManageParents() {
-  const { user } = useUserContext(); // Not used now, but good if access control is planned.
-
+  const { user } = useUserContext();
   return (
+    <>
     <div className="relative overflow-x-auto">
       <div className="hidden md:block">
         <div className="bg-background">
@@ -58,5 +58,6 @@ export default function ManageParents() {
         </div>
       </div>
     </div>
+    </>
   );
 }

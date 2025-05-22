@@ -52,16 +52,8 @@ export default function StudentDashboardLayout() {
                         </span>
                     </Link>
                     <div className="hidden md:flex space-x-6 items-center">
-                        <Link
-                            to={STUDENT_DASHBOARD}
-                            className="flex items-center text-gray-700 dark:text-gray-200 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium transition-colors"
-                        >
-                            <GaugeIcon className="mr-2 h-5 w-5" />
-                            Dashboard
-                        </Link>
                         <DropDownMenuStudent />
                         <ModeToggle />
-
                     </div>
                 </nav>
             </header>

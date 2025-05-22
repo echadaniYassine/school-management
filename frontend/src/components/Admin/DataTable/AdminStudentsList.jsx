@@ -1,30 +1,30 @@
-import { useEffect, useState } from "react";
-import ParentApi from "../../../Services/Api/Admin/ParentApi.js";
-import { DataTable } from "./DataTable.jsx";
-import { DataTableColumnHeader } from "./DataTableColumnHeader.jsx";
 import { Button } from "@/components/ui/button";
+import { Trash2Icon } from "lucide-react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
+import StudentApi from "../../../Services/Api/Admin/StudentApi.js";
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel,
   AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
   AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger
-} from "../../ui/alert-dialog.jsx";
-import { toast } from "sonner";
-import { Trash2Icon } from "lucide-react";
+} from "../../ui/alert-dialog.js";
 import {
   Sheet, SheetContent, SheetDescription, SheetHeader,
   SheetTitle, SheetTrigger
-} from "../../ui/sheet.jsx";
-import ParentCreateForm from "../Forms/ParentUpsertForm.jsx";
+} from "../../ui/sheet.js";
+import StudentUpsertForm from "../Forms/StudentUpsertForm.jsx";
+import { DataTable } from "./DataTable.jsx";
+import { DataTableColumnHeader } from "./DataTableColumnHeader.jsx";
 
-export default function AdminParentList() {
+export default function AdminStudentsList() {
   const [data, setData] = useState([]);
   const [openUpdateId, setOpenUpdateId] = useState(null); // Track which sheet is open
 
   const handleUpdateSubmit = (id, values) => {
-    const promise = ParentApi.update(id, values);
+    const promise = StudentApi.update(id, values);
     promise.then((response) => {
-      const { parent } = response.data;
-      const updated = data.map((item) => (item.id === id ? parent : item));
+      const { student } = response.data;
+      const updated = data.map((item) => (item.id === id ? student : item));
       setData(updated);
       setOpenUpdateId(null);
     });
@@ -33,18 +33,18 @@ export default function AdminParentList() {
 
   const handleDelete = async (id) => {
     const deletingLoader = toast.loading("Deleting in progress.");
-    const { data: deletedParent, status } = await ParentApi.delete(id);
+    const { data: deletedStudent, status } = await StudentApi.delete(id);
     toast.dismiss(deletingLoader);
     if (status === 200) {
-      setData(data.filter((parent) => parent.id !== id));
-      toast.success("Parent deleted", {
-        description: `Successfully deleted ${deletedParent.data.name}`,
+      setData(data.filter((student) => student.id !== id));
+      toast.success("Student deleted", {
+        description: `Successfully deleted ${deletedStudent.data.name}`,
         icon: <Trash2Icon />,
       });
     }
   };
 
-  const AdminParentColumns = [
+  const AdminStudentColumns = [
     {
       accessorKey: "id",
       header: ({ column }) => (
@@ -119,15 +119,15 @@ export default function AdminParentList() {
               </SheetTrigger>
               <SheetContent>
                 <SheetHeader>
-                  <SheetTitle>Update Parent: {name}</SheetTitle>
+                  <SheetTitle>Update Student: {name}</SheetTitle>
                   <SheetDescription>
-                    Modify parent details below and click save.
+                    Modify Student details below and click save.
+                    <StudentUpsertForm
+                      values={row.original}
+                      handleSubmit={(values) => handleUpdateSubmit(id, values)}
+                    />
                   </SheetDescription>
                 </SheetHeader>
-                <ParentCreateForm
-                  values={row.original}
-                  handleSubmit={(values) => handleUpdateSubmit(id, values)}
-                />
               </SheetContent>
             </Sheet>
 
@@ -141,7 +141,7 @@ export default function AdminParentList() {
                     Are you sure you want to delete <span className="font-bold">{name}</span>?
                   </AlertDialogTitle>
                   <AlertDialogDescription>
-                    This action cannot be undone. It will permanently delete this parent.
+                    This action cannot be undone. It will permanently delete this student.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
@@ -157,8 +157,8 @@ export default function AdminParentList() {
   ];
 
   useEffect(() => {
-    ParentApi.all().then(({ data }) => setData(data.data));
+    StudentApi.all().then(({ data }) => setData(data.data));
   }, []);
 
-  return <DataTable columns={AdminParentColumns} data={data} />;
+  return <DataTable columns={AdminStudentColumns} data={data} />;
 }

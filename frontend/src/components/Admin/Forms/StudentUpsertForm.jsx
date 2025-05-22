@@ -1,15 +1,15 @@
-import * as z from "zod";
-import { useForm } from "react-hook-form";
+import { Textarea } from "@/components/ui/textarea.jsx";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import * as z from "zod";
+import { Button } from "../../ui/button.jsx";
 import {
     Form, FormControl, FormField, FormItem, FormLabel, FormMessage
 } from "../../ui/form.jsx";
 import { Input } from "../../ui/input.jsx";
-import { Button } from "../../ui/button.jsx";
-import { Loader } from "lucide-react";
 import { RadioGroup, RadioGroupItem } from "../../ui/radio-group.jsx";
-import { Textarea } from "../../ui/textarea.jsx";
-import { toast } from "sonner";
 
 const formSchema = z.object({
     name: z.string().min(1, "Name is required").max(50),
@@ -35,10 +35,13 @@ const formSchema = z.object({
     password: z.string()
         .min(1, "Password is required")
         .min(8, "Password must be at least 8 characters")
-        .max(30, "Password must not exceed 30 characters")
+        .max(30, "Password must not exceed 30 characters"),
+    student_parent_id: z.string().max(20),
+
 });
 
-export default function ParentUpsertForm({ handleSubmit, values }) {
+export default function StudentUpsertForm({ handleSubmit, values }) {
+
     const form = useForm({
         resolver: zodResolver(formSchema),
         defaultValues: values || {
@@ -56,7 +59,7 @@ export default function ParentUpsertForm({ handleSubmit, values }) {
     const isUpdate = values !== undefined;
 
     const onSubmit = async (values) => {
-        const loaderMsg = isUpdate ? 'Updating in progress.' : 'Adding parent...';
+        const loaderMsg = isUpdate ? 'Updating in progress.' : 'Adding student...';
         const loader = toast.loading(loaderMsg);
 
         try {

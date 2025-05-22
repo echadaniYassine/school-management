@@ -22,7 +22,10 @@ class DatabaseSeeder extends Seeder
         User::factory()->create([
             'name' => 'Echadani Yassine',
             'email' => 'yassine@gmail.com',
-            'password' => Hash::make('12345678'), // ✅ CORRECT
+            'password' => Hash::make('12345678'),
+            'date_of_birth' => '2004-10-10',
+            'gender' => 'male',
+            'last_login_date' => now(), 
         ]);
 
         Teacher::factory()->create([

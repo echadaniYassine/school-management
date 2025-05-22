@@ -1,35 +1,19 @@
-import { useUserContext } from "../../../context/StudentContext";
+import { ChartAreaInteractive } from "../../chart-area-interactive";
+import { DataTable } from "../../data-table";
+import { SectionCards } from "../../section-cards";
+import data from "./data.json";
 
 export default function AdminDashboard() {
-    const { user } = useUserContext();
 
     return (
-        <div className="text-gray-800 dark:text-gray-100">
-            {user && (
-                <section className="mt-8">
-                    <h2 className="text-xl font-bold mb-4">User Information</h2>
-                    <div className="overflow-x-auto">
-                        <table className="min-w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow">
-                            <thead className="bg-gray-100 dark:bg-gray-700">
-                                <tr>
-                                    <th className="py-2 px-4 border-b border-gray-200 dark:border-gray-600 text-left">ID</th>
-                                    <th className="py-2 px-4 border-b border-gray-200 dark:border-gray-600 text-left">Name</th>
-                                    <th className="py-2 px-4 border-b border-gray-200 dark:border-gray-600 text-left">Email</th>
-                                    <th className="py-2 px-4 border-b border-gray-200 dark:border-gray-600 text-left">Created At</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr className="hover:bg-gray-50 dark:hover:bg-gray-700">
-                                    <td className="py-2 px-4 border-b border-gray-200 dark:border-gray-600">{user.id}</td>
-                                    <td className="py-2 px-4 border-b border-gray-200 dark:border-gray-600">{user.name}</td>
-                                    <td className="py-2 px-4 border-b border-gray-200 dark:border-gray-600">{user.email}</td>
-                                    <td className="py-2 px-4 border-b border-gray-200 dark:border-gray-600">{user.created_at}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </section>
-            )}
-        </div>
+        <>
+            <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
+                <SectionCards />
+                <div className="px-4 lg:px-6">
+                    <ChartAreaInteractive />
+                </div>
+                <DataTable data={data} />
+            </div>
+        </>
     );
 }
