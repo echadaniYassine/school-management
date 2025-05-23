@@ -17,9 +17,17 @@ import {
 import ParentCreateForm from "../Forms/ParentUpsertForm.jsx";
 
 export default function AdminParentList() {
-  const [data, setData] = useState([]);
   const [openUpdateId, setOpenUpdateId] = useState(null); // Track which sheet is open
+  const [data, setData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true); // <-- Added
 
+  useEffect(() => {
+    ParentApi.all()
+      .then(({ data }) => {
+        setData(data.data);
+      })
+      .finally(() => setIsLoading(false)); // <-- Turn off loading
+  }, []);
   const handleUpdateSubmit = (id, values) => {
     const promise = ParentApi.update(id, values);
     promise.then((response) => {
@@ -160,5 +168,5 @@ export default function AdminParentList() {
     ParentApi.all().then(({ data }) => setData(data.data));
   }, []);
 
-  return <DataTable columns={AdminParentColumns} data={data} />;
+  return <DataTable columns={AdminParentColumns} data={data} loading={isLoading} />;
 }

@@ -53,7 +53,7 @@ class StudentController extends Controller
     public function update(UpdateStudentRequest $request, User $student)
     {
         $formFields = $request->validated();
-        $formFields['password'] = Hash::make($formFields['password']);
+        // $formFields['password'] = Hash::make($formFields['password']);
         $student->update($formFields);
         return response()->json([
             'student' => new StudentResource($student),

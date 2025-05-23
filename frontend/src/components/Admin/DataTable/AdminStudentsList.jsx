@@ -18,6 +18,16 @@ import { DataTableColumnHeader } from "./DataTableColumnHeader.jsx";
 
 export default function AdminStudentsList() {
   const [data, setData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true); // <-- Added
+
+  useEffect(() => {
+    StudentApi.all()
+      .then(({ data }) => {
+        setData(data.data);
+      })
+      .finally(() => setIsLoading(false)); // <-- Turn off loading
+  }, []);
+
   const [openUpdateId, setOpenUpdateId] = useState(null); // Track which sheet is open
 
   const handleUpdateSubmit = (id, values) => {
@@ -160,5 +170,5 @@ export default function AdminStudentsList() {
     StudentApi.all().then(({ data }) => setData(data.data));
   }, []);
 
-  return <DataTable columns={AdminStudentColumns} data={data} />;
+  return <DataTable columns={AdminStudentColumns} data={data} loading={isLoading} />;
 }

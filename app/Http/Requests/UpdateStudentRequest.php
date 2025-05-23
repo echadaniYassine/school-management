@@ -39,7 +39,7 @@ class UpdateStudentRequest extends FormRequest
                 'email',
                 Rule::unique('users')->ignore($this->student),
             ],
-            'password' => 'required',
+            // 'password' => 'required',
         ];
     }
     public function messages()

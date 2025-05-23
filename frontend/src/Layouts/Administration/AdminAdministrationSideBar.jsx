@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils"
 import { Button } from "../../components/ui/button.js"
-import { ADMIN_DASHBOARD, ADMIN_MANAGE_PARENTS, ADMIN_MANAGE_STUDENTS, ADMIN_PROFIL } from "../../router/index.jsx"
+import { ADMIN_ACTIVITIES, ADMIN_ASSIGNMENTS, ADMIN_BLOGS, ADMIN_COURSES, ADMIN_DASHBOARD, ADMIN_MANAGE_PARENTS, ADMIN_MANAGE_STUDENTS, ADMIN_NOTIFICATION, ADMIN_PROFIL, ADMIN_SYSTEM_SETTING } from "../../router/index.jsx"
 import { Link } from "react-router-dom"
 import {
   GaugeIcon,
@@ -45,30 +45,40 @@ export function AdminAdministrationSideBar({ className }) {
             Content Management
           </h2>
           <div className="space-y-1">
-            <Button variant="ghost" className="w-full justify-start">
-              <BellIcon className="mr-2 h-5 w-5" />
-              Notification
-            </Button>
+            <Link to={ADMIN_NOTIFICATION}>
+              <Button variant="ghost" className="w-full justify-start">
+                <BellIcon className="mr-2 h-5 w-5" />
+                Notification
+              </Button>
+            </Link>
 
-            <Button variant="ghost" className="w-full justify-start">
-              <BookOpenIcon className="mr-2 h-5 w-5" />
-              Courses
-            </Button>
+            <Link to={ADMIN_COURSES}>
+              <Button variant="ghost" className="w-full justify-start">
+                <BookOpenIcon className="mr-2 h-5 w-5" />
+                Courses
+              </Button>
+            </Link>
 
-            <Button variant="ghost" className="w-full justify-start">
-              <ActivityIcon className="mr-2 h-5 w-5" />
-              Activities
-            </Button>
+            <Link to={ADMIN_ACTIVITIES}>
+              <Button variant="ghost" className="w-full justify-start">
+                <ActivityIcon className="mr-2 h-5 w-5" />
+                Activities
+              </Button>
+            </Link>
 
-            <Button variant="ghost" className="w-full justify-start">
-              <FileTextIcon className="mr-2 h-5 w-5" />
-              Blog
-            </Button>
+            <Link to={ADMIN_BLOGS}>
+              <Button variant="ghost" className="w-full justify-start">
+                <FileTextIcon className="mr-2 h-5 w-5" />
+                Blog
+              </Button>
+            </Link>
 
-            <Button variant="ghost" className="w-full justify-start">
-              <ClipboardListIcon className="mr-2 h-5 w-5" />
-              Assignments Students
-            </Button>
+            <Link to={ADMIN_ASSIGNMENTS}>
+              <Button variant="ghost" className="w-full justify-start">
+                <ClipboardListIcon className="mr-2 h-5 w-5" />
+                Assignments Students
+              </Button>
+            </Link>
           </div>
         </div>
 
@@ -90,15 +100,19 @@ export function AdminAdministrationSideBar({ className }) {
               </Button>
             </Link>
 
-            <Button variant="ghost" className="w-full justify-start">
-              <MessageSquareIcon className="mr-2 h-5 w-5" />
-              Chat manage
-            </Button>
+            {/* <Link to={''}>
+              <Button variant="ghost" className="w-full justify-start">
+                <MessageSquareIcon className="mr-2 h-5 w-5" />
+                Chat manage
+              </Button>
+            </Link> */}
 
-            <Button variant="ghost" className="w-full justify-start">
-              <SettingsIcon className="mr-2 h-5 w-5" />
-              System Settings
-            </Button>
+            <Link to={ADMIN_SYSTEM_SETTING}>
+              <Button variant="ghost" className="w-full justify-start">
+                <SettingsIcon className="mr-2 h-5 w-5" />
+                System Settings
+              </Button>
+            </Link>
           </div>
         </div>
       </div>

@@ -1,4 +1,3 @@
-
 import {
   flexRender,
   getCoreRowModel,
@@ -8,23 +7,17 @@ import {
   useReactTable,
 } from "@tanstack/react-table"
 
-import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow,} from "@/components/ui/table"
-import {useState} from "react";
-import {Input} from "../../ui/input.jsx";
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuTrigger
-} from "../../ui/dropdown-menu.jsx";
-import {Button} from "../../ui/button.jsx";
-import {DataTableViewOptions} from "./DataTableViewOptions.jsx";
-import {DataTablePagination} from "./DataTablePagination.jsx";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { useState } from "react"
+import { Input } from "../../ui/input.jsx"
+import { DataTableViewOptions } from "./DataTableViewOptions.jsx"
+import { DataTablePagination } from "./DataTablePagination.jsx"
 
-export function DataTable({columns, data}) {
+export function DataTable({ columns, data, loading }) {
   const [sorting, setSorting] = useState([])
   const [columnFilters, setColumnFilters] = useState([])
   const [columnVisibility, setColumnVisibility] = useState({})
+
   const table = useReactTable({
     data,
     columns,
@@ -47,7 +40,7 @@ export function DataTable({columns, data}) {
       <div className="flex items-center py-4">
         <Input
           placeholder="Filter emails..."
-          value={(table.getColumn("email")?.getFilterValue()) ?? ""}
+          value={table.getColumn("email")?.getFilterValue() ?? ""}
           onChange={(event) =>
             table.getColumn("email")?.setFilterValue(event.target.value)
           }
@@ -55,28 +48,34 @@ export function DataTable({columns, data}) {
         />
         <DataTableViewOptions table={table} />
       </div>
+
       <div className="rounded-md border">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                    </TableHead>
-                  )
-                })}
+                {headerGroup.headers.map((header) => (
+                  <TableHead key={header.id}>
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(header.column.columnDef.header, header.getContext())}
+                  </TableHead>
+                ))}
               </TableRow>
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows?.length ? (
+            {loading ? (
+              Array.from({ length: 5 }).map((_, rowIndex) => (
+                <TableRow key={`skeleton-row-${rowIndex}`}>
+                  {columns.map((column, colIndex) => (
+                    <TableCell key={`skeleton-cell-${rowIndex}-${colIndex}`}>
+                      <div className="h-4 w-full bg-gray-200 animate-pulse rounded" />
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
@@ -97,6 +96,7 @@ export function DataTable({columns, data}) {
               </TableRow>
             )}
           </TableBody>
+
         </Table>
         <DataTablePagination table={table} />
       </div>

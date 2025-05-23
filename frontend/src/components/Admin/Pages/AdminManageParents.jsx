@@ -7,7 +7,7 @@ import ParentUpsertForm from "../Forms/ParentUpsertForm.jsx";
 import AdminParentList from "../DataTable/AdminParentList.jsx";
 import ParentApi from "../../../Services/Api/Admin/ParentApi.js";
 
-export default function ManageParents() {
+export default function AdminManageParents() {
   const { user } = useUserContext();
   return (
     <>
