@@ -35,7 +35,7 @@ class DatabaseSeeder extends Seeder
         // Create a specific teacher
         Teacher::factory()->create([
             'name' => 'Prof. El Alami',
-            'email' => 'teacher@example.com',
+            'email' => 'teacher@gmail.com',
             'password' => Hash::make('12345678'),
             'date_of_birth' => '1980-03-15',
             'gender' => 'female',
@@ -49,7 +49,7 @@ class DatabaseSeeder extends Seeder
         // Create a specific admin
         Admin::factory()->create([
             'name' => 'Admin General',
-            'email' => 'admin@example.com',
+            'email' => 'admin@gmail.com',
             'password' => Hash::make('12345678'),
             'date_of_birth' => '1975-07-20',
             'gender' => 'male',
@@ -98,7 +98,7 @@ class DatabaseSeeder extends Seeder
         // Create a specific parent
         StudentParent::factory()->create([
             'name' => 'Parent Default',
-            'email' => 'parent@example.com',
+            'email' => 'parent@gmail.com',
             'password' => Hash::make('password'),
             'date_of_birth' => '1970-01-01',
             'gender' => 'female',

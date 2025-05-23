@@ -22,8 +22,9 @@ export default function NotificationsLog({ notifications }) {
             <CardHeader>
                 <CardTitle>Notification Log</CardTitle>
             </CardHeader>
+            {/* Assuming `notifications` array is already sorted newest first by AdminManageNotifications */}
             <CardContent className="max-h-[500px] overflow-y-auto pr-2"> {/* Scrollable log */}
-                {notifications.slice().reverse().map((notification) => ( // Show newest first
+                {notifications.map((notification) => ( 
                     <NotificationLogItem key={notification.id} notification={notification} />
                 ))}
             </CardContent>

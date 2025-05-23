@@ -1,7 +1,19 @@
-import { cn } from "@/lib/utils"
-import { Button } from "../../components/ui/button.js"
-import { ADMIN_ACTIVITIES, ADMIN_ASSIGNMENTS, ADMIN_BLOGS, ADMIN_COURSES, ADMIN_DASHBOARD, ADMIN_MANAGE_PARENTS, ADMIN_MANAGE_STUDENTS, ADMIN_NOTIFICATION, ADMIN_PROFIL, ADMIN_SYSTEM_SETTING } from "../../router/index.jsx"
-import { Link } from "react-router-dom"
+import { cn } from "@/lib/utils";
+import { Button } from "../../components/ui/button.js";
+import {
+  ADMIN_ACTIVITIES,
+  ADMIN_ASSIGNMENTS,
+  ADMIN_BLOGS,
+  ADMIN_COURSES,
+  ADMIN_DASHBOARD,
+  ADMIN_MANAGE_PARENTS,
+  ADMIN_MANAGE_STUDENTS,
+  ADMIN_MANAGE_TEACHERS,
+  ADMIN_NOTIFICATION,
+  ADMIN_PROFIL,
+  ADMIN_SYSTEM_SETTING,
+} from "../../router/index.jsx";
+import { Link, useLocation } from "react-router-dom";
 import {
   GaugeIcon,
   UserIcon,
@@ -14,108 +26,117 @@ import {
   UsersIcon,
   SettingsIcon,
   BarChart2Icon,
-} from "lucide-react"
+} from "lucide-react";
+
+// NO LONGER DEFINED HERE AT THE TOP LEVEL
 
 export function AdminAdministrationSideBar({ className }) {
+  const location = useLocation();
+  const currentPath = location.pathname;
+
+  // DEFINE sidebarSections INSIDE THE COMPONENT
+  const sidebarSections = [
+    {
+      title: "Admin Administration",
+      items: [
+        {
+          to: ADMIN_DASHBOARD, // Now it's guaranteed ADMIN_DASHBOARD is initialized
+          icon: <GaugeIcon className="mr-2 h-5 w-5" />,
+          label: "Dashboard",
+        },
+        {
+          to: ADMIN_PROFIL,
+          icon: <UserIcon className="mr-2 h-5 w-5" />,
+          label: "Profil",
+        },
+      ],
+    },
+    {
+      title: "Content Management",
+      items: [
+        {
+          to: ADMIN_NOTIFICATION,
+          icon: <BellIcon className="mr-2 h-5 w-5" />,
+          label: "Notification",
+        },
+        {
+          to: ADMIN_COURSES,
+          icon: <BookOpenIcon className="mr-2 h-5 w-5" />,
+          label: "Courses",
+        },
+        {
+          to: ADMIN_ACTIVITIES,
+          icon: <ActivityIcon className="mr-2 h-5 w-5" />,
+          label: "Activities",
+        },
+        {
+          to: ADMIN_BLOGS,
+          icon: <FileTextIcon className="mr-2 h-5 w-5" />,
+          label: "Blog",
+        },
+        {
+          to: ADMIN_ASSIGNMENTS,
+          icon: <ClipboardListIcon className="mr-2 h-5 w-5" />,
+          label: "Assignments Students",
+        },
+      ],
+    },
+    {
+      title: "User & Settings",
+      items: [
+        {
+          to: ADMIN_MANAGE_STUDENTS,
+          icon: <UsersIcon className="mr-2 h-5 w-5" />,
+          label: "Manage Users",
+        },
+        {
+          to: ADMIN_MANAGE_PARENTS,
+          icon: <UsersIcon className="mr-2 h-5 w-5" />,
+          label: "Manage Parents",
+        },
+        {
+          to: ADMIN_MANAGE_TEACHERS,
+          icon: <UsersIcon className="mr-2 h-5 w-5" />,
+          label: "Manage Teachers",
+        },
+        {
+          to: ADMIN_SYSTEM_SETTING,
+          icon: <SettingsIcon className="mr-2 h-5 w-5" />,
+          label: "System Settings",
+        },
+        
+      ],
+    },
+  ];
+
   return (
     <div className={cn("pb-12", className)}>
       <div>
-        <div className="px-3 py-2">
-          <h2 className="mb-2 px-4 text-lg font-semibold tracking-tight">
-            Admin Administration
-          </h2>
-          <div className="space-y-1">
-            <Link to={ADMIN_DASHBOARD} className="flex items-center text-gray-700 dark:text-gray-200 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium transition-colors">
-              <Button variant="secondary" className="w-full justify-start">
-                <GaugeIcon className="mr-2 h-5 w-5" />
-                Dashboard
-              </Button>
-            </Link>
-            <Link to={ADMIN_PROFIL}>
-              <Button variant="ghost" className="w-full justify-start">
-                <UserIcon className="mr-2 h-5 w-5" />
-                Profil
-              </Button>
-            </Link>
+        {sidebarSections.map((section) => (
+          <div className="px-3 py-2" key={section.title}>
+            <h2 className="mb-2 px-4 text-lg font-semibold tracking-tight">
+              {section.title}
+            </h2>
+            <div className="space-y-1">
+              {section.items.map((item) => {
+                const isActive = currentPath === item.to;
+                return (
+                  <Link to={item.to} key={item.to} aria-label={item.label}>
+                    <Button
+                      variant={isActive ? "secondary" : "ghost"}
+                      className="w-full justify-start"
+                      aria-current={isActive ? "page" : undefined}
+                    >
+                      {item.icon}
+                      {item.label}
+                    </Button>
+                  </Link>
+                );
+              })}
+            </div>
           </div>
-        </div>
-
-        <div className="px-3 py-2">
-          <h2 className="mb-2 px-4 text-lg font-semibold tracking-tight">
-            Content Management
-          </h2>
-          <div className="space-y-1">
-            <Link to={ADMIN_NOTIFICATION}>
-              <Button variant="ghost" className="w-full justify-start">
-                <BellIcon className="mr-2 h-5 w-5" />
-                Notification
-              </Button>
-            </Link>
-
-            <Link to={ADMIN_COURSES}>
-              <Button variant="ghost" className="w-full justify-start">
-                <BookOpenIcon className="mr-2 h-5 w-5" />
-                Courses
-              </Button>
-            </Link>
-
-            <Link to={ADMIN_ACTIVITIES}>
-              <Button variant="ghost" className="w-full justify-start">
-                <ActivityIcon className="mr-2 h-5 w-5" />
-                Activities
-              </Button>
-            </Link>
-
-            <Link to={ADMIN_BLOGS}>
-              <Button variant="ghost" className="w-full justify-start">
-                <FileTextIcon className="mr-2 h-5 w-5" />
-                Blog
-              </Button>
-            </Link>
-
-            <Link to={ADMIN_ASSIGNMENTS}>
-              <Button variant="ghost" className="w-full justify-start">
-                <ClipboardListIcon className="mr-2 h-5 w-5" />
-                Assignments Students
-              </Button>
-            </Link>
-          </div>
-        </div>
-
-        <div className="px-3 py-2">
-          <h2 className="mb-2 px-4 text-lg font-semibold tracking-tight">
-            User & Settings
-          </h2>
-          <div className="space-y-1">
-            <Link to={ADMIN_MANAGE_STUDENTS}>
-              <Button variant="ghost" className="w-full justify-start">
-                <UsersIcon className="mr-2 h-5 w-5" />
-                Manage Users
-              </Button>
-            </Link>
-            <Link to={ADMIN_MANAGE_PARENTS}>
-              <Button variant="ghost" className="w-full justify-start">
-                <UsersIcon className="mr-2 h-5 w-5" />
-                Manage Parents
-              </Button>
-            </Link>
-
-            {/* <Link to={''}>
-              <Button variant="ghost" className="w-full justify-start">
-                <MessageSquareIcon className="mr-2 h-5 w-5" />
-                Chat manage
-              </Button>
-            </Link> */}
-
-            <Link to={ADMIN_SYSTEM_SETTING}>
-              <Button variant="ghost" className="w-full justify-start">
-                <SettingsIcon className="mr-2 h-5 w-5" />
-                System Settings
-              </Button>
-            </Link>
-          </div>
-        </div>
+        ))}
       </div>
     </div>
-  )
+  );
 }

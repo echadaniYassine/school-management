@@ -23,6 +23,7 @@ import AdminManageBlogs from '../components/Admin/Pages/AdminManageBlogs';
 import AdminManageAssignments from '../components/Admin/Pages/AdminManageAssignments';
 import AdminManageAcitivities from '../components/Admin/Pages/AdminManageAcitivities';
 import AdminSystemSetting from '../components/Admin/Pages/AdminSystemSetting';
+import AdminManageTeachers from '../components/Admin/Pages/AdminManageTeachers';
 
 
 export const ADMIN_BASE_ROUTE = '/admin/'
@@ -38,6 +39,7 @@ export const ADMIN_BLOGS = ADMIN_BASE_ROUTE + 'blogs'
 export const ADMIN_ACTIVITIES = ADMIN_BASE_ROUTE + 'activities'
 export const ADMIN_ASSIGNMENTS = ADMIN_BASE_ROUTE + 'assignments-students'
 export const ADMIN_SYSTEM_SETTING = ADMIN_BASE_ROUTE + 'system-settings'
+export const ADMIN_MANAGE_TEACHERS = ADMIN_BASE_ROUTE + 'manage-teachers'
 
 export const TEACHER_DASHBOARD = '/teacher/Dashboard'
 export const PARENT_DASHBOARD = '/parent/Dashboard'
@@ -99,6 +101,10 @@ export const router = createBrowserRouter([
                 element: <AdminManageStudents />,
             },
             {
+                path: ADMIN_MANAGE_STUDENTS,
+                element: <AdminManageStudents />,
+            },
+            {
                 path: ADMIN_PROFIL,
                 element: <AdminProfil />,
             },
@@ -123,6 +129,10 @@ export const router = createBrowserRouter([
             {
                 path: ADMIN_SYSTEM_SETTING,
                 element: <AdminSystemSetting />,
+            },
+               {
+                path: ADMIN_MANAGE_TEACHERS,
+                element: <AdminManageTeachers />,
             },
         ]
     },
