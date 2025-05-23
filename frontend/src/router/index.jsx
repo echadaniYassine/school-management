@@ -6,24 +6,21 @@ import ParentDashboardLayout from '../Layouts/ParentDashboardLayout';
 import StudentDashboardLayout from '../Layouts/StudentDashboardLayout';
 import TeacherDashboardLayout from '../Layouts/TeacherDashboardLayout';
 import AdminDashboard from '../components/Admin/Pages/AdminDashboard';
+import AdminManageAcitivities from '../components/Admin/Pages/AdminManageAcitivities';
+import AdminManageAssignments from '../components/Admin/Pages/AdminManageAssignments';
+import AdminManageBlogs from '../components/Admin/Pages/AdminManageBlogs';
+import AdminManageCourses from '../components/Admin/Pages/AdminManageCourses';
+import AdminManageNotification from '../components/Admin/Pages/AdminManageNotification';
 import AdminManageParents from '../components/Admin/Pages/AdminManageParents';
-import UserLogin from '../components/Auth/UserLogin';
+import AdminManageStudents from '../components/Admin/Pages/AdminManageStudents';
+import AdminManageTeachers from '../components/Admin/Pages/AdminManageTeachers';
+import AdminProfil from '../components/Admin/Pages/AdminProfil';
+import AdminSystemSetting from '../components/Admin/Pages/AdminSystemSetting';
 import StudentDahboard from '../components/Student/StudentDahboard';
 import TeacherDahboard from '../components/Teacher/TeacherDahboard';
 import Home from '../pages/Home';
+import Login from '../pages/Login';
 import NotFound from '../pages/Not Found';
-import Users from '../pages/users';
-import AdminManageStudents from '../components/Admin/Pages/AdminManageStudents';
-import AdminProfil from '../components/Admin/Pages/AdminProfil';
-import AdminNotification from '../components/Admin/Pages/AdminManageNotification';
-import AdminManageCourses from '../components/Admin/Pages/AdminManageCourses';
-import AdminBlogs from '../components/Admin/Pages/AdminManageBlogs';
-import AdminManageNotification from '../components/Admin/Pages/AdminManageNotification';
-import AdminManageBlogs from '../components/Admin/Pages/AdminManageBlogs';
-import AdminManageAssignments from '../components/Admin/Pages/AdminManageAssignments';
-import AdminManageAcitivities from '../components/Admin/Pages/AdminManageAcitivities';
-import AdminSystemSetting from '../components/Admin/Pages/AdminSystemSetting';
-import AdminManageTeachers from '../components/Admin/Pages/AdminManageTeachers';
 
 
 export const ADMIN_BASE_ROUTE = '/admin/'
@@ -55,12 +52,6 @@ export const router = createBrowserRouter([
                 path: '/',
                 element: <Home />,
             },
-
-            {
-                path: '/users',
-                element: <Users />,
-            },
-
             {
                 path: '*',
                 element: <NotFound />,
@@ -72,7 +63,7 @@ export const router = createBrowserRouter([
         children: [
             {
                 path: STUDENT_LOGIN,
-                element: <UserLogin />,
+                element: <Login />,
             },
         ]
     },
