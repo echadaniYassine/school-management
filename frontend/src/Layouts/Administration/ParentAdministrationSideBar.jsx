@@ -41,10 +41,6 @@ export function ParentAdministrationSideBar({ className }) {
           </h2>
           <div className="space-y-1">
             <Button variant="ghost" className="w-full justify-start">
-              <Bell className="mr-2 h-4 w-4" />
-              Notification
-            </Button>
-            <Button variant="ghost" className="w-full justify-start">
               <MessageCircle className="mr-2 h-4 w-4" />
               Chat
             </Button>

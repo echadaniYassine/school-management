@@ -128,13 +128,18 @@ export default function UpsertBlogPostForm({
                             <Label htmlFor="author" className="text-right">
                                 Author
                             </Label>
-                            <Input
-                                id="author"
+                            <Select
                                 value={formData.author}
-                                onChange={handleChange}
-                                className="col-span-3"
-                                placeholder="Author name"
-                            />
+                                onValueChange={(value) => handleSelectChange('author', value)}
+                            >
+                                <SelectTrigger className="col-span-3" id="author">
+                                    <SelectValue placeholder="Select author role" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="Admin">Admin</SelectItem>
+                                    <SelectItem value="Teacher">Teacher</SelectItem>
+                                </SelectContent>
+                            </Select>
                         </div>
                         <div className="grid grid-cols-4 items-center gap-4">
                             <Label htmlFor="category" className="text-right">
@@ -161,7 +166,7 @@ export default function UpsertBlogPostForm({
                                 placeholder="Comma-separated, e.g., react, webdev"
                             />
                         </div>
-                         <div className="grid grid-cols-4 items-center gap-4">
+                        <div className="grid grid-cols-4 items-center gap-4">
                             <Label htmlFor="featuredImage" className="text-right">
                                 Featured Image URL
                             </Label>

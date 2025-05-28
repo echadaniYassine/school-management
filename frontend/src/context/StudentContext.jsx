@@ -18,8 +18,19 @@ export default function StudentContext({ children }) {
         localStorage.getItem('AUTHENTICATED') === 'true'
     );
 
+    // useEffect(() => {
+    //     const token = localStorage.getItem('token');
+    //     if (token && authenticated) {
+    //         UserApi.getProfile().then((res) => {
+    //             setUser(res.data?.user || null);
+    //         }).catch(() => {
+    //             logout(); // token expired or invalid
+    //         });
+    //     }
+    // }, [authenticated]);
+
     const login = async (email, password) => {
-        await UserApi.getCsrfToken();
+        // await UserApi.getCsrfToken();
         return UserApi.login(email, password);
     };
 
@@ -27,6 +38,8 @@ export default function StudentContext({ children }) {
         setUser({});
         setAuthenticated(false);
         localStorage.setItem('AUTHENTICATED', 'false');
+        localStorage.removeItem('token'); // 🔐 Optional: clear token on logout
+
     };
 
     const setAuthenticated = (isAuthenticated) => {

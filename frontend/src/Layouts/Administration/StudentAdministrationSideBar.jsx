@@ -11,7 +11,7 @@ import {
   User
 } from "lucide-react"
 import { Button } from "../../components/ui/button.js"
-import { STUDENT_DASHBOARD } from "../../router/index.jsx"
+import { STUDENT_ACTIVITIES, STUDENT_ASSIGNMENTS, STUDENT_BLOGS, STUDENT_CHATS, STUDENT_COURSES, STUDENT_DASHBOARD, STUDENT_LIBRARY, STUDENT_NOTIFICATIONS, STUDENT_PROFIL } from "../../router/index.jsx"
 import { Link } from "react-router-dom"
 
 export function StudentAdministrationSideBar({ className }) {
@@ -29,10 +29,12 @@ export function StudentAdministrationSideBar({ className }) {
                 Dashboard
               </Button>
             </Link>
-            <Button variant="ghost" className="w-full justify-start">
-              <Grid className="mr-2 h-4 w-4" />
-              Profile
-            </Button>
+            <Link to={STUDENT_PROFIL }>
+              <Button variant="ghost" className="w-full justify-start">
+                <Grid className="mr-2 h-4 w-4" />
+                Profile
+              </Button>
+            </Link>
           </div>
         </div>
         <div className="px-3 py-2">
@@ -40,34 +42,42 @@ export function StudentAdministrationSideBar({ className }) {
             Content Management
           </h2>
           <div className="space-y-1">
-            <Button variant="ghost" className="w-full justify-start">
-              <Bell className="mr-2 h-4 w-4" />
-              Notification
-            </Button>
-            <Button variant="ghost" className="w-full justify-start">
-              <MessageCircle className="mr-2 h-4 w-4" />
-              Chat
-            </Button>
-            <Button variant="ghost" className="w-full justify-start">
-              <User className="mr-2 h-4 w-4" />
-              Courses
-            </Button>
-            <Button variant="ghost" className="w-full justify-start">
-              <BookOpen className="mr-2 h-4 w-4" />
-              Library
-            </Button>
-            <Button variant="ghost" className="w-full justify-start">
-              <ActivitySquare className="mr-2 h-4 w-4" />
-              Activities
-            </Button>
-            <Button variant="ghost" className="w-full justify-start">
-              <Newspaper className="mr-2 h-4 w-4" />
-              Blog
-            </Button>
-            <Button variant="ghost" className="w-full justify-start">
-              <ClipboardList className="mr-2 h-4 w-4" />
-              Assignments
-            </Button>
+            <Link to={STUDENT_CHATS }>
+              <Button variant="ghost" className="w-full justify-start">
+                <MessageCircle className="mr-2 h-4 w-4" />
+                Chat
+              </Button>
+            </Link>
+            <Link to={STUDENT_COURSES}>
+              <Button variant="ghost" className="w-full justify-start">
+                <User className="mr-2 h-4 w-4" />
+                Courses
+              </Button>
+            </Link>
+            <Link to={STUDENT_LIBRARY }>
+              <Button variant="ghost" className="w-full justify-start">
+                <BookOpen className="mr-2 h-4 w-4" />
+                Library
+              </Button>
+            </Link>
+            <Link to={STUDENT_ACTIVITIES }>
+              <Button variant="ghost" className="w-full justify-start">
+                <ActivitySquare className="mr-2 h-4 w-4" />
+                Activities
+              </Button>
+            </Link>
+            <Link to={ STUDENT_BLOGS}>
+              <Button variant="ghost" className="w-full justify-start">
+                <Newspaper className="mr-2 h-4 w-4" />
+                Blog
+              </Button>
+            </Link>
+            <Link to={ STUDENT_ASSIGNMENTS}>
+              <Button variant="ghost" className="w-full justify-start">
+                <ClipboardList className="mr-2 h-4 w-4" />
+                Assignments
+              </Button>
+            </Link>
           </div>
         </div>
       </div>

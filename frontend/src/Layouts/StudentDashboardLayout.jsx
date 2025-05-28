@@ -1,13 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { Outlet, useNavigate, Link } from "react-router-dom";
-import { STUDENT_DASHBOARD, STUDENT_LOGIN } from "../router";
-import { useUserContext } from "../context/StudentContext";
-import { UserApi } from "../Services/Api/UserApi";
-import DropDownMenuStudent from "./DropDownMenu/DropDownMenuStudent";
-import { GaugeIcon } from 'lucide-react';
-import { StudentAdministrationSideBar } from "./Administration/StudentAdministrationSideBar";
+import { useEffect, useState } from "react";
+import { Link, Outlet, useNavigate } from "react-router-dom";
 import { ModeToggle } from "../components/mode-toggle";
-import { AdminAdministrationSideBar } from "./Administration/AdminAdministrationSideBar";
+import { useUserContext } from "../context/StudentContext";
+import { STUDENT_DASHBOARD, USER_LOGIN } from "../router";
+import { UserApi } from "../Services/Api/UserApi";
+import { StudentAdministrationSideBar } from "./Administration/StudentAdministrationSideBar";
+import DropDownMenuStudent from "./DropDownMenu/DropDownMenuStudent";
 
 export default function StudentDashboardLayout() {
     const { logout, setUser, setAuthenticated, authenticated } = useUserContext();
@@ -26,7 +24,7 @@ export default function StudentDashboardLayout() {
                 logout()
             })
         } else {
-            navigate(STUDENT_LOGIN)
+            navigate(USER_LOGIN)
         }
 
     }, [authenticated]);

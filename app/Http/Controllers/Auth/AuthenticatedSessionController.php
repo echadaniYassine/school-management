@@ -11,52 +11,65 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthenticatedSessionController extends Controller
 {
-  /**
-   * Handle an incoming authentication request.
-   */
-  public function store(LoginRequest $request): JsonResponse
-  {
-    $request->authenticate();
-    $guards = ['web', 'teacher','parent', 'admin'];
+    /**
+     * Handle an incoming authentication request.
+     */
+    public function store(LoginRequest $request): JsonResponse
+    {
+        $request->authenticate();
 
-    $user = null;
-    foreach ($guards as $guard) {
-      $currentGuard = Auth::guard($guard);
-      if ($currentGuard->check()) {
-        $user = $currentGuard->user();
-        break;
-      }
-    };
-    $request->session()->regenerate();
-    return response()->json([
-      'user' => $user,
-      'token' => $user->createToken('api', [$user->getRoleAttribute()])->plainTextToken
-    ]);
-  }
+        $user = $this->resolveAuthenticatedUser();
 
-  /**
-   * Destroy an authenticated session.
-   */
-  public function destroy(Request $request): Response
-  {
-    $guards = ['web', 'teacher','parent', 'admin'];
-    $user = null;
-    foreach ($guards as $guard) {
-      $currentGuard = Auth::guard($guard);
-      if ($currentGuard->check()) {
-        $user = $currentGuard->user();
-        break;
-      }
-    }
-    $request->user()->currentAccessToken()->delete();
-    if ($user) {
-      Auth::guard($guard)->logout(); // Use the matched guard
+        if (!$user) {
+            return response()->json(['message' => 'Authentication failed.'], 401);
+        }
+
+        $token = $user->createToken('api', [$user->getRoleAttribute()])->plainTextToken;
+
+        return response()->json([
+            'user' => $user,
+            'token' => $token
+        ]);
     }
 
-    $request->session()->invalidate();
+    /**
+     * Destroy an authenticated session.
+     */
+    public function destroy(Request $request): Response
+    {
+        $user = $request->user();
 
-    $request->session()->regenerateToken();
+        if ($user) {
+            $user->currentAccessToken()?->delete(); // Deletes the current token
+        }
 
-    return response()->noContent();
-  }
+        $this->logoutAllGuards();
+
+        return response()->noContent(); // 204 No Content
+    }
+
+    /**
+     * Attempt to resolve the authenticated user from multiple guards.
+     */
+    private function resolveAuthenticatedUser(): ?\Illuminate\Contracts\Auth\Authenticatable
+    {
+        foreach (['web', 'teacher', 'parent', 'admin'] as $guard) {
+            if (Auth::guard($guard)->check()) {
+                return Auth::guard($guard)->user();
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Logout all guards to clean up any potential session usage.
+     */
+    private function logoutAllGuards(): void
+    {
+        foreach (['web', 'teacher', 'parent', 'admin'] as $guard) {
+            if (Auth::guard($guard)->check()) {
+                Auth::guard($guard)->logout();
+            }
+        }
+    }
 }

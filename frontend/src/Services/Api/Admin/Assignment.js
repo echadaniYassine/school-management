@@ -1,37 +1,47 @@
-// src/Api/AssignmentApi.js
-import { axiosClient } from "../../../Api/axios"; // Your configured axios instance
+import { axiosClient } from "../../../Api/axios";
+
+const getPrefix = (role) => {
+  if (role === 'student') return '/student';
+  if (role === 'teacher') return '/teacher';
+  return '/admin';
+};
 
 const AssignmentApi = {
-    getAll: async (params = {}) => { // params: { page, search, course, status, per_page }
-        return await axiosClient.get('/admin/assignments', { params });
-    },
-    getById: async (id) => {
-        return await axiosClient.get(`/admin/assignments/${id}`);
-    },
-    create: async (formData) => { // Expects FormData if file uploads are involved
-        return await axiosClient.post('/admin/assignments', formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data', // Important for file uploads
-            },
-        });
-    },
-    update: async (id, formData) => { // Expects FormData
-        // FormData with PUT is tricky, so backend often expects POST with _method field
-        formData.append('_method', 'PUT');
-        return await axiosClient.post(`/admin/assignments/${id}`, formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            },
-        });
-    },
-    delete: async (id) => {
-        return await axiosClient.delete(`/admin/assignments/${id}`);
-    },
-    downloadInstructions: async (id) => {
-        // This will trigger a file download
-        return await axiosClient.get(`/admin/assignments/${id}/download-instructions`, {
-            responseType: 'blob', // Important for file downloads
-        });
-    }
+  getAll: async (params = {}) => {
+    return await axiosClient.get('assignments', { params });
+  },
+
+  getById: async (id, role = 'admin') => {
+    const prefix = getPrefix(role);
+    return await axiosClient.get(`${prefix}/assignments/${id}`);
+  },
+
+  create: async (formData, role = 'admin') => {
+    const prefix = getPrefix(role);
+    return await axiosClient.post(`${prefix}/assignments`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+  },
+
+  update: async (id, formData, role = 'admin') => {
+    formData.append('_method', 'PUT'); // PUT workaround for FormData
+    const prefix = getPrefix(role);
+    return await axiosClient.post(`${prefix}/assignments/${id}`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+  },
+
+  delete: async (id, role = 'admin') => {
+    const prefix = getPrefix(role);
+    return await axiosClient.delete(`${prefix}/assignments/${id}`);
+  },
+
+  downloadInstructions: async (id, role = 'admin') => {
+    const prefix = getPrefix(role);
+    return await axiosClient.get(`${prefix}/assignments/${id}/download-instructions`, {
+      responseType: 'blob',
+    });
+  },
 };
+
 export default AssignmentApi;

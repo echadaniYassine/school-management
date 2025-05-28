@@ -16,7 +16,7 @@ class ActivityResource extends JsonResource
             'location' => $this->location,
             'capacity' => $this->capacity,
             'status' => $this->status,
-            'category' => $this->category,
+            // 'category' => $this->category,
             'createdAt' => $this->created_at->toIso8601String(),
             'updatedAt' => $this->updated_at->toIso8601String(),
             // Optional: 'creatorName' => $this->whenLoaded('creator', fn() => $this->creator->name),

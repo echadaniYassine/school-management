@@ -21,6 +21,11 @@ class ActivityController extends Controller
 
     public function store(StoreActivityRequest $request)
     {
+        $user = $request->user();
+
+        if (!($user instanceof \App\Models\Admin || $user instanceof \App\Models\Teacher)) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
         $validatedData = $request->validated();
         // Optionally, add created_by_id if you have user authentication
         // $validatedData['created_by_id'] = auth()->id();

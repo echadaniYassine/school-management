@@ -26,7 +26,7 @@ class ActivityFactory extends Factory
             'location' => $this->faker->streetAddress,
             'capacity' => $this->faker->numberBetween(20, 200),
             'status' => $this->faker->randomElement($statuses),
-            'category' => $this->faker->randomElement($categories),
+            // 'category' => $this->faker->randomElement($categories),
         ];
     }
 }

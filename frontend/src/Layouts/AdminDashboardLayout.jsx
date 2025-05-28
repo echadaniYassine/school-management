@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import { ModeToggle } from "../components/mode-toggle";
 import { useUserContext } from "../context/StudentContext";
-import { ADMIN_DASHBOARD, STUDENT_LOGIN } from "../router";
+import { ADMIN_DASHBOARD, USER_LOGIN } from "../router";
 import { UserApi } from "../Services/Api/UserApi";
 import { AdminAdministrationSideBar } from "./Administration/AdminAdministrationSideBar";
 import DropDownMenuAdmin from "./DropDownMenu/DropDownMenuAdmin";
@@ -24,7 +24,7 @@ export default function AdminDashboardLayout() {
                 logout()
             })
         } else {
-            navigate(STUDENT_LOGIN)
+            navigate(USER_LOGIN)
         }
 
     }, [authenticated]);

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import { ModeToggle } from "../components/mode-toggle";
 import { useUserContext } from "../context/StudentContext";
-import { PARENT_DASHBOARD, STUDENT_LOGIN } from "../router";
+import { PARENT_DASHBOARD, USER_LOGIN } from "../router";
 import { UserApi } from "../Services/Api/UserApi";
 import { ParentAdministrationSideBar } from "./Administration/ParentAdministrationSideBar";
 import DropDownMenuParent from "./DropDownMenu/DropDownMenuParent";
@@ -24,7 +24,7 @@ export default function ParentDashboardLayout() {
                 logout()
             })
         } else {
-            navigate(STUDENT_LOGIN)
+            navigate(USER_LOGIN)
         }
 
     }, [authenticated]);

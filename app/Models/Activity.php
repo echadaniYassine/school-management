@@ -16,7 +16,7 @@ class Activity extends Model
         'location',
         'capacity',
         'status',
-        'category',
+        // 'category',
         // 'created_by_id',
     ];
 

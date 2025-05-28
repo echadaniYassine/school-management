@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('location');
             $table->integer('capacity')->unsigned();
             $table->string('status')->default('draft'); // e.g., active, draft, cancelled
-            $table->string('category'); // e.g., academic, sports, cultural, social
+            // $table->string('category'); // e.g., academic, sports, cultural, social
             // $table->unsignedBigInteger('created_by_id')->nullable(); // Optional: if you want to track who created it
             // $table->foreign('created_by_id')->references('id')->on('users')->onDelete('set null');
             $table->timestamps();

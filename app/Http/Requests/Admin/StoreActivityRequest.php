@@ -22,7 +22,7 @@ class StoreActivityRequest extends FormRequest
             'location' => 'required|string|max:255',
             'capacity' => 'required|integer|min:1',
             'status' => ['required', 'string', Rule::in(['active', 'draft', 'cancelled'])],
-            'category' => ['required', 'string', Rule::in(['academic', 'sports', 'cultural', 'social'])],
+            // 'category' => ['required', 'string', Rule::in(['academic', 'sports', 'cultural', 'social'])],
         ];
     }
 }

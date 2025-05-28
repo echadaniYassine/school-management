@@ -2,7 +2,7 @@ import React from 'react'
 import { UserApi } from "../../Services/Api/UserApi";
 import { useUserContext } from "../../context/StudentContext";
 import { useNavigate } from "react-router-dom";
-import { STUDENT_LOGIN } from "../../router";
+import { USER_LOGIN } from "../../router";
 
 import {
     DropdownMenu,
@@ -37,7 +37,7 @@ export default function DefaultDropDownMenu({ children }) {
     const handleLogout = async () => {
         await UserApi.logout().then(() => {
             logout()
-            navigate(STUDENT_LOGIN)
+            navigate(USER_LOGIN)
         })
     };
 
@@ -72,11 +72,6 @@ export default function DefaultDropDownMenu({ children }) {
                             <MessageSquare className="mr-2 h-4 w-4" />
                             Messages
                             <DropdownMenuShortcut>⌘M</DropdownMenuShortcut>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem>
-                            <Bell className="mr-2 h-4 w-4" />
-                            Notifications
-                            <DropdownMenuShortcut>⌘N</DropdownMenuShortcut>
                         </DropdownMenuItem>
                     </DropdownMenuGroup>
 

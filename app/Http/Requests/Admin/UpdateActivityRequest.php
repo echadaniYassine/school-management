@@ -23,7 +23,7 @@ class UpdateActivityRequest extends FormRequest
             'location' => 'sometimes|required|string|max:255',
             'capacity' => 'sometimes|required|integer|min:1',
             'status' => ['sometimes', 'required', 'string', Rule::in(['active', 'draft', 'cancelled'])],
-            'category' => ['sometimes', 'required', 'string', Rule::in(['academic', 'sports', 'cultural', 'social'])],
+            // 'category' => ['sometimes', 'required', 'string', Rule::in(['academic', 'sports', 'cultural', 'social'])],
         ];
     }
 }

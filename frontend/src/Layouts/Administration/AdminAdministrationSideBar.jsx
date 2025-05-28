@@ -55,11 +55,6 @@ export function AdminAdministrationSideBar({ className }) {
       title: "Content Management",
       items: [
         {
-          to: ADMIN_NOTIFICATION,
-          icon: <BellIcon className="mr-2 h-5 w-5" />,
-          label: "Notification",
-        },
-        {
           to: ADMIN_COURSES,
           icon: <BookOpenIcon className="mr-2 h-5 w-5" />,
           label: "Courses",

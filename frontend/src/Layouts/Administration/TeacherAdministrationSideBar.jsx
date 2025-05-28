@@ -1,76 +1,97 @@
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils";
 import {
-  ActivitySquare,
-  Bell,
-  BookOpen,
-  CirclePlay,
-  ClipboardList,
-  Grid,
-  MessageCircle,
-  Newspaper,
-  User
-} from "lucide-react"
-import { Button } from "../../components/ui/button.js"
-import { TEACHER_DASHBOARD } from "../../router/index.jsx"
-import { Link } from "react-router-dom"
+  ActivityIcon,
+  BellIcon,
+  BookOpenIcon,
+  ClipboardListIcon,
+  FileTextIcon,
+  GaugeIcon,
+  SettingsIcon,
+  UserIcon,
+  UsersIcon
+} from "lucide-react";
+import { Link, useLocation } from "react-router-dom";
+import { Button } from "../../components/ui/button.js";
+import { ADMIN_ASSIGNMENTS, TEACHER_ACTIVITIES, TEACHER_ASSIGNMENTS, TEACHER_BLOGS, TEACHER_COURSES, TEACHER_DASHBOARD, TEACHER_NOTIFICATIONS, TEACHER_PROFIL } from "../../router/index.jsx";
+
+// NO LONGER DEFINED HERE AT THE TOP LEVEL
 
 export function TeacherAdministrationSideBar({ className }) {
+  const location = useLocation();
+  const currentPath = location.pathname;
+
+  // DEFINE sidebarSections INSIDE THE COMPONENT
+  const sidebarSections = [
+    {
+      title: "Teacher Administration",
+      items: [
+        {
+          to: TEACHER_DASHBOARD, // Now it's guaranteed ADMIN_DASHBOARD is initialized
+          icon: <GaugeIcon className="mr-2 h-5 w-5" />,
+          label: "Dashboard",
+        },
+        {
+          to: TEACHER_PROFIL,
+          icon: <UserIcon className="mr-2 h-5 w-5" />,
+          label: "Profil",
+        },
+      ],
+    },
+    {
+      title: "Content Management",
+      items: [
+        {
+          to: TEACHER_COURSES,
+          icon: <BookOpenIcon className="mr-2 h-5 w-5" />,
+          label: "Courses",
+        },
+        {
+          to: TEACHER_ACTIVITIES,
+          icon: <ActivityIcon className="mr-2 h-5 w-5" />,
+          label: "Activities",
+        },
+        {
+          to: TEACHER_BLOGS,
+          icon: <FileTextIcon className="mr-2 h-5 w-5" />,
+          label: "Blog",
+        },
+        {
+          to: TEACHER_ASSIGNMENTS,
+          icon: <ClipboardListIcon className="mr-2 h-5 w-5" />,
+          label: "Assignments Students",
+        },
+      ],
+    },
+  ];
+
   return (
     <div className={cn("pb-12", className)}>
       <div>
-        <div className="px-3 py-2">
-          <h2 className="mb-2 px-4 text-lg font-semibold tracking-tight">
-            Teacher Administration
-          </h2>
-          <div className="space-y-1">
-            <Link to={TEACHER_DASHBOARD} className="flex items-center text-gray-700 dark:text-gray-200 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium transition-colors">
-              <Button variant="secondary" className="w-full justify-start">
-                <CirclePlay className="mr-2 h-4 w-4" />
-                Dashboard
-              </Button>
-            </Link>
-            <Button variant="ghost" className="w-full justify-start">
-              <Grid className="mr-2 h-4 w-4" />
-              Profile
-            </Button>
+        {sidebarSections.map((section) => (
+          <div className="px-3 py-2" key={section.title}>
+            <h2 className="mb-2 px-4 text-lg font-semibold tracking-tight">
+              {section.title}
+            </h2>
+            <div className="space-y-1">
+              {section.items.map((item) => {
+                const isActive = currentPath === item.to;
+                return (
+                  <Link to={item.to} key={item.to} aria-label={item.label}>
+                    <Button
+                      variant={isActive ? "secondary" : "ghost"}
+                      className="w-full justify-start"
+                      aria-current={isActive ? "page" : undefined}
+                    >
+                      {item.icon}
+                      {item.label}
+                    </Button>
+                  </Link>
+                );
+              })}
+            </div>
           </div>
-        </div>
-        <div className="px-3 py-2">
-          <h2 className="mb-2 px-4 text-lg font-semibold tracking-tight">
-            Content Management
-          </h2>
-          <div className="space-y-1">
-            <Button variant="ghost" className="w-full justify-start">
-              <Bell className="mr-2 h-4 w-4" />
-              Notification
-            </Button>
-            <Button variant="ghost" className="w-full justify-start">
-              <MessageCircle className="mr-2 h-4 w-4" />
-              Chat
-            </Button>
-            <Button variant="ghost" className="w-full justify-start">
-              <User className="mr-2 h-4 w-4" />
-              Courses
-            </Button>
-            <Button variant="ghost" className="w-full justify-start">
-              <BookOpen className="mr-2 h-4 w-4" />
-              Library
-            </Button>
-            <Button variant="ghost" className="w-full justify-start">
-              <ActivitySquare className="mr-2 h-4 w-4" />
-              Activities
-            </Button>
-            <Button variant="ghost" className="w-full justify-start">
-              <Newspaper className="mr-2 h-4 w-4" />
-              Blog
-            </Button>
-            <Button variant="ghost" className="w-full justify-start">
-              <ClipboardList className="mr-2 h-4 w-4" />
-              Assignments
-            </Button>
-          </div>
-        </div>
+        ))}
       </div>
     </div>
-  )
+  );
 }

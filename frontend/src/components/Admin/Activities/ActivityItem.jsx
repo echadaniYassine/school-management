@@ -10,9 +10,12 @@ const getStatusBadgeClass = (status) => {
     const statusStyles = {
         active: "bg-green-100 text-green-800 border-green-200 hover:bg-green-100",
         draft: "bg-yellow-100 text-yellow-800 border-yellow-200 hover:bg-yellow-100",
-        cancelled: "bg-red-100 text-red-800 border-red-200 hover:bg-red-100"
+        cancelled: "bg-red-100 text-red-800 border-red-200 hover:bg-red-100",
+        default: "bg-gray-100 text-gray-800 border-gray-200 hover:bg-gray-100" // Added a default
     };
-    return statusStyles[status] || statusStyles.draft;
+    // Ensure status is a string, convert to lowercase for matching, and fallback
+    const key = typeof status === 'string' ? status.toLowerCase() : 'default';
+    return statusStyles[key] || statusStyles.default;
 };
 
 const getCategoryBadgeClass = (category) => {
@@ -20,43 +23,67 @@ const getCategoryBadgeClass = (category) => {
         academic: "bg-blue-100 text-blue-800 border-blue-200 hover:bg-blue-100",
         sports: "bg-orange-100 text-orange-800 border-orange-200 hover:bg-orange-100",
         cultural: "bg-purple-100 text-purple-800 border-purple-200 hover:bg-purple-100",
-        social: "bg-pink-100 text-pink-800 border-pink-200 hover:bg-pink-100"
+        social: "bg-pink-100 text-pink-800 border-pink-200 hover:bg-pink-100",
+        default: "bg-gray-100 text-gray-800 border-gray-200 hover:bg-gray-100" // Added a default
     };
-    return categoryStyles[category] || categoryStyles.academic;
+    // Ensure category is a string, convert to lowercase for matching, and fallback
+    const key = typeof category === 'string' ? category.toLowerCase() : 'default';
+    return categoryStyles[key] || categoryStyles.default;
 };
 
 export default function ActivityItem({ activity, onEdit, onDelete }) {
+    // **DEBUGGING: Log the activity object to see its structure**
+    // console.log("ActivityItem received activity:", JSON.stringify(activity, null, 2));
+
+    if (!activity) {
+        // This case should ideally be caught by ActivitiesList, but good to have
+        return <Card><CardContent>Activity data is missing.</CardContent></Card>;
+    }
+
+    // Helper to safely format properties like status and category for display
+    const formatPropertyDisplay = (value) => {
+        if (typeof value === 'string' && value.length > 0) {
+            return value.charAt(0).toUpperCase() + value.slice(1);
+        }
+        return 'N/A'; // Fallback for undefined or empty string
+    };
+
+    const displayStatus = formatPropertyDisplay(activity.status);
+    const displayCategory = formatPropertyDisplay(activity.category);
+
     return (
         <Card className="hover:shadow-md transition-shadow">
             <CardContent className="p-6">
-                <div className="flex justify-between items-start mb-4 flex-col sm:flex-row"> {/* Adjusted for better responsiveness */}
+                <div className="flex justify-between items-start mb-4 flex-col sm:flex-row">
                     <div className="flex-1 mb-4 sm:mb-0">
                         <div className="flex items-center gap-3 mb-2 flex-wrap">
-                            <h3 className="text-lg font-semibold">{activity.title}</h3>
+                            <h3 className="text-lg font-semibold">{activity.title || 'Untitled Activity'}</h3>
+                            {/* Use the safely formatted displayStatus and ensure activity.status is passed to badge class func */}
                             <Badge className={getStatusBadgeClass(activity.status)}>
-                                {activity.status.charAt(0).toUpperCase() + activity.status.slice(1)}
+                                {displayStatus}
                             </Badge>
+                            {/* Use the safely formatted displayCategory and ensure activity.category is passed to badge class func */}
                             <Badge className={getCategoryBadgeClass(activity.category)}>
-                                {activity.category.charAt(0).toUpperCase() + activity.category.slice(1)}
+                                {displayCategory}
                             </Badge>
                         </div>
-                        <p className="text-muted-foreground mb-3">{activity.description}</p>
+                        <p className="text-muted-foreground mb-3">{activity.description || 'No description available.'}</p>
                         <div className="flex flex-col sm:flex-row sm:items-center gap-x-6 gap-y-2 text-sm text-muted-foreground">
                             <div className="flex items-center gap-1">
                                 <Calendar className="h-4 w-4" />
-                                {new Date(activity.date).toLocaleDateString()}
+                                {activity.date ? new Date(activity.date).toLocaleDateString() : 'No date'}
                             </div>
                             <div className="flex items-center gap-1">
                                 <MapPin className="h-4 w-4" />
-                                {activity.location}
+                                {activity.location || 'No location'}
                             </div>
                             <div className="flex items-center gap-1">
                                 <Users className="h-4 w-4" />
-                                Max {activity.capacity} participants
+                                Max {typeof activity.capacity === 'number' ? activity.capacity : 'N/A'} participants
                             </div>
                         </div>
                     </div>
-                    <div className="flex items-center gap-2 sm:ml-4"> {/* Adjusted margin */}
+                    <div className="flex items-center gap-2 sm:ml-4">
                         <Button
                             variant="outline"
                             size="sm"
@@ -78,7 +105,7 @@ export default function ActivityItem({ activity, onEdit, onDelete }) {
                                     <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                                     <AlertDialogDescription>
                                         This action cannot be undone. This will permanently delete the activity
-                                        "{activity.title}" and remove all associated data.
+                                        "{activity.title || 'this activity'}" and remove all associated data.
                                     </AlertDialogDescription>
                                 </AlertDialogHeader>
                                 <AlertDialogFooter>

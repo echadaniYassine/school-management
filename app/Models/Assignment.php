@@ -13,18 +13,18 @@ class Assignment extends Model
         'title',
         'description',
         'course',
-        // 'course_id',
+        'course_id',
         'due_date',
         'status',
         'assigned_to_description',
-        // 'assigned_to_ids',
+         'assigned_to_ids',
         'instructions_file_path',
         'created_by_id',
     ];
 
     protected $casts = [
         'due_date' => 'date:Y-m-d',
-        // 'assigned_to_ids' => 'array', // If you use a JSON field for IDs
+        'assigned_to_ids' => 'array', // If you use a JSON field for IDs
     ];
 
     public function creator()
