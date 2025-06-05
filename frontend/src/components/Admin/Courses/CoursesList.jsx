@@ -1,5 +1,4 @@
 // src/components/admin/courses/CoursesList.jsx
-import React from 'react';
 import CourseItem from './CourseItem';
 
 export default function CoursesList({ courses, onEditCourse, onDeleteCourse, onManageCourseContent }) {

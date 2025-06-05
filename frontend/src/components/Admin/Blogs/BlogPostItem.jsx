@@ -1,10 +1,9 @@
 // src/components/admin/blogs/BlogPostItem.jsx
-import React from 'react';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"; // Added CardFooter, CardHeader, CardTitle for more structure
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
-import { Edit2, Trash2, Eye, CalendarDays, User, Tag } from 'lucide-react';
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"; // Added CardFooter, CardHeader, CardTitle for more structure
+import { CalendarDays, Edit2, Eye, Tag, Trash2, User } from 'lucide-react';
 
 const getStatusBadgeClass = (status) => {
     const statusStyles = {

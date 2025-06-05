@@ -1,5 +1,4 @@
 // src/components/admin/assignments/AssignmentsList.jsx
-import React from 'react';
 import AssignmentItem from './AssignmentItem';
 
 export default function AssignmentsList({

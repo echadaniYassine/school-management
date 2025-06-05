@@ -1,18 +1,15 @@
 import { cn } from "@/lib/utils";
 import {
   ActivityIcon,
-  BellIcon,
   BookOpenIcon,
   ClipboardListIcon,
   FileTextIcon,
   GaugeIcon,
-  SettingsIcon,
-  UserIcon,
-  UsersIcon
+  UserIcon
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "../../components/ui/button.js";
-import { ADMIN_ASSIGNMENTS, TEACHER_ACTIVITIES, TEACHER_ASSIGNMENTS, TEACHER_BLOGS, TEACHER_COURSES, TEACHER_DASHBOARD, TEACHER_NOTIFICATIONS, TEACHER_PROFIL } from "../../router/index.jsx";
+import { TEACHER_ACTIVITIES, TEACHER_ASSIGNMENTS, TEACHER_BLOGS, TEACHER_COURSES, TEACHER_DASHBOARD, TEACHER_PROFILE } from "../../router/index.jsx";
 
 // NO LONGER DEFINED HERE AT THE TOP LEVEL
 
@@ -31,7 +28,7 @@ export function TeacherAdministrationSideBar({ className }) {
           label: "Dashboard",
         },
         {
-          to: TEACHER_PROFIL,
+          to: TEACHER_PROFILE,
           icon: <UserIcon className="mr-2 h-5 w-5" />,
           label: "Profil",
         },
@@ -43,7 +40,7 @@ export function TeacherAdministrationSideBar({ className }) {
         {
           to: TEACHER_COURSES,
           icon: <BookOpenIcon className="mr-2 h-5 w-5" />,
-          label: "Courses",
+          label: "Library",
         },
         {
           to: TEACHER_ACTIVITIES,

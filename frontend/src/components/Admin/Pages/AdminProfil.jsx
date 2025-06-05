@@ -1,15 +1,15 @@
-import { useUserContext } from "../../../context/StudentContext"; // Ensure this context provides ADMIN user data
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"; // For profile picture
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
+  CardDescription,
   CardHeader,
   CardTitle,
-  CardDescription,
 } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"; // For profile picture
+import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { KeyRound, UserCog } from "lucide-react"; // Example icons
+import { useUserContext } from "../../../context/StudentContext"; // Ensure this context provides ADMIN user data
 
 function SkeletonRow() {
   return (

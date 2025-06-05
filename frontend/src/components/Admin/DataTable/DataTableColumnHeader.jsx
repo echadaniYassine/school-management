@@ -1,10 +1,10 @@
 
 import {
   ArrowDownIcon, ArrowUpDownIcon, ArrowUpIcon, EyeOffIcon
+} from "lucide-react";
 
-} from "lucide-react"
-
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils";
+import { Button } from "../../ui/button.jsx";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,15 +12,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from "../../ui/dropdown-menu.jsx";
-import {Button} from "../../ui/button.jsx";
 
 
 
 export function DataTableColumnHeader({
-                                                       column,
-                                                       title,
-                                                       className,
-                                                     }) {
+  column,
+  title,
+  className,
+}) {
   if (!column.getCanSort()) {
     return <div className={cn(className)}>{title}</div>
   }

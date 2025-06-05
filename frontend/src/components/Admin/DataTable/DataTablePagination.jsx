@@ -1,6 +1,6 @@
-import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "../../ui/select.jsx";
-import {Button} from "../../ui/button.jsx";
-import {ChevronFirstIcon, ChevronLastIcon, ChevronLeftIcon, ChevronRightIcon} from "lucide-react";
+import { ChevronFirstIcon, ChevronLastIcon, ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
+import { Button } from "../../ui/button.jsx";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../ui/select.jsx";
 
 export function DataTablePagination({table}) {
   return (

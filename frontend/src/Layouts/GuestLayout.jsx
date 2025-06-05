@@ -1,8 +1,8 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import Header from "../components/Header";
-import { STUDENT_DASHBOARD } from "../router";
 import { useUserContext } from "../context/StudentContext";
+import { STUDENT_DASHBOARD } from "../router";
 
 export default function GuestLayout() {
     const navigate = useNavigate();

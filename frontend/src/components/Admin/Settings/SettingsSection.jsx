@@ -1,7 +1,6 @@
 // src/components/admin/settings/SettingsSection.jsx
-import React from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function SettingsSection({ title, description, children, onSave, isSaving, hasChanges }) {
     return (

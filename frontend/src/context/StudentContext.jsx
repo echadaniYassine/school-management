@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useState } from 'react';
 import { UserApi } from '../Services/Api/UserApi';
 
 export const StudentStateContext = createContext({

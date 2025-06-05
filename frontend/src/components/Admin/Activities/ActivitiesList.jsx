@@ -1,8 +1,7 @@
 // src/components/admin/Activities/ActivitiesList.jsx
-import React from 'react';
 // Corrected import path for ActivityItem:
 // Assuming ActivityItem.jsx is in src/components/admin/activities/
-import ActivityItem from '../activities/ActivityItem'; 
+import ActivityItem from '../activities/ActivityItem';
 
 export default function ActivitiesList({ activities, onEditActivity, onDeleteActivity }) {
     if (!activities || activities.length === 0) { // Added a check for !activities

@@ -1,12 +1,12 @@
 // src/components/admin/notifications/AdminManageNotifications.jsx
-import React, { useState, useEffect, useCallback } from 'react';
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+import { AlertCircle } from 'lucide-react';
+import { useCallback, useEffect, useState } from 'react';
+import NotificationApi from '../../../Services/Api/Admin/NotificationApi'; // Adjust path if your Api folder is elsewhere
 import SendNotificationForm from '../Forms/SendNotificationForm'; // Ensure this component exists and works
 import NotificationsLog from '../Notifications/NotificationLog';
-import NotificationApi from '../../../Services/Api/Admin/NotificationApi'; // Adjust path if your Api folder is elsewhere
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { AlertCircle } from 'lucide-react';
 
 // A simple mock for SendNotificationForm if you don't have it yet, for testing purposes
 const MockSendNotificationForm = ({ onSendNotification, isSending }) => {

@@ -1,23 +1,33 @@
-// src/components/admin/assignments/AdminViewAssignments.jsx
-import React, { useState, useEffect, useCallback } from 'react';
+// src/components/teacher/assignments/TeacherAssignment.jsx
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Plus, AlertCircle, Search, Download } from 'lucide-react'; // Added Download icon
+import { AlertCircle, Plus, Search } from 'lucide-react'; // Removed Download icon for now, add if needed by AssignmentsList
+import { useCallback, useEffect, useState } from 'react';
 
-import AssignmentsList from '../Admin/Assignments/AssignmentsList'; // Adjusted path based on your provided structure
-import UpsertAssignmentForm from '../Admin/Forms/UpsertAssignmentForm'; // You need to create this
-import AssignmentApi from '../../Services/Api/Admin/Assignment'; // Adjust path if necessary
+// Adjust the import path for AssignmentApi based on your project structure
+// Assuming AssignmentApi.js is at 'src/Api/AssignmentApi.js'
+// and this component is at 'src/components/teacher/assignments/TeacherAssignment.jsx'
+// The import path would be:
+import AssignmentApi from '../../Services/Api/Admin/Assignment'; // Example: Adjust if AssignmentApi is in src/Api
+// Or if it's in your services folder:
+// import AssignmentApi from '../../Services/Api/Teacher/Assignment'; // if you have role-specific API files
+// For this fix, we'll assume a general AssignmentApi that handles roles internally.
 
-// Constants for filters - ideally, courses might be fetched too
+// Import sub-components (ensure paths are correct)
+// These might need to be teacher-specific or generic enough
+import AssignmentsList from '../Admin/Assignments/AssignmentsList'; // Or a teacher-specific list if needed
+import UpsertAssignmentForm from '../Admin/Forms/UpsertAssignmentForm'; // Or a teacher-specific form
+
+// Constants for filters
 const COURSE_OPTIONS = ["All Courses", "Mathematics 101", "World History", "Physics 201", "English Literature", "Computer Science Basics"]; // Example
 const STATUS_OPTIONS = ["All Statuses", "draft", "published", "archived", "grading", "graded"];
 
 
-// Loading Skeleton for Assignments List
+// Loading Skeleton for Assignments List (remains the same)
 const AssignmentsLoadingSkeleton = () => (
     <div className="space-y-4">
         {[...Array(3)].map((_, i) => (
@@ -41,11 +51,11 @@ const AssignmentsLoadingSkeleton = () => (
     </div>
 );
 
-
-export default function TeacherAssignment() {
+// Renaming for clarity if this is specifically for teachers
+export default function TeacherManageAssignments() { // Renamed from TeacherAssignment
     const [assignments, setAssignments] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
-    const [isSending, setIsSending] = useState(false); // For form submissions
+    const [isSending, setIsSending] = useState(false);
     const [error, setError] = useState(null);
     const [pagination, setPagination] = useState({ currentPage: 1, lastPage: 1, total: 0, perPage: 10 });
 
@@ -55,6 +65,9 @@ export default function TeacherAssignment() {
 
     const [isUpsertModalOpen, setIsUpsertModalOpen] = useState(false);
     const [currentAssignmentForUpsert, setCurrentAssignmentForUpsert] = useState(null);
+
+    // **** THIS IS THE CRITICAL CHANGE FOR ROLE ****
+    const userRole = 'teacher'; // Hardcode the role for this component
 
     const fetchAssignments = useCallback(async (page = 1) => {
         setIsLoading(true);
@@ -67,126 +80,144 @@ export default function TeacherAssignment() {
                 course: selectedCourse === COURSE_OPTIONS[0] ? '' : selectedCourse,
                 status: selectedStatus === STATUS_OPTIONS[0] ? '' : selectedStatus,
             };
-            const response = await AssignmentApi.getAll(params);
+            // Pass userRole to AssignmentApi.getAll
+            const response = await AssignmentApi.getAll(userRole, params);
             setAssignments(response.data.data || []);
             setPagination(prev => ({
                 ...prev,
                 currentPage: response.data.meta.current_page,
                 lastPage: response.data.meta.last_page,
                 total: response.data.meta.total,
+                perPage: response.data.meta.per_page, // Ensure perPage is updated from meta if available
             }));
         } catch (err) {
-            console.error("Failed to fetch assignments:", err);
+            console.error(`Failed to fetch assignments for role ${userRole}:`, err);
             setError(err.response?.data?.message || "Failed to load assignments.");
             setAssignments([]);
         } finally {
             setIsLoading(false);
         }
-    }, [searchTerm, selectedCourse, selectedStatus, pagination.perPage]);
+    }, [userRole, searchTerm, selectedCourse, selectedStatus, pagination.perPage]); // Added userRole to dependencies (though constant)
 
     useEffect(() => {
-        fetchAssignments(1); // Fetch on initial load or when filters change
+        fetchAssignments(1);
     }, [fetchAssignments]);
 
 
     const handleOpenCreateModal = () => {
         setCurrentAssignmentForUpsert(null);
-        setError(null);
+        setError(null); // Clear previous errors when opening modal
         setIsUpsertModalOpen(true);
     };
 
     const handleOpenEditModal = (assignment) => {
         setCurrentAssignmentForUpsert(assignment);
-        setError(null);
+        setError(null); // Clear previous errors
         setIsUpsertModalOpen(true);
     };
 
     const handleCloseUpsertModal = () => {
         setIsUpsertModalOpen(false);
         setCurrentAssignmentForUpsert(null);
+        // It's often good to clear form-specific errors when closing the modal manually
+        // If error state is shared, ensure it's contextually cleared or handled.
     };
 
-    const handleSaveAssignment = async (formData) => { // Expects FormData from UpsertAssignmentForm
+    const handleSaveAssignment = async (formData) => {
         setError(null);
         setIsSending(true);
         try {
             if (currentAssignmentForUpsert && currentAssignmentForUpsert.id) {
-                await AssignmentApi.update(currentAssignmentForUpsert.id, formData);
-                // TODO: Show success toast "Assignment updated"
+                // Pass userRole to AssignmentApi.update
+                await AssignmentApi.update(currentAssignmentForUpsert.id, formData, userRole);
             } else {
-                await AssignmentApi.create(formData);
-                // TODO: Show success toast "Assignment created"
+                // Pass userRole to AssignmentApi.create
+                await AssignmentApi.create(formData, userRole);
             }
             handleCloseUpsertModal();
-            fetchAssignments(currentAssignmentForUpsert ? pagination.currentPage : 1); // Refetch
+            fetchAssignments(currentAssignmentForUpsert ? pagination.currentPage : 1);
         } catch (err) {
-            console.error("Failed to save assignment:", err);
+            console.error(`Failed to save assignment for role ${userRole}:`, err);
             let errorMessage = "Failed to save assignment.";
             if (err.response?.data?.errors) {
                 errorMessage = Object.values(err.response.data.errors).flat().join(' ');
             } else if (err.response?.data?.message) {
                 errorMessage = err.response.data.message;
             }
-            setError(errorMessage); // Display error, ideally within the modal
+            setError(errorMessage); // This error will be shown in the modal if formError prop is used, or globally
         } finally {
             setIsSending(false);
         }
     };
 
     const handleDeleteAssignment = async (assignmentId) => {
-        // Optionally add a confirmation dialog here
         setError(null);
+        // Optional: Add confirmation dialog
+        // if (!window.confirm("Are you sure you want to delete this assignment?")) return;
         try {
-            await AssignmentApi.delete(assignmentId);
-            // TODO: Show success toast "Assignment deleted"
-            fetchAssignments(pagination.currentPage); // Refetch
+            // Pass userRole to AssignmentApi.delete
+            await AssignmentApi.delete(assignmentId, userRole);
+            fetchAssignments(pagination.currentPage); // Refetch, consider if page becomes empty
         } catch (err) {
-            console.error("Failed to delete assignment:", err);
+            console.error(`Failed to delete assignment for role ${userRole}:`, err);
             setError(err.response?.data?.message || "Failed to delete assignment.");
         }
     };
 
     const handleDownloadInstructions = async (assignmentId, assignmentTitle) => {
+        setError(null); // Clear previous general errors
         try {
-            const response = await AssignmentApi.downloadInstructions(assignmentId);
+            // Pass userRole to AssignmentApi.downloadInstructions
+            const response = await AssignmentApi.downloadInstructions(assignmentId, userRole);
             const blob = new Blob([response.data], { type: response.headers['content-type'] });
             const link = document.createElement('a');
             link.href = window.URL.createObjectURL(blob);
-            // Try to get filename from content-disposition header, fallback to constructing one
+            
             const contentDisposition = response.headers['content-disposition'];
-            let filename = `${assignmentTitle}-instructions.unknown`;
+            let filename = `${assignmentTitle || 'assignment'}-instructions.file`; // Default filename
             if (contentDisposition) {
                 const filenameMatch = contentDisposition.match(/filename="?(.+)"?/i);
                 if (filenameMatch && filenameMatch.length === 2)
                     filename = filenameMatch[1];
             }
             link.download = filename;
+            document.body.appendChild(link); // Required for Firefox
             link.click();
+            document.body.removeChild(link); // Clean up
             window.URL.revokeObjectURL(link.href);
         } catch (err) {
-            console.error("Failed to download instructions:", err);
-            setError(err.response?.data?.message || "Could not download file.");
+            console.error(`Failed to download instructions for role ${userRole}:`, err);
+            let downloadError = "Could not download file.";
+            if (err.response && err.response.data instanceof Blob) {
+                // Try to read error message from blob if it's JSON
+                try {
+                    const errorJson = JSON.parse(await err.response.data.text());
+                    downloadError = errorJson.message || downloadError;
+                } catch (e) { /* Ignore parsing error, stick to default */ }
+            } else if (err.response?.data?.message) {
+                downloadError = err.response.data.message;
+            }
+            setError(downloadError);
         }
     };
 
     const handleViewSubmissions = (assignmentId) => {
-        console.log("View submissions for assignment ID:", assignmentId);
+        console.log(`View submissions for assignment ID: ${assignmentId} (as ${userRole})`);
+        // Navigate or open modal for submissions, potentially passing userRole if needed for that view
         alert(`Implement view submissions for assignment ID: ${assignmentId}. This might navigate to a new page or open a detailed modal.`);
-        // Example navigation: history.push(`/admin/assignments/${assignmentId}/submissions`);
     };
 
     const handlePageChange = (newPage) => {
-        if (newPage >= 1 && newPage <= pagination.lastPage) {
+        if (newPage >= 1 && newPage <= pagination.lastPage && newPage !== pagination.currentPage) {
             fetchAssignments(newPage);
         }
     };
-
 
     return (
         <div className="space-y-6 p-4 md:p-6">
             <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
-                    <CardTitle className="text-2xl font-bold">Manage Assignments</CardTitle>
+                    <CardTitle className="text-2xl font-bold">Manage Assignments ({userRole === 'teacher' ? 'Teacher View' : 'Admin View'})</CardTitle>
                     <Button className="flex items-center gap-2" onClick={handleOpenCreateModal}>
                         <Plus className="h-4 w-4" />
                         New Assignment
@@ -194,10 +225,9 @@ export default function TeacherAssignment() {
                 </CardHeader>
                 <CardContent>
                     <p className="text-muted-foreground mb-6">
-                        Create, view, and manage all academic assignments.
+                        Create, view, and manage all academic assignments for your courses.
                     </p>
 
-                    {/* Filters Section */}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 items-end">
                         <div className="relative md:col-span-1">
                             <Search className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -230,7 +260,7 @@ export default function TeacherAssignment() {
                         </Select>
                     </div>
 
-                    {error && !isUpsertModalOpen && (
+                    {error && !isUpsertModalOpen && ( // Show general errors if modal is not open or error is not for modal
                         <Alert variant="destructive" className="mb-4">
                             <AlertCircle className="h-4 w-4" />
                             <AlertTitle>Error</AlertTitle>
@@ -252,13 +282,13 @@ export default function TeacherAssignment() {
                         <AssignmentsList
                             assignments={assignments}
                             onViewSubmissions={handleViewSubmissions}
-                            onEditAssignment={handleOpenEditModal} // Pass edit handler
-                            onDeleteAssignment={handleDeleteAssignment} // Pass delete handler
-                            onDownloadInstructions={handleDownloadInstructions} // Pass download handler
+                            onEditAssignment={handleOpenEditModal}
+                            onDeleteAssignment={handleDeleteAssignment}
+                            onDownloadInstructions={handleDownloadInstructions}
+                            // Pass userRole if AssignmentsList needs it for any internal logic, though API calls are handled here
                         />
                     ) : null}
 
-                    {/* Pagination Controls */}
                     {!isLoading && !error && assignments.length > 0 && pagination.lastPage > 1 && (
                         <div className="flex justify-center items-center space-x-2 mt-8">
                             <Button
@@ -280,7 +310,6 @@ export default function TeacherAssignment() {
                             </Button>
                         </div>
                     )}
-
                 </CardContent>
             </Card>
 
@@ -288,10 +317,10 @@ export default function TeacherAssignment() {
                 <UpsertAssignmentForm
                     isOpen={isUpsertModalOpen}
                     onOpenChange={(isOpen) => {
-                        if (!isOpen) handleCloseUpsertModal(); // Your function to set isUpsertModalOpen(false) and reset currentAssignment
-                        else setIsUpsertModalOpen(true);
+                        if (!isOpen) handleCloseUpsertModal();
+                        // else setIsUpsertModalOpen(true); // Not strictly needed if isOpen is already true
                     }}
-                    onSubmit={handleSaveAssignment} // Your function that calls AssignmentApi.create/update with FormData
+                    onSubmit={handleSaveAssignment}
                     initialData={currentAssignmentForUpsert}
                     dialogTitle={currentAssignmentForUpsert ? "Edit Assignment" : "Create New Assignment"}
                     dialogDescription={
@@ -299,9 +328,9 @@ export default function TeacherAssignment() {
                             ? "Make changes to the assignment details."
                             : "Fill in the details to create a new assignment."
                     }
-                    submitButtonText={currentAssignmentForUpsert ? "Update Assignment" : "Create Assignment"}
-                    isSending={isSending} // Your state variable for API call in progress
-                    formError={error} // Your state variable for API errors (to show in the modal)
+                    submitButtonText={isSending ? (currentAssignmentForUpsert ? "Updating..." : "Creating...") : (currentAssignmentForUpsert ? "Update Assignment" : "Create Assignment")}
+                    isSending={isSending}
+                    formError={isUpsertModalOpen ? error : null} // Pass error to form only when modal is open
                 />
             )}
         </div>

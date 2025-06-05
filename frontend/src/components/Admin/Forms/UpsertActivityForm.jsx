@@ -1,11 +1,11 @@
 // src/components/admin/activities/UpsertActivityForm.jsx
-import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { useEffect, useState } from 'react';
 
 const DEFAULT_FORM_DATA = {
     title: '',
@@ -21,7 +21,7 @@ export default function UpsertActivityForm({
     isOpen,
     onOpenChange,
     onSubmit,
-    initialData, 
+    initialData,
     dialogTitle,
     dialogDescription,
     submitButtonText
@@ -32,12 +32,12 @@ export default function UpsertActivityForm({
         if (initialData) {
             setFormData({
                 ...initialData,
-                capacity: initialData.capacity?.toString() || '', 
+                capacity: initialData.capacity?.toString() || '',
             });
         } else {
             setFormData(DEFAULT_FORM_DATA);
         }
-    }, [initialData, isOpen]); 
+    }, [initialData, isOpen]);
 
     const handleChange = (e) => {
         const { id, value } = e.target;

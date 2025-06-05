@@ -1,14 +1,17 @@
-import { axiosClient } from "../../../Api/axios";
+// src/Api/AssignmentApi.js (or your path, e.g., src/Services/Api/Admin/Assignment.js)
+import { axiosClient } from "../../../Api/axios"; // Adjust path as needed
 
 const getPrefix = (role) => {
   if (role === 'student') return '/student';
   if (role === 'teacher') return '/teacher';
-  return '/admin';
+  return '/admin'; // Defaults to /admin
 };
 
 const AssignmentApi = {
-  getAll: async (params = {}) => {
-    return await axiosClient.get('assignments', { params });
+  // Modified getAll to accept role as the first parameter
+  getAll: async (role = 'admin', params = {}) => {
+    const prefix = getPrefix(role);
+    return await axiosClient.get(`${prefix}/assignments`, { params });
   },
 
   getById: async (id, role = 'admin') => {

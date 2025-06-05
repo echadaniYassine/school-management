@@ -1,4 +1,15 @@
 import { cn } from "@/lib/utils";
+import {
+  ActivityIcon,
+  BookOpenIcon,
+  ClipboardListIcon,
+  FileTextIcon,
+  GaugeIcon,
+  SettingsIcon,
+  UserIcon,
+  UsersIcon
+} from "lucide-react";
+import { Link, useLocation } from "react-router-dom";
 import { Button } from "../../components/ui/button.js";
 import {
   ADMIN_ACTIVITIES,
@@ -9,24 +20,9 @@ import {
   ADMIN_MANAGE_PARENTS,
   ADMIN_MANAGE_STUDENTS,
   ADMIN_MANAGE_TEACHERS,
-  ADMIN_NOTIFICATION,
-  ADMIN_PROFIL,
-  ADMIN_SYSTEM_SETTING,
+  ADMIN_PROFILE,
+  ADMIN_SYSTEM_SETTING
 } from "../../router/index.jsx";
-import { Link, useLocation } from "react-router-dom";
-import {
-  GaugeIcon,
-  UserIcon,
-  BellIcon,
-  MessageSquareIcon,
-  BookOpenIcon,
-  ActivityIcon,
-  FileTextIcon,
-  ClipboardListIcon,
-  UsersIcon,
-  SettingsIcon,
-  BarChart2Icon,
-} from "lucide-react";
 
 // NO LONGER DEFINED HERE AT THE TOP LEVEL
 
@@ -45,7 +41,7 @@ export function AdminAdministrationSideBar({ className }) {
           label: "Dashboard",
         },
         {
-          to: ADMIN_PROFIL,
+          to: ADMIN_PROFILE,
           icon: <UserIcon className="mr-2 h-5 w-5" />,
           label: "Profil",
         },
@@ -57,7 +53,7 @@ export function AdminAdministrationSideBar({ className }) {
         {
           to: ADMIN_COURSES,
           icon: <BookOpenIcon className="mr-2 h-5 w-5" />,
-          label: "Courses",
+          label: "Library",
         },
         {
           to: ADMIN_ACTIVITIES,

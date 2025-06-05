@@ -1,14 +1,14 @@
 // src/components/admin/courses/AdminManageCourses.jsx
-import React, { useState, useEffect, useCallback } from 'react';
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Plus } from 'lucide-react';
-import { toast } from 'sonner';
+import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Plus } from 'lucide-react';
+import { useCallback, useEffect, useState } from 'react';
+import { toast } from 'sonner';
 
+import CoursesApi from '../../Services/Api/Admin/Courses.js'; // Adjust path as needed
 import CoursesList from '../Admin/Courses/CoursesList'; // Adjust path as needed
 import UpsertCourseForm from '../Admin/Forms/UpsertCourseForm'; // Adjust path as needed
-import CoursesApi from '../../Services/Api/Admin/Courses.js'; // Adjust path as needed
 
 // This component could be named 'ManageCoursesPage' or similar if it's generic.
 // If this specific file/component instance is ALWAYS for teachers, then 'TeacherCourses' is fine.

@@ -2,16 +2,16 @@ import {
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
-  getSortedRowModel,
   getPaginationRowModel,
+  getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table"
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { useState } from "react"
 import { Input } from "../../ui/input.jsx"
-import { DataTableViewOptions } from "./DataTableViewOptions.jsx"
 import { DataTablePagination } from "./DataTablePagination.jsx"
+import { DataTableViewOptions } from "./DataTableViewOptions.jsx"
 
 export function DataTable({ columns, data, loading }) {
   const [sorting, setSorting] = useState([])

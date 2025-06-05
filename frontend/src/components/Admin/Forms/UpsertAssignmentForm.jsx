@@ -1,25 +1,22 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"; // For displaying errors
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
     Dialog,
     DialogContent,
-    DialogHeader,
-    DialogTitle,
     DialogDescription,
     DialogFooter,
-    // DialogClose, // We'll use onOpenChange for closing
+    DialogHeader,
+    DialogTitle,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"; // For displaying errors
-import { CalendarIcon, UploadCloud, XCircle, AlertCircle, Loader2 } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
 import { format, parseISO } from "date-fns"; // parseISO for initialData
-import { cn } from "@/lib/utils";
+import { AlertCircle, Loader2, UploadCloud } from "lucide-react";
+import { useEffect, useRef, useState } from 'react';
+// import { cn } from "@/lib/utils";
 
 
 // These should ideally match or be derived from backend/shared constants
@@ -43,14 +40,17 @@ export default function UpsertAssignmentForm({
     const [dueDate, setDueDate] = useState(null); // Date object
     const [status, setStatus] = useState(STATUS_OPTIONS[0]);
     const [assignedToDescription, setAssignedToDescription] = useState('');
-    
+
     const [instructionsFile, setInstructionsFile] = useState(null); // File object for new upload
     const [existingFileName, setExistingFileName] = useState(''); // Display name of current file
     const [removeInstructionsFile, setRemoveInstructionsFile] = useState(false);
-    
+
     const [localError, setLocalError] = useState(''); // For simple client-side validation
 
     const fileInputRef = useRef(null);
+    // Renamed to avoid conflict with Dialog's isOpen prop
+    // const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+
 
     useEffect(() => {
         if (isOpen && initialData) {
@@ -126,7 +126,7 @@ export default function UpsertAssignmentForm({
         if (removeInstructionsFile && initialData && initialData.hasInstructionsFile) {
             formData.append('instructions_file_remove', 'true');
         }
-        
+
         onSubmit(formData); // Pass FormData to parent
     };
 
@@ -160,7 +160,7 @@ export default function UpsertAssignmentForm({
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <Label htmlFor="course">Course</Label>
-                             <Select value={course} onValueChange={setCourse}>
+                            <Select value={course} onValueChange={setCourse}>
                                 <SelectTrigger id="course-select">
                                     <SelectValue placeholder="Select a course" />
                                 </SelectTrigger>
@@ -172,35 +172,26 @@ export default function UpsertAssignmentForm({
                             </Select>
                             {course === "Other" && <Input className="mt-2" placeholder="Specify course name" onChange={e => setCourse(e.target.value)} />}
                         </div>
-                         <div>
+
+                        <div>
                             <Label htmlFor="dueDate">Due Date <span className="text-red-500">*</span></Label>
-                            <Popover>
-                                <PopoverTrigger asChild>
-                                    <Button
-                                        id="dueDate"
-                                        variant={"outline"}
-                                        className={cn(
-                                            "w-full justify-start text-left font-normal",
-                                            !dueDate && "text-muted-foreground"
-                                        )}
-                                    >
-                                        <CalendarIcon className="mr-2 h-4 w-4" />
-                                        {dueDate ? format(dueDate, "PPP") : <span>Pick a date</span>}
-                                    </Button>
-                                </PopoverTrigger>
-                                <PopoverContent className="w-auto p-0">
-                                    <Calendar
-                                        mode="single"
-                                        selected={dueDate}
-                                        onSelect={setDueDate}
-                                        initialFocus
-                                        disabled={(date) => date < new Date(new Date().setDate(new Date().getDate() -1))} // Disable past dates
-                                    />
-                                </PopoverContent>
-                            </Popover>
+                            <Input
+                                id="dueDate"
+                                type="date"
+                                value={dueDate ? format(dueDate, "yyyy-MM-dd") : ""}
+                                onChange={(e) => {
+                                    if (e.target.value) {
+                                        setDueDate(new Date(e.target.value));
+                                    } else {
+                                        setDueDate(null);
+                                    }
+                                }}
+                                min={format(new Date(), "yyyy-MM-dd")} // Prevents selecting past dates
+                                className="w-full"
+                            />
                         </div>
                     </div>
-                   
+
 
                     <div>
                         <Label htmlFor="status">Status</Label>
@@ -238,7 +229,7 @@ export default function UpsertAssignmentForm({
                             />
                             {instructionsFile && <span className="text-sm text-muted-foreground truncate max-w-[200px]">{instructionsFile.name}</span>}
                         </div>
-                        
+
                         {initialData && initialData.hasInstructionsFile && !instructionsFile && (
                             <div className="mt-2 text-sm text-muted-foreground items-center flex">
                                 Current file: <span className="ml-1 italic">{existingFileName || "Instructions file uploaded"}</span>
@@ -252,9 +243,9 @@ export default function UpsertAssignmentForm({
                                 </div>
                             </div>
                         )}
-                         {!instructionsFile && !initialData?.hasInstructionsFile && (
-                             <p className="text-xs text-muted-foreground mt-1">No file selected or previously uploaded.</p>
-                         )}
+                        {!instructionsFile && !initialData?.hasInstructionsFile && (
+                            <p className="text-xs text-muted-foreground mt-1">No file selected or previously uploaded.</p>
+                        )}
 
                     </div>
 

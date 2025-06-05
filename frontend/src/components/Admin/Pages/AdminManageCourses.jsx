@@ -1,15 +1,15 @@
 // src/components/admin/courses/AdminManageCourses.jsx
-import React, { useState, useEffect, useCallback } from 'react';
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Plus } from 'lucide-react';
-import { toast } from 'sonner'; // Make sure you have sonner or a similar toast library installed
+import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Plus } from 'lucide-react';
+import { useCallback, useEffect, useState } from 'react';
+import { toast } from 'sonner'; // Make sure you have sonner or a similar toast library installed
 
 // Adjust import paths for your project structure
+import CoursesApi from '../../../Services/Api/Admin/Courses.js'; // Adjust path to your CoursesApi.js
 import CoursesList from '../Courses/CoursesList'; // Or './CoursesList' if in same folder
 import UpsertCourseForm from '../Forms/UpsertCourseForm'; // Or './UpsertCourseForm'
-import CoursesApi from '../../../Services/Api/Admin/Courses.js'; // Adjust path to your CoursesApi.js
 
 export default function AdminManageCourses() {
     const [allCourses, setAllCourses] = useState([]); // Will be fetched from API

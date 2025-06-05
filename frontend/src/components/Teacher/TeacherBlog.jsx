@@ -1,18 +1,18 @@
 // src/components/admin/blogs/TeacherBlog.jsx
 // OR, if making it generic: src/components/shared/blogs/ManageBlogPosts.jsx
-import React, { useState, useEffect, useCallback } from 'react';
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Plus, AlertCircle, Search } from 'lucide-react';
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Skeleton } from "@/components/ui/skeleton";
+import { AlertCircle, Plus, Search } from 'lucide-react';
+import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'sonner'; // Ensure sonner is set up
 
 // Adjust import paths as per your project structure
+import BlogPostApi from '../../Services/Api/Admin/Blog';
 import BlogPostsList from '../Admin/Blogs/BlogPostsList';
 import UpsertBlogPostForm from '../Admin/Forms/UpsertBlogPostForm';
-import BlogPostApi from '../../Services/Api/Admin/Blog';
 
 // Skeleton for loading blog posts (Keep your existing skeleton code)
 const BlogPostsLoadingSkeleton = () => (

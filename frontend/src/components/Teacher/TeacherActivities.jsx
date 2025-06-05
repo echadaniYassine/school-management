@@ -2,12 +2,12 @@
 // Or better, rename to src/components/teacher/activities/TeacherManageActivities.jsx
 // and update import paths accordingly if you move it.
 
-import React, { useState, useEffect, useCallback } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Plus, AlertCircle } from 'lucide-react';
+import { AlertCircle, Plus } from 'lucide-react';
+import { useCallback, useEffect, useState } from 'react';
 
 // Assuming ActivityApi.js is located at 'src/Api/ActivityApi.js'
 // and this component is at 'src/components/admin/activities/AdminManageActivities.jsx'

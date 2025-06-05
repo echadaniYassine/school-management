@@ -1,5 +1,4 @@
 // src/components/admin/blogs/BlogPostsList.jsx
-import React from 'react';
 import BlogPostItem from './BlogPostItem';
 
 export default function BlogPostsList({ posts, onEditPost, onDeletePost, onViewPost }) {

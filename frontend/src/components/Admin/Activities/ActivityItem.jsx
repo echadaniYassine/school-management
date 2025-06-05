@@ -1,10 +1,9 @@
 // src/components/admin/activities/ActivityItem.jsx
-import React from 'react';
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
-import { Edit2, Trash2, Calendar, MapPin, Users } from 'lucide-react';
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Calendar, Edit2, MapPin, Trash2, Users } from 'lucide-react';
 
 const getStatusBadgeClass = (status) => {
     const statusStyles = {

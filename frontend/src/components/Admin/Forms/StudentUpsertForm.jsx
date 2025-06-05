@@ -1,15 +1,15 @@
-import * as z from "zod";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import * as z from "zod";
+import { Button } from "../../ui/button.jsx";
 import {
     Form, FormControl, FormField, FormItem, FormLabel, FormMessage,
 } from "../../ui/form.jsx";
 import { Input } from "../../ui/input.jsx";
-import { Button } from "../../ui/button.jsx";
-import { Loader } from "lucide-react";
 import { RadioGroup, RadioGroupItem } from "../../ui/radio-group.jsx";
 import { Textarea } from "../../ui/textarea.jsx";
-import { toast } from "sonner";
 
 const baseSchema = z.object({
     name: z.string().max(50, "Name is too long"),

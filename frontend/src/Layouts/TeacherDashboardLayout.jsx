@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import { ModeToggle } from "../components/mode-toggle";
 import { useUserContext } from "../context/StudentContext";
-import { USER_LOGIN, TEACHER_DASHBOARD } from "../router";
+import { TEACHER_DASHBOARD, USER_LOGIN } from "../router";
 import { UserApi } from "../Services/Api/UserApi";
 import { TeacherAdministrationSideBar } from "./Administration/TeacherAdministrationSideBar";
 import DropDownMenuTeacher from "./DropDownMenu/DropDownMenuTeacher";

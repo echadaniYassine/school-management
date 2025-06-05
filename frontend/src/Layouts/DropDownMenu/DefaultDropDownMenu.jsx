@@ -1,9 +1,9 @@
-import React from 'react'
+import { useNavigate } from "react-router-dom";
 import { UserApi } from "../../Services/Api/UserApi";
 import { useUserContext } from "../../context/StudentContext";
-import { useNavigate } from "react-router-dom";
 import { USER_LOGIN } from "../../router";
 
+import { Button } from "@/components/ui/button";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -13,21 +13,15 @@ import {
     DropdownMenuSeparator,
     DropdownMenuShortcut,
     DropdownMenuTrigger,
-} from "../../components/ui/dropdown-menu"
-import { Button } from "@/components/ui/button";
+} from "../../components/ui/dropdown-menu";
 
 // Lucide Icons
 import {
-    User,
-    BookOpen,
-    GraduationCap,
-    Calendar,
-    FileText,
-    MessageSquare,
-    Bell,
-    Settings,
     HelpCircle,
-    LogOut
+    LogOut,
+    MessageSquare,
+    Settings,
+    User
 } from 'lucide-react';
 
 export default function DefaultDropDownMenu({ children }) {

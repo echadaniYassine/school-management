@@ -1,14 +1,14 @@
 // src/components/admin/activities/AdminManageActivities.jsx
-import React, { useState, useEffect, useCallback } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Plus, AlertCircle } from 'lucide-react';
+import { AlertCircle, Plus } from 'lucide-react';
+import { useCallback, useEffect, useState } from 'react';
 
+import ActivityApi from '../../../Services/Api/Admin/Activity'; // Adjust path if necessary
 import ActivitiesList from '../Activities/ActivitiesList';
 import UpsertActivityForm from '../Forms/UpsertActivityForm'; // Ensure this form is set up
-import ActivityApi from '../../../Services/Api/Admin/Activity'; // Adjust path if necessary
 
 // Simple loading skeleton for the activities list
 const ActivitiesLoadingSkeleton = () => {

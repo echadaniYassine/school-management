@@ -4,6 +4,7 @@ import { Trash2Icon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import TeacherApi from "../../../Services/Api/Admin/TeacherApi.js"; // Corrected import
+import TeacherUpsertForm from "../../Admin/Forms/TeachersUpsertForm.jsx"; // Renamed form
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel,
   AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
@@ -13,7 +14,6 @@ import {
   Sheet, SheetContent, SheetDescription, SheetHeader,
   SheetTitle, SheetTrigger
 } from "../../ui/sheet.js";
-import TeacherUpsertForm from "../../Admin/Forms/TeachersUpsertForm.jsx"; // Renamed form
 import { DataTable } from "./DataTable.jsx";
 import { DataTableColumnHeader } from "./DataTableColumnHeader.jsx";
 

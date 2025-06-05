@@ -1,6 +1,7 @@
 "use client"
 
-import {Button} from "../../ui/button.jsx";
+import { SlidersHorizontalIcon } from "lucide-react";
+import { Button } from "../../ui/button.jsx";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -9,7 +10,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from "../../ui/dropdown-menu.jsx";
-import {SlidersHorizontalIcon} from "lucide-react";
 
 export function DataTableViewOptions({table}) {
   return (
