@@ -18,9 +18,8 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->enum('type', ['CC', 'EFF']);
-            $table->foreignIdFor(Course::class)->constrained()->cascadeOnDelete();
-            $table->foreignIdFor(Team::class)->constrained()->cascadeOnDelete();
-            $table->foreignIdFor(Teacher::class)->constrained()->cascadeOnDelete();
+            $table->foreignId('teacher_id')->constrained('users')->cascadeOnDelete(); // The teacher who created it
+            $table->foreignId('course_id')->constrained()->cascadeOnDelete();
             $table->softDeletes();
             $table->timestamps();
         });

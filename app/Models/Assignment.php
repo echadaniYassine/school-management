@@ -2,22 +2,22 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Assignment extends Model
 {
-    use HasFactory;
+    use HasFactory, Notifiable, SoftDeletes; // <-- THIS IS THE CAUSE
 
     protected $fillable = [
         'title',
         'description',
-        'course',
-        'course_id',
+        'course_id', // Use this
         'due_date',
         'status',
         'assigned_to_description',
-         'assigned_to_ids',
         'instructions_file_path',
         'created_by_id',
     ];

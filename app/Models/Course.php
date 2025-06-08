@@ -3,52 +3,36 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Course extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, Notifiable, SoftDeletes; // <-- THIS IS THE CAUSE
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
-        'title',
+        'name',
         'code',
         'description',
-        'instructor',
         'category',
-        'level',
-        'duration',
-        'status',
         'thumbnail_url',
-        'price',
-        // 'user_id', // If you add instructor relationship
-        'category_id', // If you add category relationship
+        'teacher_id', // Add this to fillable
     ];
 
     /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
+     * Get the teacher (user) who teaches this course.
      */
-    protected $casts = [
-        'price' => 'decimal:2',
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
-    ];
+    public function teacher()
+    {
+        return $this->belongsTo(User::class, 'teacher_id');
+    }
 
-    // Optional: Define relationships
-    // public function instructorUser()
-    // {
-    //     return $this->belongsTo(User::class, 'user_id');
-    // }
-
-     public function courseCategory()
-     {
-         return $this->belongsTo(Category::class, 'category_id');
-     }
+    /**
+     * Get all the exams associated with this course.
+     */
+    public function exams()
+    {
+        return $this->hasMany(Exam::class);
+    }
 }

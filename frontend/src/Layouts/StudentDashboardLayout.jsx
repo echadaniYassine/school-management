@@ -1,43 +1,73 @@
 import { useEffect, useState } from "react";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import { ModeToggle } from "../components/mode-toggle";
+import { Notification } from "../components/Notification/Notification";
 import { useUserContext } from "../context/StudentContext";
 import { STUDENT_DASHBOARD, USER_LOGIN } from "../router";
 import { UserApi } from "../Services/Api/UserApi";
-import { StudentAdministrationSideBar } from "./Administration/StudentAdministrationSideBar";
 import DropDownMenuStudent from "./DropDownMenu/DropDownMenuStudent";
+import { StudentAdministrationSideBar } from "./Administration/StudentAdministrationSideBar";
 
 export default function StudentDashboardLayout() {
-    const { logout, setUser, setAuthenticated, authenticated } = useUserContext();
+    const { logout, setUser, authenticated, user } = useUserContext();
     const navigate = useNavigate();
-    const [isLoading, setIsLoading] = useState(true)
-
-
+    const [isLoading, setIsLoading] = useState(true);
+    const [notificationCount, setNotificationCount] = useState(5);
 
     useEffect(() => {
-        if (authenticated === true) {
-            setIsLoading(false)
-            UserApi.getUser().then(({ data }) => {
-                setUser(data)
-                setAuthenticated(true)
-            }).catch(() => {
-                logout()
-            })
+        // This flag prevents state updates if the component unmounts during an async operation.
+        let isMounted = true;
+
+        const loadUser = async () => {
+            // If user data already exists in context, no need to fetch again.
+            if (user) {
+                setIsLoading(false);
+                return;
+            }
+
+            try {
+                const { data } = await UserApi.getUser();
+                if (isMounted) {
+                    setUser(data);
+                }
+            } catch (error) {
+                // If the token is expired or invalid, the API call will fail. Log the user out.
+                if (isMounted) {
+                    logout();
+                }
+            } finally {
+                if (isMounted) {
+                    setIsLoading(false);
+                }
+            }
+        };
+
+        if (authenticated) {
+            loadUser();
         } else {
-            navigate(USER_LOGIN)
+            // If not authenticated, redirect to the login page immediately.
+            navigate(USER_LOGIN);
         }
 
-    }, [authenticated]);
+        // Cleanup function to run when the component unmounts.
+        return () => {
+            isMounted = false;
+        };
+    }, [authenticated, user, navigate, setUser, logout]);
 
+    // Display a loading indicator while fetching user data.
     if (isLoading) {
-        return <></>
+        return (
+            <div className="min-h-screen flex items-center justify-center">
+                Loading...
+            </div>
+        );
     }
-
 
     return (
         <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-900">
             {/* Header */}
-            <header className="bg-white shadow-md dark:bg-gray-800 dark:border-gray-700">
+            <header className="bg-white shadow-md dark:bg-gray-800 dark:border-b dark:border-gray-700">
                 <nav className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
                     <Link to={STUDENT_DASHBOARD} className="flex items-center">
                         <img
@@ -49,7 +79,8 @@ export default function StudentDashboardLayout() {
                             YourCompany
                         </span>
                     </Link>
-                    <div className="hidden md:flex space-x-6 items-center">
+                    <div className="flex space-x-4 md:space-x-6 items-center">
+                        <Notification count={notificationCount} onClick={() => alert('Notifications clicked!')} />
                         <DropDownMenuStudent />
                         <ModeToggle />
                     </div>
@@ -58,14 +89,11 @@ export default function StudentDashboardLayout() {
 
             {/* Main Content */}
             <main className="flex flex-1 overflow-hidden">
-                {/* Sidebar */}
                 <aside className="hidden md:block md:w-64 border-r bg-white dark:bg-gray-800 dark:border-gray-700 shadow-sm">
                     <div className="h-full p-4 overflow-y-auto">
-                        <StudentAdministrationSideBar/>
+                        <StudentAdministrationSideBar />
                     </div>
                 </aside>
-
-                {/* Outlet */}
                 <section className="flex-1 p-6 overflow-y-auto bg-gray-50 dark:bg-gray-900">
                     <Outlet />
                 </section>

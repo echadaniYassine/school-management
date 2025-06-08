@@ -21,8 +21,11 @@ return new class extends Migration
             // For more granular assignment targets, you might use a pivot table or JSON field
             // $table->json('assigned_to_ids')->nullable(); // e.g., [user_ids] or [group_ids]
             $table->text('instructions_file_path')->nullable(); // Path to an attached instructions file
-            $table->unsignedBigInteger('created_by_id')->nullable(); // Admin/Teacher who created it
-            $table->foreign('created_by_id')->references('id')->on('users')->onDelete('set null');
+
+            $table->foreignId('created_by_id')->constrained('users')->onDelete('cascade'); // The user (teacher/admin) who created it
+            $table->foreignId('course_id')->constrained()->onDelete('cascade');
+
+
             $table->timestamps();
         });
     }

@@ -40,16 +40,10 @@ class LoginRequest extends FormRequest
     public function authenticate(): void
     {
         $this->ensureIsNotRateLimited();
-        $guards = ['web', 'teacher', 'parent', 'admin'];
-        $isLogged = false;
 
-        foreach ($guards as $guard) {
-            if (Auth::guard($guard)->attempt($this->only('email', 'password'), $this->boolean('remember'))) {
-                $isLogged = true;
-                break;
-            }
-        }
-        if (!$isLogged) {
+        // The key change: Attempt authentication only on the default 'web' guard,
+        // which uses the 'users' table. No more loops!
+        if (!Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([

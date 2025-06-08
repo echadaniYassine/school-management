@@ -18,13 +18,7 @@ return new class extends Migration
             $table->json('tags')->nullable();
             $table->string('featured_image')->nullable(); // Stores path relative to disk
             $table->string('author')->nullable(); // Keep this if you also want a string author name
-
-            // Define the author_id column
-            $table->unsignedBigInteger('author_id')->nullable(); // <--- UNCOMMENTED THIS LINE
-
-            // Add the foreign key constraint to the now existing author_id column
-            $table->foreign('author_id')->references('id')->on('users')->onDelete('set null');
-
+            $table->foreignId('author_id')->constrained('users')->onDelete('cascade'); // Any user can be an author!
             $table->timestamp('published_at')->nullable();
             $table->timestamps();
         });

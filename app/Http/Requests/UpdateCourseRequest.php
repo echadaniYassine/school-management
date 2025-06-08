@@ -23,19 +23,20 @@ class UpdateCourseRequest extends FormRequest
      */
     public function rules(): array
     {
-        $courseId = $this->route('course') ? $this->route('course')->id : null; // Get course ID from route for unique rule
+        $courseId = $this->route('course')?->id; // Safely get course ID
 
         return [
-            'title' => ['sometimes', 'required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255'], // Renamed from 'title'
             'code' => ['nullable', 'string', 'max:50', Rule::unique('courses', 'code')->ignore($courseId)],
             'description' => ['nullable', 'string'],
             'instructor' => ['nullable', 'string', 'max:255'],
             'category' => ['nullable', 'string', 'max:100'],
             'level' => ['nullable', 'string', Rule::in(['Beginner', 'Intermediate', 'Advanced', 'All Levels'])],
             'duration' => ['nullable', 'string', 'max:100'],
-            'status' => ['sometimes', 'required', Rule::in(['draft', 'published', 'archived'])],
+            'status' => ['required', Rule::in(['draft', 'published', 'archived'])],
             'thumbnail_url' => ['nullable', 'url', 'max:2048'],
-            'price' => ['nullable', 'numeric', 'min:0'],
+            'teacher_id' => ['required', 'exists:users,id'],
+
         ];
     }
 }

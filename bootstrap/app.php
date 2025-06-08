@@ -19,6 +19,7 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
 
         $middleware->api(prepend: [
+            // For SPAs on the same domain, you should uncomment this:
             // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
         ]);
 
@@ -26,11 +27,13 @@ return Application::configure(basePath: dirname(__DIR__))
             'verified' => \App\Http\Middleware\EnsureEmailIsVerified::class,
             'abilities' => CheckAbilities::class,
             'ability' => CheckForAnyAbility::class
-
         ]);
-
-        //
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
-    })->create();
+    })
+    ->withProviders([ // <--- MOVED TO THE CORRECT POSITION
+        // This is now correctly part of the application configuration.
+        App\Providers\AuthServiceProvider::class,
+    ])
+    ->create(); // <--- THE ONE AND ONLY ->create() CALL, AT THE VERY END.

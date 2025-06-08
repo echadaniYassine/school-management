@@ -23,17 +23,19 @@ class StoreCourseRequest extends FormRequest
      */
     public function rules(): array
     {
+        $courseId = $this->route('course')?->id; // Safely get course ID
+
         return [
-            'title' => ['required', 'string', 'max:255'],
-            'code' => ['nullable', 'string', 'max:50', Rule::unique('courses', 'code')],
+            'name' => ['required', 'string', 'max:255'], // Renamed from 'title'
+            'code' => ['nullable', 'string', 'max:50', Rule::unique('courses', 'code')->ignore($courseId)],
             'description' => ['nullable', 'string'],
-            'instructor' => ['nullable', 'string', 'max:255'],
             'category' => ['nullable', 'string', 'max:100'],
             'level' => ['nullable', 'string', Rule::in(['Beginner', 'Intermediate', 'Advanced', 'All Levels'])],
             'duration' => ['nullable', 'string', 'max:100'],
             'status' => ['required', Rule::in(['draft', 'published', 'archived'])],
-            'thumbnail_url' => ['nullable', 'url', 'max:2048'], // Validate as URL
-            'price' => ['nullable', 'numeric', 'min:0'],
+            'thumbnail_url' => ['nullable', 'url', 'max:2048'],
+            // 'teacher_id' => ['required', 'exists:users,id'],
+
         ];
     }
 }
