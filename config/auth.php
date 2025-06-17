@@ -16,7 +16,7 @@ return [
   */
 
     'defaults' => [
-        'guard' => 'web',
+        'guard' => 'web', // Can be 'web' or 'sanctum' depending on your frontend auth flow
         'passwords' => 'users',
     ],
 
@@ -42,17 +42,9 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
-        'teacher' => [
-            'driver' => 'session',
-            'provider' => 'teachers',
-        ],
-        'admin' => [
-            'driver' => 'session',
-            'provider' => 'admins',
-        ],
-        'parent' => [
-            'driver' => 'session',
-            'provider' => 'parents',
+        'sanctum' => [
+            'driver' => 'sanctum',
+            'provider' => 'users',
         ],
     ],
     /*
@@ -77,20 +69,6 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
         ],
-
-        'teachers' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\Teacher::class,
-        ],
-        'admins' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\Admin::class,
-        ],
-        'parents' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\StudentParent::class,
-        ],
-        
     ],
 
     /*
@@ -118,25 +96,6 @@ return [
             'table' => 'password_reset_tokens',
             'expire' => 60,
             'throttle' => 60,
-        ],
-        'admins' => [
-            'provider' => 'admins',
-            'table' => 'password_reset_tokens',
-            'expire' => 60,
-            'throttle' => 60,
-        ],
-        'teachers' => [
-            'provider' => 'teachers',
-            'table' => 'password_reset_tokens',
-            'expire' => 60,
-            'throttle' => 60,
-        ],
-        
-        'parents' => [
-          'provider' => 'parents',
-          'table' => 'password_reset_tokens',
-          'expire' => 60,
-          'throttle' => 60,
         ],
     ],
 

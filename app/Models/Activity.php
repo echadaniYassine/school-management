@@ -1,34 +1,23 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Activity extends Model
 {
     use HasFactory;
-
-    protected $fillable = [
-        'title',
-        'description',
-        'date',
-        'location',
-        'capacity',
-        'status',
-        // 'category',
-        // 'created_by_id',
-    ];
-
-    protected $casts = [
-        'date' => 'date:Y-m-d', // Ensure date is cast correctly
-        'capacity' => 'integer',
-    ];
-
-    // Optional: Relationship to User model if created_by_id is used
-    public function creator()
+    
+    protected $fillable = ['title', 'description', 'date', 'location', 'capacity', 'status', 'author_id'];
+    
+    protected function casts(): array
     {
-        return $this->belongsTo(User::class, 'created_by_id');
+        return ['date' => 'date:Y-m-d', 'capacity' => 'integer'];
     }
 
+    public function author(): BelongsTo 
+    {
+        return $this->belongsTo(User::class, 'author_id');
+    }
 }

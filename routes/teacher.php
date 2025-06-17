@@ -1,14 +1,12 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\CourseController;
-use App\Http\Controllers\Admin\ActivityController;
-use App\Http\Controllers\Admin\AssignmentController;
-use App\Http\Controllers\Admin\BlogPostController;
+use App\Http\Controllers\Api\ActivityController;
+use App\Http\Controllers\Api\AssignmentController;
 
-Route::middleware(['auth:sanctum', 'ability:teacher'])->prefix('teacher')->group(function () {
-    Route::apiResource('courses', CourseController::class);
+// All routes here are automatically prefixed with '/api/teacher' and require TEACHER role.
+Route::middleware('role:teacher')->prefix('teacher')->name('teacher.')->group(function () {
+
     Route::apiResource('activities', ActivityController::class);
     Route::apiResource('assignments', AssignmentController::class);
-    Route::apiResource('blog-posts', BlogPostController::class);
 });

@@ -3,32 +3,37 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Auth\LoginRequest;
-use Illuminate\Http\JsonResponse;
+use App\Http\Requests\Auth\LoginRequest; // <-- Use the new, simple LoginRequest
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
 
 class AuthenticatedSessionController extends Controller
 {
     /**
      * Handle an incoming authentication request.
      */
-    public function store(LoginRequest $request): JsonResponse
+    public function store(LoginRequest $request): Response
     {
+        // The LoginRequest already validated the fields are present and valid.
         $request->authenticate();
 
-        $user = $this->resolveAuthenticatedUser();
+        $user = $request->user();
+        
+        // Update last login timestamp
+        $user->last_login_at = now();
+        $user->save();
 
-        if (!$user) {
-            return response()->json(['message' => 'Authentication failed.'], 401);
-        }
+        // Create a Sanctum API token for the user.
+        $token = $user->createToken('api-token')->plainTextToken;
 
-        $token = $user->createToken('api', [$user->getRoleAttribute()])->plainTextToken;
-
-        return response()->json([
-            'user' => $user,
-            'token' => $token
+        // Return the token in the response.
+        return response([
+            'token' => $token,
+            'message' => 'Login successful.'
         ]);
     }
 
@@ -37,39 +42,9 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): Response
     {
-        $user = $request->user();
+        // Revoke the token that was used to authenticate the current request...
+        $request->user()->currentAccessToken()->delete();
 
-        if ($user) {
-            $user->currentAccessToken()?->delete(); // Deletes the current token
-        }
-
-        $this->logoutAllGuards();
-
-        return response()->noContent(); // 204 No Content
-    }
-
-    /**
-     * Attempt to resolve the authenticated user from multiple guards.
-     */
-    private function resolveAuthenticatedUser(): ?\Illuminate\Contracts\Auth\Authenticatable
-    {
-        foreach (['web', 'teacher', 'parent', 'admin'] as $guard) {
-            if (Auth::guard($guard)->check()) {
-                return Auth::guard($guard)->user();
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Logout all guards to clean up any potential session usage.
-     */
-    private function logoutAllGuards(): void
-    {
-        foreach (['web', 'teacher', 'parent', 'admin'] as $guard) {
-            if (Auth::guard($guard)->check()) {
-                Auth::guard($guard)->logout();
-            }
-        }
+        return response()->noContent();
     }
 }

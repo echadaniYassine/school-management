@@ -1,32 +1,18 @@
 <?php
-
 namespace Database\Factories;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
-
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Activity>
- */
-class ActivityFactory extends Factory
-{
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
-    public function definition()
-    {
-        $statuses = ['active', 'draft', 'cancelled'];
-        $categories = ['academic', 'sports', 'cultural', 'social'];
-
+class ActivityFactory extends Factory {
+    public function definition(): array {
         return [
-            'title' => $this->faker->sentence(3),
-            'description' => $this->faker->paragraph(2),
-            'date' => $this->faker->dateTimeBetween('+1 week', '+3 months')->format('Y-m-d'),
-            'location' => $this->faker->streetAddress,
-            'capacity' => $this->faker->numberBetween(20, 200),
-            'status' => $this->faker->randomElement($statuses),
-            // 'category' => $this->faker->randomElement($categories),
+            'author_id' => User::factory(),
+            'title' => fake()->sentence(3),
+            'description' => fake()->paragraph(2),
+            'date' => fake()->dateTimeBetween('+1 week', '+3 months')->format('Y-m-d'),
+            'location' => fake()->streetAddress,
+            'capacity' => fake()->numberBetween(20, 200),
+            'status' => fake()->randomElement(['active', 'draft', 'cancelled']),
         ];
     }
 }

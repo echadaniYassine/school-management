@@ -1,14 +1,14 @@
 <?php
-
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\CourseController;
-use App\Http\Controllers\Admin\ActivityController;
-use App\Http\Controllers\Admin\AssignmentController;
-use App\Http\Controllers\Admin\BlogPostController;
 
-Route::middleware(['auth:sanctum', 'ability:student'])->prefix('student')->group(function () {
-    Route::apiResource('courses', CourseController::class)->only(['index', 'show']);
-    Route::apiResource('activities', ActivityController::class)->only(['index', 'show']);
-    Route::apiResource('assignments', AssignmentController::class)->only(['index', 'show']);
-    Route::apiResource('blog-posts', BlogPostController::class)->only(['index', 'show']);
+// All routes here are automatically prefixed with '/student' and require STUDENT role.
+Route::middleware('role:student')->prefix('student')->name('student.')->group(function () {
+    // Students can only view (index/show) these resources.
+    Route::apiResource('courses', \App\Http\Controllers\Api\CourseController::class)->only(['index', 'show']);
+    Route::apiResource('activities', \App\Http\Controllers\Api\ActivityController::class)->only(['index', 'show']);
+    Route::apiResource('assignments', \App\Http\Controllers\Api\AssignmentController::class)->only(['index', 'show']);
+    Route::apiResource('blog-posts', \App\Http\Controllers\Api\BlogPostController::class)->only(['index', 'show']);
+
+    // Special routes
+    Route::get('assignments/{assignment}/download', [\App\Http\Controllers\Api\AssignmentController::class, 'downloadInstructions'])->name('assignments.download');
 });

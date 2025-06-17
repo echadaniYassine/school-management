@@ -7,76 +7,63 @@ use App\Models\Course;
 use App\Http\Requests\StoreCourseRequest;
 use App\Http\Requests\UpdateCourseRequest;
 use App\Http\Resources\CourseResource;
-use Illuminate\Http\Request; // Added for index filtering
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class CourseController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    public function __construct()
+    {
+        // FIXED: Parameter name now matches route model binding.
+        $this->authorizeResource(Course::class, 'course');
+    }
+
     public function index(Request $request)
     {
-        // Basic search/filtering example
+        // Public view is allowed by the policy.
         $query = Course::query();
 
-        if ($request->has('search') && $request->search != '') {
-            $searchTerm = $request->search;
-            $query->where(function ($q) use ($searchTerm) {
+        if ($request->filled('search')) {
+            $searchTerm = $request->input('search');
+            $query->where(fn ($q) => 
                 $q->where('title', 'like', "%{$searchTerm}%")
                   ->orWhere('code', 'like', "%{$searchTerm}%")
                   ->orWhere('instructor', 'like', "%{$searchTerm}%")
-                  ->orWhere('category', 'like', "%{$searchTerm}%");
-            });
+            );
         }
 
-        if ($request->has('status') && $request->status != '') {
+        if ($request->filled('status')) {
             $query->where('status', $request->status);
         }
 
-        // You can add more filters for category, level, etc.
-
-        $courses = $query->orderBy('created_at', 'desc')->paginate(15); // Paginate results
+        $courses = $query->latest()->paginate($request->input('per_page', 15));
         return CourseResource::collection($courses);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreCourseRequest $request)
     {
-        $validatedData = $request->validated();
-        $course = Course::create($validatedData);
-        return new CourseResource($course);
+        $course = Course::create($request->validated());
+        return (new CourseResource($course))
+            ->response()
+            ->setStatusCode(Response::HTTP_CREATED);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Course $course)
     {
-        // Eager load relationships if you have them
-        // $course->load('instructorUser', 'courseCategory');
+        // Public view is allowed by the policy.
         return new CourseResource($course);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(UpdateCourseRequest $request, Course $course)
     {
-        $validatedData = $request->validated();
-        $course->update($validatedData);
-        return new CourseResource($course);
+        $course->update($request->validated());
+        return new CourseResource($course->fresh());
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Course $course)
     {
-        $course->delete(); // Soft delete
-        // For permanent delete: $course->forceDelete();
-        return response()->json(['message' => 'Course deleted successfully.'], 200);
-        // Or return response()->noContent(); // 204 No Content
+        $course->delete();
+        // BEST PRACTICE: Return 204 No Content for successful deletion.
+        return response()->noContent();
     }
 }

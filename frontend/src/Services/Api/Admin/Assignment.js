@@ -1,49 +1,58 @@
-// src/Api/AssignmentApi.js (or your path, e.g., src/Services/Api/Admin/Assignment.js)
-import { axiosClient } from "../../../Api/axios"; // Adjust path as needed
+// src/Services/Api/Admin/Assignment.js (or a more general path)
+import { axiosClient } from "../../../Api/axios"; // Adjust path
 
-const getPrefix = (role) => {
-  if (role === 'student') return '/student';
-  if (role === 'teacher') return '/teacher';
-  return '/admin'; // Defaults to /admin
+const getApiPrefix = (role) => {
+    switch (role) {
+        case 'student': return '/student';
+        case 'teacher': return '/teacher';
+        case 'admin': return '/admin';
+        default: return '/admin'; // Fallback or throw error
+    }
 };
 
 const AssignmentApi = {
-  // Modified getAll to accept role as the first parameter
-  getAll: async (role = 'admin', params = {}) => {
-    const prefix = getPrefix(role);
-    return await axiosClient.get(`${prefix}/assignments`, { params });
+  getAll: (role = 'admin', params = {}) => { // Default role to admin if not provided
+    const prefix = getApiPrefix(role);
+    return axiosClient.get(`${prefix}/assignments`, { params });
   },
 
-  getById: async (id, role = 'admin') => {
-    const prefix = getPrefix(role);
-    return await axiosClient.get(`${prefix}/assignments/${id}`);
+  getById: (id, role = 'admin') => {
+    const prefix = getApiPrefix(role);
+    return axiosClient.get(`${prefix}/assignments/${id}`);
   },
 
-  create: async (formData, role = 'admin') => {
-    const prefix = getPrefix(role);
-    return await axiosClient.post(`${prefix}/assignments`, formData, {
+  create: (formData, role = 'admin') => {
+    const prefix = getApiPrefix(role);
+    // FormData is typically used with POST for creation
+    return axiosClient.post(`${prefix}/assignments`, formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
   },
 
-  update: async (id, formData, role = 'admin') => {
-    formData.append('_method', 'PUT'); // PUT workaround for FormData
-    const prefix = getPrefix(role);
-    return await axiosClient.post(`${prefix}/assignments/${id}`, formData, {
+  // For updates with FormData, backend needs to handle POST with _method=PUT
+  update: (id, formData, role = 'admin') => {
+    const prefix = getApiPrefix(role);
+    formData.append('_method', 'PUT'); // Common practice for FormData updates
+    return axiosClient.post(`${prefix}/assignments/${id}`, formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
   },
 
-  delete: async (id, role = 'admin') => {
-    const prefix = getPrefix(role);
-    return await axiosClient.delete(`${prefix}/assignments/${id}`);
+  delete: (id, role = 'admin') => {
+    const prefix = getApiPrefix(role);
+    return axiosClient.delete(`${prefix}/assignments/${id}`);
   },
 
-  downloadInstructions: async (id, role = 'admin') => {
-    const prefix = getPrefix(role);
-    return await axiosClient.get(`${prefix}/assignments/${id}/download-instructions`, {
-      responseType: 'blob',
-    });
+  // Renamed from downloadInstructions to match backend route if it's general
+  // Or keep as downloadInstructions if that's the specific endpoint name
+  downloadInstructions: (assignmentId, role = 'admin') => {
+    const prefix = getApiPrefix(role);
+    // The backend route was /api/assignments/{assignment}/download
+    // It implies the prefix is already handled or it's a public non-role-prefixed route
+    // If it's role-prefixed:
+    // return axiosClient.get(`${prefix}/assignments/${assignmentId}/download-instructions`, { responseType: 'blob' });
+    // If it's a general public route as defined in api.php:
+    return axiosClient.get(`/assignments/${assignmentId}/download`, { responseType: 'blob' });
   },
 };
 

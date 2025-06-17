@@ -1,31 +1,28 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\StudentController;
-use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\Admin\SettingController;
-use App\Http\Controllers\Admin\TeacherController;
-use App\Http\Controllers\StudentParentController;
+use App\Http\Controllers\Api\ActivityController;
+use App\Http\Controllers\Api\AssignmentController;
+use App\Http\Controllers\Api\BlogPostController;
+use App\Http\Controllers\Api\ClassTypeController;
 use App\Http\Controllers\Api\CourseController;
-use App\Http\Controllers\Admin\ActivityController;
-use App\Http\Controllers\Admin\BlogPostController;
-use App\Http\Controllers\Admin\AssignmentController;
+use App\Http\Controllers\Api\ExamController;
+use App\Http\Controllers\Api\ExamRecordController;
+use App\Http\Controllers\Api\TeamController;
+use App\Http\Controllers\Api\UserController;
+use Illuminate\Support\Facades\Route;
 
-Route::middleware(['auth:sanctum', 'ability:admin'])->prefix('admin')->group(function () {
-    Route::apiResources([
-        'parents' => StudentParentController::class,
-        'students' => StudentController::class,
-        'courses' => CourseController::class,
-        'teachers' => TeacherController::class,
-        'activities' => ActivityController::class,
-        'blog-posts' => BlogPostController::class,
-        'assignments' => AssignmentController::class,
-    ]);
+// All routes here are automatically prefixed with '/api/admin' and require ADMIN role.
+Route::middleware('role:admin')->prefix('admin')->name('admin.')->group(function () {
+    // Full CRUD for all major resources
+    Route::apiResource('users', UserController::class);
+    Route::apiResource('courses', CourseController::class);
+    Route::apiResource('activities', ActivityController::class);
+    Route::apiResource('assignments', AssignmentController::class);
+    Route::apiResource('blog-posts', BlogPostController::class);
+    Route::apiResource('class-types', ClassTypeController::class);
+    Route::apiResource('teams', TeamController::class);
+    Route::apiResource('exams', ExamController::class);
 
-    Route::apiResource('categories', CategoryController::class)->only(['index']);
-
-    // Settings
-    Route::get('system-settings', [SettingController::class, 'index']);
-    Route::put('system-settings/{section}', [SettingController::class, 'updateSection']);
-    Route::post('system-actions/clear-cache', [SettingController::class, 'clearCache']);
+    // Nested resource for exam records with shallow routing for update/show/delete
+    Route::apiResource('exams.records', ExamRecordController::class)->shallow();
 });

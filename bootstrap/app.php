@@ -15,7 +15,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->web(append: [
-            // \App\Http\Middleware\VerifyCsrfToken::class,
+            //
         ]);
 
         $middleware->api(prepend: [
@@ -23,13 +23,9 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
 
         $middleware->alias([
-            'verified' => \App\Http\Middleware\EnsureEmailIsVerified::class,
-            'abilities' => CheckAbilities::class,
-            'ability' => CheckForAnyAbility::class
-
+            'role' => \App\Http\Middleware\CheckRole::class,
+            // 'verified' => \App\Http\Middleware\EnsureEmailIsVerified::class,
         ]);
-
-        //
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
