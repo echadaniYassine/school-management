@@ -42,7 +42,7 @@ require __DIR__ . '/auth.php';
 //======================================================================
 Route::middleware('auth:sanctum')->group(function () {
     // Get the current authenticated user
-    Route::get('/me', fn(Request $request) => new UserResource($request->user()))->name('me');
+    Route::get('/user', fn(Request $request) => new UserResource($request->user()))->name('me');
 
     // Load role-specific route files
     require __DIR__ . '/admin.php';

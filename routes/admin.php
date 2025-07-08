@@ -19,7 +19,6 @@ Route::middleware('role:admin')->prefix('admin')->name('admin.')->group(function
     Route::apiResource('activities', ActivityController::class);
     Route::apiResource('assignments', AssignmentController::class);
     Route::apiResource('blog-posts', BlogPostController::class);
-    Route::apiResource('class-types', ClassTypeController::class);
     Route::apiResource('teams', TeamController::class);
     Route::apiResource('exams', ExamController::class);
 

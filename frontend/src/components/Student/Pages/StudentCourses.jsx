@@ -1,15 +1,18 @@
+// src/components/student/Pages/StudentCourses.jsx
+
 import React, { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Skeleton } from "@/components/ui/skeleton";
 import { BookOpen, AlertCircle } from 'lucide-react';
-import CoursesApi from "../../../Services/Api/Admin/Courses";
+import CoursesApi from "../../../Services/Api/Courses"; // Make sure path is correct
 
+// A dedicated component for the loading state.
 const StudentCoursesLoadingSkeleton = () => {
   return (
     <div className="space-y-4">
       {[...Array(3)].map((_, i) => (
-        <Card key={i}>
+        <Card key={`skeleton-${i}`}> {/* Added a key for best practices */}
           <CardHeader>
             <Skeleton className="h-6 w-3/4" />
           </CardHeader>
@@ -27,31 +30,34 @@ export default function StudentCourses() {
   const [courses, setCourses] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  
+  // The role is hard-coded because this is a student-specific page.
   const userRole = 'student';
 
   const fetchCourses = useCallback(async () => {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await CoursesApi.getAll({}, userRole);
-      setCourses(response.data?.data || []);
+      // --- THE FIX ---
+      // We now call the API with a single object containing the 'role' and optional 'params'.
+      const response = await CoursesApi.getAll({ role: userRole });
+      
+      // Ensure we have an array, even if the API response is unexpected.
+      setCourses(Array.isArray(response.data?.data) ? response.data.data : []);
+
     } catch (err) {
       console.error(`Failed to fetch courses for role ${userRole}:`, err);
-      let errorMessage = "Failed to load courses. Please try again.";
-      if (err.response?.data?.message) {
-          errorMessage = err.response.data.message;
-      } else if (err.message) {
-          // Handle cases like "target must be an object" if they originate here
-          errorMessage = `Client-side error: ${err.message}`;
-      }
+      // Provide a more user-friendly default error message.
+      const errorMessage = err.response?.data?.message || "An unexpected error occurred while loading courses.";
       setError(errorMessage);
-      setCourses([]);
+      setCourses([]); // Clear any previous course data on error
     } finally {
       setIsLoading(false);
     }
-  }, [userRole]);
+  }, [userRole]); // The dependency array is correct.
 
   useEffect(() => {
+    // This effect runs once on component mount to fetch the initial data.
     fetchCourses();
   }, [fetchCourses]);
 
@@ -61,50 +67,48 @@ export default function StudentCourses() {
         <CardHeader>
           <CardTitle className="text-2xl font-bold flex items-center">
             <BookOpen className="mr-2 h-6 w-6" />
-            Available Courses
+            My Enrolled Courses
           </CardTitle>
         </CardHeader>
         <CardContent>
           <p className="text-muted-foreground mb-6">
-            Here are the courses available for you to view and participate in.
+            Here are the courses you are currently enrolled in.
           </p>
 
-          {error && (
-            <Alert variant="destructive" className="mb-4">
-              <AlertCircle className="h-4 w-4" />
-              <AlertTitle>Error</AlertTitle>
-              <AlertDescription>{error}</AlertDescription>
-            </Alert>
-          )}
-
+          {/* Conditional Rendering Logic */}
           {isLoading ? (
             <StudentCoursesLoadingSkeleton />
-          ) : !error && courses.length === 0 ? (
-            <div className="text-center py-8">
-              <p className="text-muted-foreground">No courses are currently available.</p>
+          ) : error ? (
+            <Alert variant="destructive" className="mb-4">
+              <AlertCircle className="h-4 w-4" />
+              <AlertTitle>Error Loading Courses</AlertTitle>
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          ) : courses.length === 0 ? (
+            <div className="text-center py-12 border-2 border-dashed rounded-lg">
+              <p className="text-lg font-medium text-muted-foreground">You are not enrolled in any courses yet.</p>
+              <p className="text-sm text-muted-foreground mt-2">Please contact an administrator if you believe this is an error.</p>
             </div>
-          ) : !error && courses.length > 0 ? (
+          ) : (
             <div className="space-y-4">
               {courses.map(course => (
-                <Card key={course.id} className="hover:shadow-md transition-shadow">
+                <Card key={course.id} className="hover:shadow-lg transition-shadow duration-300">
                   <CardHeader>
                     <CardTitle className="text-lg">{course.title || "Untitled Course"}</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-sm text-muted-foreground line-clamp-2">
+                    <p className="text-sm text-muted-foreground line-clamp-2 mb-4">
                       {course.description || "No description available."}
                     </p>
-                    {course.category?.name && (
-                      <p className="text-xs text-gray-500 mt-2">Category: {course.category.name}</p>
-                    )}
-                    {course.created_at && (
-                      <p className="text-xs text-gray-500 mt-1">Created on: {new Date(course.created_at).toLocaleDateString()}</p>
-                    )}
+                    <div className="flex justify-between items-center text-xs text-gray-500 dark:text-gray-400">
+                        <span>Category: <strong>{course.category?.name || 'N/A'}</strong></span>
+                        <span>Created: <strong>{new Date(course.created_at).toLocaleDateString()}</strong></span>
+                    </div>
                   </CardContent>
                 </Card>
               ))}
             </div>
-          ) : null}
+          )}
         </CardContent>
       </Card>
     </div>

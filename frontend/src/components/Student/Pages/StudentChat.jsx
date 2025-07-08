@@ -1,3 +1,5 @@
+// src/components/Student/Pages/StudentChat.jsx
+
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MessageSquare } from 'lucide-react';

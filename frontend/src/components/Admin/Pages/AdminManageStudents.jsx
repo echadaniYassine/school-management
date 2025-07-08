@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useUserContext } from "../../../context/StudentContext.jsx";
-import studentApi from "../../../Services/Api/Admin/StudentApi.js";
+import { useUserContext } from "../../../context/UserContext.jsx";
+import studentApi from "../../../Services/Api/StudentApi.js";
 import { ScrollArea, ScrollBar } from "../../ui/scroll-area.jsx";
 import { Separator } from "../../ui/separator.jsx";
 import {

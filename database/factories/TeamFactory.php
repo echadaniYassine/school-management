@@ -27,8 +27,6 @@ class TeamFactory extends Factory
         return [
             'name' => $teamName,
             'code' => $this->faker->unique()->regexify('[A-Z0-9]{3,5}-[0-9]{2,4}'), // e.g., DEV-101 or TEAMX-2023
-            // Ensure a ClassType exists or create one
-            'class_type_id' => ClassType::factory(),
         ];
     }
 }

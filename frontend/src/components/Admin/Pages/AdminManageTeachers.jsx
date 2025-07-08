@@ -8,7 +8,7 @@ import { ScrollArea, ScrollBar } from "../../ui/scroll-area.jsx"; // Keep if nee
 import { useState } from "react";
 import AdminTeachersList from "../DataTable/AdminTeachersList.jsx"; // Corrected import
 import TeacherUpsertForm from "../Forms/TeachersUpsertForm.jsx";     // Corrected import
-import TeacherApi from "../../../Services/Api/Admin/TeacherApi.js"; // Corrected import
+import TeacherApi from "../../../Services/Api/TeacherApi.js"; // Corrected import
 
 export default function AdminManageTeachers() {
   const [activeTab, setActiveTab] = useState("items_list");

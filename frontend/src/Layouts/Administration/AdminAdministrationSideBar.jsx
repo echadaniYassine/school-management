@@ -21,7 +21,7 @@ import {
   ADMIN_MANAGE_STUDENTS,
   ADMIN_MANAGE_TEACHERS,
   ADMIN_PROFILE,
-  ADMIN_SYSTEM_SETTING
+  // ADMIN_SYSTEM_SETTING
 } from "../../router/index.jsx";
 
 // NO LONGER DEFINED HERE AT THE TOP LEVEL
@@ -89,11 +89,6 @@ export function AdminAdministrationSideBar({ className }) {
           to: ADMIN_MANAGE_TEACHERS,
           icon: <UsersIcon className="mr-2 h-5 w-5" />,
           label: "Manage Teachers",
-        },
-        {
-          to: ADMIN_SYSTEM_SETTING,
-          icon: <SettingsIcon className="mr-2 h-5 w-5" />,
-          label: "System Settings",
         },
         
       ],

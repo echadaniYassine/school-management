@@ -1,10 +1,12 @@
+// src/components/Student/Pages/StudentAssignments.jsx
+
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AlertCircle, Download, FileText } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
-import AssignmentApi from "../../../Services/Api/Admin/Assignment";
+import AssignmentApi from "../../../Services/Api/Assignment";
 
 const StudentAssignmentsLoadingSkeleton = () => {
     return (

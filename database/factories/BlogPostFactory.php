@@ -14,7 +14,7 @@ class BlogPostFactory extends Factory {
             'content' => '<p>' . implode('</p><p>', fake()->paragraphs(5)) . '</p>',
             'status' => fake()->randomElement(['published', 'draft', 'archived']),
             'category' => fake()->randomElement(['Technology', 'Lifestyle', 'Education']),
-            'tags' => fake()->words(rand(2, 5)),
+            // 'tags' => fake()->words(rand(2, 5)),
             'featured_image' => fake()->optional()->imageUrl(640, 480, 'posts', true),
             'published_at' => fake()->optional()->dateTimeThisYear(),
         ];

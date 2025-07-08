@@ -9,21 +9,13 @@ use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-// REMOVED: use Illuminate\Foundation\Auth\Access\AuthorizesRequests; (already in base Controller)
-
 
 class UserController extends Controller
 {
-    // REMOVED: use AuthorizesRequests;
-
     public function __construct()
     {
-        // Apply middleware consistent with UserPolicy (admin only)
-        // authorizeResource will handle the authorization based on UserPolicy.
-        // Explicit role middleware can be an additional check or for roles not covered by policies.
-        // For simplicity, if UserPolicy is strict admin-only, this specific method middleware is somewhat redundant with authorizeResource.
-        // However, keeping it makes the intent clear.
-        $this->middleware('role:admin')->only(['store', 'update', 'destroy']);
+        // The authorizeResource method automatically applies the correct UserPolicy
+        // methods to each controller action, making a separate middleware call redundant.
         $this->authorizeResource(User::class, 'user');
     }
 

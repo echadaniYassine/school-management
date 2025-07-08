@@ -8,7 +8,7 @@ export default function Header() {
 
     <header className="bg-white shadow-md dark:bg-gray-800 dark:border-gray-700">
       <nav className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-        <Link to="#" className="flex items-center">
+        <Link to="/" className="flex items-center">
           <img
             src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600"
             className="h-8 w-auto"
@@ -23,11 +23,11 @@ export default function Header() {
             {/* <Home className="mr-2 h-5 w-5" /> */}
             Home
           </Link>
-          <Link to='/' className="flex items-center text-gray-700 dark:text-gray-200 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium transition-colors">
+          <Link to='/about' className="flex items-center text-gray-700 dark:text-gray-200 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium transition-colors">
             {/* <Info className="mr-2 h-5 w-5" /> */}
             About
           </Link>
-          <Link to='/' className="flex items-center text-gray-700 dark:text-gray-200 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium transition-colors">
+          <Link to='/blog' className="flex items-center text-gray-700 dark:text-gray-200 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium transition-colors">
             {/* <Newspaper className="mr-2 h-5 w-5" /> */}
             Blog
           </Link>

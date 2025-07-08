@@ -22,7 +22,7 @@ class BlogPostResource extends JsonResource
             'content' => $this->content,
             'status' => $this->status,
             'category' => $this->category,
-            'tags' => $this->tags ?? [],
+            // 'tags' => $this->tags ?? [],
             'featuredImageUrl' => $featuredImageUrl, // Send the full URL
             'author' => new UserResource($this->whenLoaded('author')),
             'publishedAt' => $this->published_at?->toIso8601String(),

@@ -1,23 +1,24 @@
-import './App.css';
+// src/App.jsx
+
 import { RouterProvider } from 'react-router-dom';
 import { router } from './router/index';
-import StudentContext from './context/StudentContext';
-import { ThemeProvider } from "./components/theme-provider"
+// --- FIX IS HERE ---
+// We import UserContext because that is the correct name of our context provider now.
+import UserContext from './context/UserContext'; 
+import { ThemeProvider } from "./components/theme-provider";
 import { Toaster } from "./components/ui/sonner";
 
 function App() {
   return (
     <>
-
-      <StudentContext>
+      {/* --- FIX IS HERE --- */}
+      {/* We use the UserContext component we just imported. */}
+      <UserContext>
         <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
           <RouterProvider router={router} />
         </ThemeProvider>
-      </StudentContext>
+      </UserContext>
       <Toaster />
-
-
-
     </>
   );
 }

@@ -1,25 +1,39 @@
 <?php
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
-    public function up(): void {
+    /**
+     * Run the migrations.
+     */
+    public function up(): void 
+    {
         Schema::create('blog_posts', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('author_id')->nullable()->constrained('users')->onDelete('set null');
+
+            // --- FIX: Renamed 'user_id' to 'author_id' to match the Model and Policy. ---
+            // 'onDelete('cascade')' means if the author (User) is deleted, their posts are also deleted.
+            $table->foreignId('author_id')->constrained('users')->onDelete('cascade');
+            
             $table->string('title');
-            $table->string('slug')->unique();
+            $table->string('slug')->unique(); // Excellent for SEO-friendly URLs.
             $table->longText('content');
             $table->string('status')->default('draft');
             $table->string('category')->nullable();
-            $table->json('tags')->nullable();
+            // $table->json('tags')->nullable(); // Storing tags as JSON is flexible.
             $table->string('featured_image')->nullable();
             $table->timestamp('published_at')->nullable();
             $table->timestamps();
         });
     }
-    public function down(): void {
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void 
+    {
         Schema::dropIfExists('blog_posts');
     }
 };

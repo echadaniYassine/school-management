@@ -1,9 +1,11 @@
+// src/components/Student/Pages/StudentActivities.jsx
+
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AlertCircle, ListChecks } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
-import ActivityApi from "../../../Services/Api/Admin/Activity";
+import ActivityApi from "../../../Services/Api/Activity";
 
 const StudentActivitiesLoadingSkeleton = () => {
     return (

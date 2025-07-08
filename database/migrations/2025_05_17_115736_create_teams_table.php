@@ -9,7 +9,6 @@ return new class extends Migration {
             $table->id();
             $table->string('name');
             $table->string('code', 20)->unique();
-            $table->foreignIdFor(ClassType::class)->constrained()->cascadeOnDelete();
             $table->softDeletes();
             $table->timestamps();
         });

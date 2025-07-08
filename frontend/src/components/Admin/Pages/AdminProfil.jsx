@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { KeyRound, UserCog } from "lucide-react"; // Example icons
-import { useUserContext } from "../../../context/StudentContext"; // Ensure this context provides ADMIN user data
+import { useUserContext } from "../../../context/UserContext"; // Ensure this context provides ADMIN user data
 
 function SkeletonRow() {
   return (

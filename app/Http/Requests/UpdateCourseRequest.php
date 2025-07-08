@@ -17,15 +17,15 @@ class UpdateCourseRequest extends FormRequest
 
         return [
             'title' => ['sometimes', 'required', 'string', 'max:255'],
-            'code' => ['nullable', 'string', 'max:50', Rule::unique('courses', 'code')->ignore($courseId)],
+            // 'code' => ['nullable', 'string', 'max:50', Rule::unique('courses', 'code')->ignore($courseId)],
             'description' => ['nullable', 'string'],
             'instructor' => ['nullable', 'string', 'max:255'],
             'category' => ['nullable', 'string', 'max:100'],
-            'level' => ['nullable', 'string', Rule::in(['Beginner', 'Intermediate', 'Advanced', 'All Levels'])],
-            'duration' => ['nullable', 'string', 'max:100'],
-            'status' => ['sometimes', 'required', Rule::in(['draft', 'published', 'archived'])],
+            // 'level' => ['nullable', 'string', Rule::in(['Beginner', 'Intermediate', 'Advanced', 'All Levels'])],
+            // 'duration' => ['nullable', 'string', 'max:100'],
+            // 'status' => ['sometimes', 'required', Rule::in(['draft', 'published', 'archived'])],
             'thumbnail_url' => ['nullable', 'url', 'max:2048'],
-            'price' => ['nullable', 'numeric', 'min:0'],
+            // 'price' => ['nullable', 'numeric', 'min:0'],
         ];
     }
 }

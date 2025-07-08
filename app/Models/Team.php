@@ -18,11 +18,6 @@ class Team extends Model
         'class_type_id',
     ];
 
-    public function classType(): BelongsTo
-    {
-        return $this->belongsTo(ClassType::class);
-    }
-
     public function exams(): HasMany
     {
         return $this->hasMany(Exam::class);

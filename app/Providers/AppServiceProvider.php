@@ -21,7 +21,6 @@ class AppServiceProvider extends ServiceProvider
         \App\Models\BlogPost::class => \App\Policies\BlogPostPolicy::class,
         \App\Models\Course::class => \App\Policies\CoursePolicy::class,
         \App\Models\Team::class => \App\Policies\TeamPolicy::class,
-        \App\Models\ClassType::class => \App\Policies\ClassTypePolicy::class,
         \App\Models\Exam::class => \App\Policies\ExamPolicy::class,
         \App\Models\ExamRecord::class => \App\Policies\ExamRecordPolicy::class, // ADDED
     ];

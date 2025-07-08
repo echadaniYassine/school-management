@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Trash2Icon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import TeacherApi from "../../../Services/Api/Admin/TeacherApi.js"; // Corrected import
+import TeacherApi from "../../../Services/Api/TeacherApi.js"; // Corrected import
 import TeacherUpsertForm from "../../Admin/Forms/TeachersUpsertForm.jsx"; // Renamed form
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel,

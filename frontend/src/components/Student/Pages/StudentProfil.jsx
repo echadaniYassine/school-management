@@ -1,5 +1,7 @@
+// src/components/Student/Pages/StudentProfil.jsx
+
 import React from 'react';
-import { useUserContext } from "../../../context/StudentContext";
+import { useUserContext } from "../../../context/UserContext";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";

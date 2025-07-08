@@ -20,8 +20,8 @@ class StoreBlogPostRequest extends FormRequest
             'content' => 'required|string',
             'status' => ['required', 'string', Rule::in(['published', 'draft', 'archived'])],
             'category' => 'nullable|string|max:100',
-            'tags' => 'nullable|array',
-            'tags.*' => 'nullable|string|max:50',
+            // 'tags' => 'nullable|array',
+            // 'tags.*' => 'nullable|string|max:50',
             'featured_image_file' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
             'published_at' => 'nullable|date_format:Y-m-d H:i:s',
         ];

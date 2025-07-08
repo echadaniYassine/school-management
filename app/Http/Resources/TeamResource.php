@@ -8,7 +8,6 @@ class TeamResource extends JsonResource {
             'id' => $this->id,
             'name' => $this->name,
             'code' => $this->code,
-            'classType' => new ClassTypeResource($this->whenLoaded('classType')),
             'createdAt' => $this->created_at->toIso8601String(),
         ];
     }

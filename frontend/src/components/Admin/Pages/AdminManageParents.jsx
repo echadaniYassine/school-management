@@ -1,9 +1,9 @@
-import { useUserContext } from "../../../context/StudentContext.jsx";
+import { useUserContext } from "../../../context/UserContext.jsx";
 import { ScrollArea, ScrollBar } from "../../ui/scroll-area.jsx";
 import { Separator } from "../../ui/separator.jsx";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../ui/tabs.jsx";
 
-import ParentApi from "../../../Services/Api/Admin/ParentApi.js";
+import ParentApi from "../../../Services/Api/ParentApi.js";
 import AdminParentList from "../DataTable/AdminParentList.jsx";
 import ParentUpsertForm from "../Forms/ParentUpsertForm.jsx";
 

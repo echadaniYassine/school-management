@@ -1,4 +1,6 @@
-import { useUserContext } from "../../context/StudentContext";
+// src/components/Teacher/TeacherProfil.jsx
+
+import { useUserContext } from "../../context/UserContext";
 import {
   Card,
   CardContent,

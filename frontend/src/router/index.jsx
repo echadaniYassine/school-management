@@ -1,198 +1,185 @@
-import { createBrowserRouter } from 'react-router-dom';
+// src/router/index.jsx
 
-// Layouts
+import { createBrowserRouter, Navigate } from 'react-router-dom';
+
+// --- CORE COMPONENTS ---
+import AuthGuard from '../components/Auth/AuthGuard'; // Adjust path if needed
+
+// --- LAYOUTS ---
+// Layouts wrap groups of routes and provide shared UI and protection logic.
 import AdminDashboardLayout from '../Layouts/AdminDashboardLayout';
 import GuestLayout from '../Layouts/GuestLayout';
-import Layout from '../Layouts/Layout'; // General public layout
-import ParentDashboardLayout from '../Layouts/ParentDashboardLayout';
+import Layout from '../Layouts/Layout';
 import StudentDashboardLayout from '../Layouts/StudentDashboardLayout';
 import TeacherDashboardLayout from '../Layouts/TeacherDashboardLayout';
+// import ParentDashboardLayout from '../Layouts/ParentDashboardLayout';
 
-// Public Pages
+// --- PUBLIC PAGES ---
+import About from '../pages/About'; // <-- Import the new page
+import Blog from '../pages/Blog'; // <-- Import the new page
 import Home from '../pages/Home';
 import Login from '../pages/Login';
 import NotFound from '../pages/Not Found';
 
-// Admin Pages
-import AdminDashboard from '../components/Admin/Pages/AdminDashboard';
-import AdminManageActivities from '../components/Admin/Pages/AdminManageAcitivities'; // Corrected typo from Acitivities
-import AdminManageAssignments from '../components/Admin/Pages/AdminManageAssignments';
-import AdminManageBlogs from '../components/Admin/Pages/AdminManageBlogs';
-import AdminManageCourses from '../components/Admin/Pages/AdminManageCourses';
-import AdminManageParents from '../components/Admin/Pages/AdminManageParents';
-import AdminManageStudents from '../components/Admin/Pages/AdminManageStudents';
-import AdminManageTeachers from '../components/Admin/Pages/AdminManageTeachers';
-import AdminProfile from '../components/Admin/Pages/AdminProfil'; // Renamed AdminProfil to AdminProfile for consistency
-import AdminSystemSetting from '../components/Admin/Pages/AdminSystemSetting';
-// AdminNotifications component would be needed if ADMIN_NOTIFICATION route is used
 
-// Student Pages
-import StudentActivities from '../components/Student/Pages/StudentActivities';
-import StudentAssignments from '../components/Student/Pages/StudentAssignments';
-import StudentBlog from '../components/Student/Pages/StudentBlog';
-import StudentChat from '../components/Student/Pages/StudentChat';
-import StudentCourses from '../components/Student/Pages/StudentCourses';
-import StudentDashboardPage from '../components/Student/Pages/StudentDahboard'; // Renamed StudentDahboard for clarity
-import StudentProfilePage from '../components/Student/Pages/StudentProfil'; // Renamed StudentProfil for clarity
-// StudentNotifications component would be needed if STUDENT_NOTIFICATIONS route is used
+// --- ADMIN PAGES ---
+import AdminDashboard from '../components/admin/Pages/AdminDashboard';
+import AdminManageParents from '../components/admin/Pages/AdminManageParents';
+import AdminManageStudents from '../components/admin/Pages/AdminManageStudents';
+import AdminManageTeachers from '../components/admin/Pages/AdminManageTeachers';
+import AdminProfile from '../components/admin/Pages/AdminProfil';
+import ManageActivitiesPage from '../components/Manage/ManageActivitiesPage';
+import ManageAssignmentsPage from '../components/Manage/ManageAssignmentsPage';
+import ManageCoursesPage from '../components/Manage/ManageCoursesPage'; // Adjust path
+// import AdminSystemSetting from '../components/admin/Pages/AdminSystemSetting';
 
-// Teacher Pages
-import TeacherActivities from '../components/Teacher/TeacherActivities';
-import TeacherAssignment from '../components/Teacher/TeacherAssignment';
-import TeacherBlog from '../components/Teacher/TeacherBlog';
-import TeacherCourses from '../components/Teacher/TeacherCourses';
-import TeacherDashboardPage from '../components/Teacher/TeacherDahboard'; // Renamed TeacherDahboard for clarity
-import TeacherProfilePage from '../components/Teacher/TeacherProfil'; // Renamed TeacherProfil for clarity
-// TeacherChat and TeacherNotifications components would be needed if their routes are used
+// --- STUDENT PAGES ---
+import StudentActivities from '../components/student/Pages/StudentActivities';
+import StudentAssignments from '../components/student/Pages/StudentAssignments';
+import StudentBlog from '../components/student/Pages/StudentBlog';
+import StudentChat from '../components/student/Pages/StudentChat';
+import StudentCourses from '../components/student/Pages/StudentCourses';
+import StudentDashboard from '../components/student/Pages/StudentDahboard';
+import StudentProfile from '../components/student/Pages/StudentProfil';
 
-// Parent Pages (Assuming these components will be created)
-// import ParentDashboardPage from '../components/Parent/Pages/ParentDashboard';
-// import ParentProfilePage from '../components/Parent/Pages/ParentProfile';
-// import ParentChatPage from '../components/Parent/Pages/ParentChat';
-// import ParentViewLibraryPage from '../components/Parent/Pages/ParentViewLibrary';
-// import ParentViewActivitiesPage from '../components/Parent/Pages/ParentViewActivities';
-// import ParentViewBlogPage from '../components/Parent/Pages/ParentViewBlog';
-// import ParentChildProfilePage from '../components/Parent/Pages/ParentChildProfile';
-// import ParentChildAssignmentsPage from '../components/Parent/Pages/ParentChildAssignments';
-// import ParentChildAttendancePage from '../components/Parent/Pages/ParentChildAttendance';
+// --- TEACHER PAGES ---
+import ManageBlogPostsPage from '../components/Manage/ManageBlogPostsPage'; // Adjust path
+import TeacherChat from '../components/teacher/TeacherChat';
+import TeacherDashboard from '../components/teacher/TeacherDahboard';
+import TeacherProfile from '../components/teacher/TeacherProfil';
+
+import ForgotPassword from '../components/Auth/ForgotPassword';
+import Register from '../components/Auth/Register';
+import ResetPassword from '../components/Auth/ResetPassword';
+
+// ========================================================================
+//                           ROUTE CONSTANTS
+// Using constants makes it easy to manage routes and avoid typos.
+// ========================================================================
 
 
 // --- ROUTE CONSTANTS ---
+export const USER_LOGIN = '/login';
+export const USER_REGISTER = '/register';
+export const FORGOT_PASSWORD = '/forgot-password';
 
 // Base Routes
-export const ADMIN_BASE_ROUTE = '/admin';
-export const STUDENT_BASE_ROUTE = '/student';
-export const TEACHER_BASE_ROUTE = '/teacher';
-export const PARENT_BASE_ROUTE = '/parent';
-
-// Auth Routes
-export const USER_LOGIN = '/login';
+const ADMIN_BASE = '/admin';
+const STUDENT_BASE = '/student';
+const TEACHER_BASE = '/teacher';
+const PARENT_BASE = '/parent';
 
 // Admin Routes
-export const ADMIN_DASHBOARD = `${ADMIN_BASE_ROUTE}/dashboard`;
-export const ADMIN_PROFILE = `${ADMIN_BASE_ROUTE}/profile`;
-export const ADMIN_MANAGE_PARENTS = `${ADMIN_BASE_ROUTE}/manage-parents`;
-export const ADMIN_MANAGE_STUDENTS = `${ADMIN_BASE_ROUTE}/manage-students`;
-export const ADMIN_MANAGE_TEACHERS = `${ADMIN_BASE_ROUTE}/manage-teachers`;
-export const ADMIN_COURSES = `${ADMIN_BASE_ROUTE}/courses`;
-export const ADMIN_BLOGS = `${ADMIN_BASE_ROUTE}/blogs`;
-export const ADMIN_ACTIVITIES = `${ADMIN_BASE_ROUTE}/activities`;
-export const ADMIN_ASSIGNMENTS = `${ADMIN_BASE_ROUTE}/assignments`;
-export const ADMIN_SYSTEM_SETTING = `${ADMIN_BASE_ROUTE}/system-settings`;
-export const ADMIN_NOTIFICATIONS = `${ADMIN_BASE_ROUTE}/notifications`; // Defined, but ensure component exists if used
+export const ADMIN_DASHBOARD = `${ADMIN_BASE}/dashboard`;
+export const ADMIN_PROFILE = `${ADMIN_BASE}/profile`;
+export const ADMIN_MANAGE_PARENTS = `${ADMIN_BASE}/manage-parents`;
+export const ADMIN_MANAGE_STUDENTS = `${ADMIN_BASE}/manage-students`;
+export const ADMIN_MANAGE_TEACHERS = `${ADMIN_BASE}/manage-teachers`;
+export const ADMIN_COURSES = `${ADMIN_BASE}/courses`;
+export const ADMIN_BLOGS = `${ADMIN_BASE}/blogs`;
+export const ADMIN_ACTIVITIES = `${ADMIN_BASE}/activities`;
+export const ADMIN_ASSIGNMENTS = `${ADMIN_BASE}/assignments`;
+export const ADMIN_SYSTEM_SETTING = `${ADMIN_BASE}/system-settings`;
 
 // Student Routes
-export const STUDENT_DASHBOARD = `${STUDENT_BASE_ROUTE}/dashboard`;
-export const STUDENT_PROFILE = `${STUDENT_BASE_ROUTE}/profile`;
-export const STUDENT_NOTIFICATIONS = `${STUDENT_BASE_ROUTE}/notifications`; // Defined, but ensure component exists if used
-export const STUDENT_CHATS = `${STUDENT_BASE_ROUTE}/chat`;
-export const STUDENT_COURSES = `${STUDENT_BASE_ROUTE}/courses`;
-// export const STUDENT_LIBRARY = `${STUDENT_BASE_ROUTE}/library`; // Often same as COURSES for students
-export const STUDENT_ACTIVITIES = `${STUDENT_BASE_ROUTE}/activities`;
-export const STUDENT_BLOGS = `${STUDENT_BASE_ROUTE}/blogs`;
-export const STUDENT_ASSIGNMENTS = `${STUDENT_BASE_ROUTE}/assignments`;
+export const STUDENT_DASHBOARD = `${STUDENT_BASE}/dashboard`;
+export const STUDENT_PROFILE = `${STUDENT_BASE}/profile`;
+export const STUDENT_CHATS = `${STUDENT_BASE}/chat`;
+export const STUDENT_COURSES = `${STUDENT_BASE}/courses`;
+export const STUDENT_ACTIVITIES = `${STUDENT_BASE}/activities`;
+export const STUDENT_BLOGS = `${STUDENT_BASE}/blogs`;
+export const STUDENT_ASSIGNMENTS = `${STUDENT_BASE}/assignments`;
 
 // Teacher Routes
-export const TEACHER_DASHBOARD = `${TEACHER_BASE_ROUTE}/dashboard`;
-export const TEACHER_PROFILE = `${TEACHER_BASE_ROUTE}/profile`;
-export const TEACHER_NOTIFICATIONS = `${TEACHER_BASE_ROUTE}/notifications`; // Defined, but ensure component exists if used
-export const TEACHER_CHATS = `${TEACHER_BASE_ROUTE}/chat`;
-export const TEACHER_COURSES = `${TEACHER_BASE_ROUTE}/courses`;
-// export const TEACHER_LIBRARY = `${TEACHER_BASE_ROUTE}/library`; // Often same as COURSES
-export const TEACHER_ACTIVITIES = `${TEACHER_BASE_ROUTE}/activities`;
-export const TEACHER_BLOGS = `${TEACHER_BASE_ROUTE}/blogs`;
-export const TEACHER_ASSIGNMENTS = `${TEACHER_BASE_ROUTE}/assignments`;
+export const TEACHER_DASHBOARD = `${TEACHER_BASE}/dashboard`;
+export const TEACHER_PROFILE = `${TEACHER_BASE}/profile`;
+export const TEACHER_CHATS = `${TEACHER_BASE}/chat`;
+export const TEACHER_COURSES = `${TEACHER_BASE}/courses`;
+export const TEACHER_ACTIVITIES = `${TEACHER_BASE}/activities`;
+export const TEACHER_BLOGS = `${TEACHER_BASE}/blogs`;
+export const TEACHER_ASSIGNMENTS = `${TEACHER_BASE}/assignments`;
 
-// Parent Routes (Define these as needed)
-export const PARENT_DASHBOARD = `${PARENT_BASE_ROUTE}/dashboard`;
-export const PARENT_PROFILE = `${PARENT_BASE_ROUTE}/profile`;
-export const PARENT_CHAT = `${PARENT_BASE_ROUTE}/chat`;
-export const PARENT_VIEW_LIBRARY = `${PARENT_BASE_ROUTE}/library`;
-export const PARENT_VIEW_ACTIVITIES = `${PARENT_BASE_ROUTE}/activities`;
-export const PARENT_VIEW_BLOG = `${PARENT_BASE_ROUTE}/blog`;
-export const PARENT_CHILD_PROFILE = `${PARENT_BASE_ROUTE}/child/profile`;
-export const PARENT_CHILD_ASSIGNMENTS = `${PARENT_BASE_ROUTE}/child/assignments`;
-export const PARENT_CHILD_ATTENDANCE = `${PARENT_BASE_ROUTE}/child/attendance`;
-export const PARENT_NOTIFICATIONS = `${PARENT_BASE_ROUTE}/notifications`; // Added for completeness
+// Parent Routes (Placeholders)
+export const PARENT_DASHBOARD = `${PARENT_BASE}/dashboard`;
 
 
-// --- ROUTER CONFIGURATION ---
+// ========================================================================
+//                         ROUTER CONFIGURATION
+// ========================================================================
+
 export const router = createBrowserRouter([
-    // Public Routes
+    // --- PROTECTED ROUTES ---
     {
-        element: <Layout />,
+        path: ADMIN_BASE,
+        element: <AdminDashboardLayout />,
         children: [
-            { path: '/', element: <Home /> },
-            { path: '*', element: <NotFound /> }, // Catch-all should ideally be last in this group or overall
+            { path: '', element: <Navigate to={ADMIN_DASHBOARD} replace /> },
+            { path: 'dashboard', element: <AdminDashboard /> },
+            { path: 'profile', element: <AdminProfile /> },
+            { path: 'manage-parents', element: <AdminManageParents /> },
+            { path: 'manage-students', element: <AdminManageStudents /> },
+            { path: 'manage-teachers', element: <AdminManageTeachers /> },
+            { path: 'courses', element: <ManageCoursesPage userRole="admin" /> },
+            { path: 'activities', element: <ManageActivitiesPage userRole="admin"/> },
+            { path: 'blog-posts', element: <ManageBlogPostsPage userRole="admin" /> },
+            { path: 'assignments', element: <ManageAssignmentsPage userRole="admin" /> },
+        ]
+    },
+    {
+        path: STUDENT_BASE,
+        element: <StudentDashboardLayout />,
+        children: [
+            { path: '', element: <Navigate to={STUDENT_DASHBOARD} replace /> },
+            { path: 'dashboard', element: <StudentDashboard /> },
+            { path: 'profile', element: <StudentProfile /> },
+            { path: 'chat', element: <StudentChat /> },
+            { path: 'courses', element: <StudentCourses /> },
+            { path: 'activities', element: <StudentActivities /> },
+            { path: 'blogs', element: <StudentBlog /> },
+            { path: 'assignments', element: <StudentAssignments /> },
         ],
     },
-    // Guest Routes (Not Logged In)
+    {
+        path: TEACHER_BASE,
+        element: <TeacherDashboardLayout />,
+        children: [
+            { path: '', element: <Navigate to={TEACHER_DASHBOARD} replace /> },
+            { path: 'dashboard', element: <TeacherDashboard /> },
+            { path: 'profile', element: <TeacherProfile /> },
+            { path: 'chat', element: <TeacherChat /> },
+            { path: 'courses', element: <ManageCoursesPage userRole="teacher" /> },
+            { path: 'activities', element: <ManageActivitiesPage userRole="teacher"/> },
+            { path: 'blog-posts', element: <ManageBlogPostsPage userRole="teacher" /> },
+            { path: 'assignments', element: <ManageAssignmentsPage userRole="teacher" /> },
+
+
+        ],
+    },
+
+    // --- GUEST & PUBLIC ROUTES ---
     {
         element: <GuestLayout />,
         children: [
             { path: USER_LOGIN, element: <Login /> },
+            { path: USER_REGISTER, element: <Register /> }, // <-- Add this
+            { path: FORGOT_PASSWORD, element: <ForgotPassword /> }, // <-- Add this
+            { path: '/reset-password', element: <ResetPassword /> }, // <-- Add this
         ],
     },
-    // Student Routes
     {
-        element: <StudentDashboardLayout />,
+        element: <Layout />,
         children: [
-            { path: STUDENT_DASHBOARD, element: <StudentDashboardPage /> },
-            { path: STUDENT_PROFILE, element: <StudentProfilePage /> },
-            { path: STUDENT_CHATS, element: <StudentChat /> },
-            { path: STUDENT_COURSES, element: <StudentCourses /> },
-            { path: STUDENT_ACTIVITIES, element: <StudentActivities /> },
-            { path: STUDENT_BLOGS, element: <StudentBlog /> },
-            { path: STUDENT_ASSIGNMENTS, element: <StudentAssignments /> },
-            // { path: STUDENT_NOTIFICATIONS, element: <StudentNotificationsPage /> }, // Add if component exists
-        ],
-    },
-    // Admin Routes
-    {
-        element: <AdminDashboardLayout />,
-        children: [
-            { path: ADMIN_DASHBOARD, element: <AdminDashboard /> },
-            { path: ADMIN_PROFILE, element: <AdminProfile /> },
-            { path: ADMIN_MANAGE_PARENTS, element: <AdminManageParents /> },
-            { path: ADMIN_MANAGE_STUDENTS, element: <AdminManageStudents /> },
-            { path: ADMIN_MANAGE_TEACHERS, element: <AdminManageTeachers /> },
-            { path: ADMIN_COURSES, element: <AdminManageCourses /> },
-            { path: ADMIN_BLOGS, element: <AdminManageBlogs /> },
-            { path: ADMIN_ACTIVITIES, element: <AdminManageActivities /> },
-            { path: ADMIN_ASSIGNMENTS, element: <AdminManageAssignments /> },
-            { path: ADMIN_SYSTEM_SETTING, element: <AdminSystemSetting /> },
-            // { path: ADMIN_NOTIFICATIONS, element: <AdminNotificationsPage /> }, // Add if component exists
-        ],
-    },
-    // Teacher Routes
-    {
-        element: <TeacherDashboardLayout />,
-        children: [
-            { path: TEACHER_DASHBOARD, element: <TeacherDashboardPage /> },
-            { path: TEACHER_PROFILE, element: <TeacherProfilePage /> },
-            { path: TEACHER_CHATS, element: <TeacherCourses /> }, // Original had TeacherCourses here, verify if it should be TeacherChat component
-            { path: TEACHER_COURSES, element: <TeacherCourses /> },
-            { path: TEACHER_ACTIVITIES, element: <TeacherActivities /> },
-            { path: TEACHER_BLOGS, element: <TeacherBlog /> },
-            { path: TEACHER_ASSIGNMENTS, element: <TeacherAssignment /> },
-            // { path: TEACHER_NOTIFICATIONS, element: <TeacherNotificationsPage /> }, // Add if component exists
-        ],
-    },
-    // Parent Routes
-    {
-        element: <ParentDashboardLayout />,
-        children: [
-            // Replace AdminDashboard with actual ParentDashboardPage when created
-            { path: PARENT_DASHBOARD, element: <AdminDashboard /> /* <ParentDashboardPage /> */ },
-            // { path: PARENT_PROFILE, element: <ParentProfilePage /> },
-            // { path: PARENT_CHAT, element: <ParentChatPage /> },
-            // { path: PARENT_VIEW_LIBRARY, element: <ParentViewLibraryPage /> },
-            // { path: PARENT_VIEW_ACTIVITIES, element: <ParentViewActivitiesPage /> },
-            // { path: PARENT_VIEW_BLOG, element: <ParentViewBlogPage /> },
-            // { path: PARENT_CHILD_PROFILE, element: <ParentChildProfilePage /> },
-            // { path: PARENT_CHILD_ASSIGNMENTS, element: <ParentChildAssignmentsPage /> },
-            // { path: PARENT_CHILD_ATTENDANCE, element: <ParentChildAttendancePage /> },
-            // { path: PARENT_NOTIFICATIONS, element: <ParentNotificationsPage /> }, // Add if component exists
+            {
+                path: '/',
+                element: (
+                    <AuthGuard>
+                        <Home />
+                    </AuthGuard>
+                ),
+            },
+            { path: '/about', element: <About /> }, // <-- Add this route
+            { path: '/blog', element: <Blog /> }, // <-- Add this route
+            { path: '*', element: <NotFound /> },
         ],
     },
 ]);

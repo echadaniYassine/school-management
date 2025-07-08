@@ -32,16 +32,23 @@ return [
 
         'local' => [
             'driver' => 'local',
-            'root' => storage_path('app/private'),
+            'root' => storage_path('app'),
             'serve' => true,
             'throw' => false,
             'report' => false,
+        ],
+        // --- ADD THIS ENTIRE BLOCK ---
+        'private' => [
+            'driver' => 'local',
+            'root' => storage_path('app/private'), // Files will be stored in storage/app/private
+            'visibility' => 'private', // Default visibility for new files
+            'throw' => false,
         ],
 
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
-            'url' => env('APP_URL').'/storage',
+            'url' => env('APP_URL') . '/storage',
             'visibility' => 'public',
             'throw' => false,
             'report' => false,

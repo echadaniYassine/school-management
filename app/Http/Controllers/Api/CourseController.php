@@ -25,10 +25,11 @@ class CourseController extends Controller
 
         if ($request->filled('search')) {
             $searchTerm = $request->input('search');
-            $query->where(fn ($q) => 
+            $query->where(
+                fn($q) =>
                 $q->where('title', 'like', "%{$searchTerm}%")
-                  ->orWhere('code', 'like', "%{$searchTerm}%")
-                  ->orWhere('instructor', 'like', "%{$searchTerm}%")
+                    ->orWhere('code', 'like', "%{$searchTerm}%")
+                    ->orWhere('instructor', 'like', "%{$searchTerm}%")
             );
         }
 
@@ -42,7 +43,17 @@ class CourseController extends Controller
 
     public function store(StoreCourseRequest $request)
     {
-        $course = Course::create($request->validated());
+        // 1. Get the validated data from the form request.
+        $validatedData = $request->validated();
+
+        // 2. Add the ID of the currently authenticated user to the data array.
+        //    This is the step that fixes the "NOT NULL constraint failed" error.
+        $validatedData['author_id'] = $request->user()->id; // or auth()->id()
+
+        // 3. Create the course using the now-complete data.
+        $course = Course::create($validatedData);
+
+        // 4. Return the new resource with a 201 Created status code.
         return (new CourseResource($course))
             ->response()
             ->setStatusCode(Response::HTTP_CREATED);
@@ -63,7 +74,6 @@ class CourseController extends Controller
     public function destroy(Course $course)
     {
         $course->delete();
-        // BEST PRACTICE: Return 204 No Content for successful deletion.
         return response()->noContent();
     }
 }

@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Trash2Icon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import StudentApi from "../../../Services/Api/Admin/StudentApi.js";
+import StudentApi from "../../../Services/Api/StudentApi.js";
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel,
   AlertDialogContent, AlertDialogDescription, AlertDialogFooter,

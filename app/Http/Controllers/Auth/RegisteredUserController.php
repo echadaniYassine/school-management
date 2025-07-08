@@ -22,7 +22,7 @@ class RegisteredUserController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
@@ -30,12 +30,22 @@ class RegisteredUserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->string('password')),
+
+            // --- THIS IS THE FIX ---
+            // We must provide a value for the 'role' column.
+            'role' => 'student',
         ]);
 
         event(new Registered($user));
 
         Auth::login($user);
 
-        return response()->noContent();
+        $token = $user->createToken('api-token')->plainTextToken;
+
+        return response([
+            'user' => $user, // Optional: return the user object
+            'token' => $token,
+            'message' => 'Registration successful.'
+        ], 201);
     }
 }

@@ -7,7 +7,8 @@ return new class extends Migration {
     public function up(): void {
         Schema::create('assignments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('author_id')->nullable()->constrained('users')->onDelete('set null');
+            // --- FIX: Renamed 'user_id' to 'author_id' to match the Model and Policy. ---
+            $table->foreignId('author_id')->constrained('users')->onDelete('cascade');
             $table->string('title');
             $table->text('description')->nullable();
             $table->string('course')->nullable();

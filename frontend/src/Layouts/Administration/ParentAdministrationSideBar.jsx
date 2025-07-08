@@ -13,7 +13,7 @@ import {
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "../../components/ui/button.js";
 import {
-  PARENT_CHAT,
+  // PARENT_CHAT,
   PARENT_CHILD_ASSIGNMENTS,
   PARENT_CHILD_ATTENDANCE,
   PARENT_CHILD_PROFILE,
@@ -65,11 +65,11 @@ export function ParentAdministrationSideBar({ className }) {
           icon: <NewspaperIcon className="mr-2 h-5 w-5" />,
           label: "Blog",
         },
-        {
-          to: PARENT_CHAT, // Example: Replace with actual route
-          icon: <MessageSquareIcon className="mr-2 h-5 w-5" />,
-          label: "Chat",
-        },
+        // {
+        //   to: PARENT_CHAT, // Example: Replace with actual route
+        //   icon: <MessageSquareIcon className="mr-2 h-5 w-5" />,
+        //   label: "Chat",
+        // },
       ],
     },
     {

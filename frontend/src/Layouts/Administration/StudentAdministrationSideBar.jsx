@@ -14,7 +14,7 @@ import {
   STUDENT_ACTIVITIES,
   STUDENT_ASSIGNMENTS,
   STUDENT_BLOGS,
-  STUDENT_CHATS,
+  // STUDENT_CHATS,
   STUDENT_COURSES,
   STUDENT_DASHBOARD,
   // STUDENT_LIBRARY, // Assuming STUDENT_COURSES is the library for students
@@ -65,11 +65,11 @@ export function StudentAdministrationSideBar({ className }) {
           icon: <ClipboardListIcon className="mr-2 h-5 w-5" />,
           label: "Assignments",
         },
-        {
-          to: STUDENT_CHATS,
-          icon: <MessageSquareIcon className="mr-2 h-5 w-5" />,
-          label: "Chat",
-        },
+        // {
+        //   to: STUDENT_CHATS,
+        //   icon: <MessageSquareIcon className="mr-2 h-5 w-5" />,
+        //   label: "Chat",
+        // },
         // Add Notifications if you have a route and UI for it
         // {
         //   to: STUDENT_NOTIFICATIONS,

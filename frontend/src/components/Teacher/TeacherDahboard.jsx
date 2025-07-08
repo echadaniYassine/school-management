@@ -1,4 +1,6 @@
-import { useUserContext } from "../../context/StudentContext";
+// src/components/Teacher/TeacherDahboard.jsx
+
+import { useUserContext } from "../../context/UserContext";
 
 export default function TeacherDahboard() {
   const { user } = useUserContext();

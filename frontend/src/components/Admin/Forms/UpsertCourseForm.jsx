@@ -9,15 +9,15 @@ import { useEffect, useState } from 'react';
 
 const DEFAULT_FORM_DATA = {
     title: '',
-    code: '',
+    // code: '',
     description: '',
     instructor: '',
     category: '',
-    level: 'Beginner',
-    duration: '',
-    status: 'draft',
+    // level: 'Beginner',
+    // duration: '',
+    // status: 'draft',
     thumbnailUrl: '',
-    price: '0' // Store as string for input, parse on submit
+    // price: '0' // Store as string for input, parse on submit
 };
 
 export default function UpsertCourseForm({
@@ -47,9 +47,9 @@ export default function UpsertCourseForm({
         setFormData(prev => ({ ...prev, [id]: value }));
     };
 
-    const handleSelectChange = (name, value) => {
-        setFormData(prev => ({ ...prev, [name]: value }));
-    };
+    // const handleSelectChange = (name, value) => {
+    //     setFormData(prev => ({ ...prev, [name]: value }));
+    // };
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -82,7 +82,7 @@ export default function UpsertCourseForm({
                                 required
                             />
                         </div>
-                        <div className="grid grid-cols-4 items-center gap-4">
+                        {/* <div className="grid grid-cols-4 items-center gap-4">
                             <Label htmlFor="code" className="text-right">
                                 Code
                             </Label>
@@ -93,7 +93,7 @@ export default function UpsertCourseForm({
                                 className="col-span-3"
                                 placeholder="e.g., CS101"
                             />
-                        </div>
+                        </div> */}
                         <div className="grid grid-cols-4 items-start gap-4">
                             <Label htmlFor="description" className="text-right pt-2">
                                 Description
@@ -131,7 +131,7 @@ export default function UpsertCourseForm({
                                 placeholder="e.g., Technology, Business"
                             />
                         </div>
-                        <div className="grid grid-cols-4 items-center gap-4">
+                        {/* <div className="grid grid-cols-4 items-center gap-4">
                             <Label htmlFor="level" className="text-right">
                                 Level
                             </Label>
@@ -146,8 +146,8 @@ export default function UpsertCourseForm({
                                     <SelectItem value="All Levels">All Levels</SelectItem>
                                 </SelectContent>
                             </Select>
-                        </div>
-                        <div className="grid grid-cols-4 items-center gap-4">
+                        </div> */}
+                        {/* <div className="grid grid-cols-4 items-center gap-4">
                             <Label htmlFor="duration" className="text-right">
                                 Duration
                             </Label>
@@ -158,8 +158,8 @@ export default function UpsertCourseForm({
                                 className="col-span-3"
                                 placeholder="e.g., 8 Weeks, 1 Semester"
                             />
-                        </div>
-                         <div className="grid grid-cols-4 items-center gap-4">
+                        </div> */}
+                         {/* <div className="grid grid-cols-4 items-center gap-4">
                             <Label htmlFor="price" className="text-right">
                                 Price
                             </Label>
@@ -173,7 +173,7 @@ export default function UpsertCourseForm({
                                 min="0"
                                 step="0.01"
                             />
-                        </div>
+                        </div> */}
                         <div className="grid grid-cols-4 items-center gap-4">
                             <Label htmlFor="thumbnailUrl" className="text-right">
                                 Thumbnail URL
@@ -186,7 +186,7 @@ export default function UpsertCourseForm({
                                 placeholder="https://example.com/image.jpg"
                             />
                         </div>
-                        <div className="grid grid-cols-4 items-center gap-4">
+                        {/* <div className="grid grid-cols-4 items-center gap-4">
                             <Label htmlFor="status" className="text-right">
                                 Status
                             </Label>
@@ -200,7 +200,7 @@ export default function UpsertCourseForm({
                                     <SelectItem value="archived">Archived</SelectItem>
                                 </SelectContent>
                             </Select>
-                        </div>
+                        </div> */}
                     </div>
                     <DialogFooter className="pt-4">
                         <Button type="button" variant="outline" onClick={handleClose}>
