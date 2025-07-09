@@ -2,6 +2,7 @@
 import { Navigate, Outlet } from 'react-router-dom';
 import { useUserContext } from '../context/UserContext'; // Adjust path if needed
 import Header from '../components/Header'
+import Footer from '../components/Admin/Footer/Footer';
 
 export default function GuestLayout() {
   const { authenticated, isLoading } = useUserContext();
@@ -20,6 +21,8 @@ export default function GuestLayout() {
       <main>
         <Outlet />
       </main>
+      <Footer />
+
     </div>
   );
 }

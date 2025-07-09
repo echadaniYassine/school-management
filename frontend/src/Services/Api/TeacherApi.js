@@ -1,23 +1,33 @@
 // src/Services/Api/Admin/TeacherApi.js
-import { axiosClient } from "../../Api/axios"; // Ensure this path is correct
+import { axiosClient } from "../../Api/axios";
 
 const TeacherApi = {
+    // FIX: Get all users, but filter by role='teacher'
+    all: async (params = {}) => {
+        // Merge the role filter with any other existing params (like search or pagination)
+        const requestParams = { ...params, role: 'teacher' };
+        return await axiosClient.get('/admin/users', { params: requestParams });
+    },
+
+    // A 'teacher' is a 'user', so we use the user endpoints for CUD operations.
+    // The backend policy will ensure only an admin can perform these actions.
     create: async (payload) => {
-        return await axiosClient.post('/admin/teachers', payload);
+        // IMPORTANT: Ensure the payload includes 'role': 'teacher'
+        const teacherPayload = { ...payload, role: 'teacher' };
+        return await axiosClient.post('/admin/users', teacherPayload);
     },
+
     update: async (id, payload) => {
-        // Backend expects PUT, but axiosClient.put might not send ID in body like your example
-        // It's usually /admin/teachers/{id} with payload in body
-        return await axiosClient.put(`/admin/teachers/${id}`, payload);
+        return await axiosClient.put(`/admin/users/${id}`, payload);
     },
+
     delete: async (id) => {
-        return await axiosClient.delete(`/admin/teachers/${id}`);
+        return await axiosClient.delete(`/admin/users/${id}`);
     },
-    all: async (params = {}) => { // Added params for potential pagination/filtering
-        return await axiosClient.get('/admin/teachers', { params });
-    },
-    getById: async (id) => { // Optional: if you need to fetch a single teacher
-         return await axiosClient.get(`/admin/teachers/${id}`);
+
+    getById: async (id) => {
+         return await axiosClient.get(`/admin/users/${id}`);
     }
 };
+
 export default TeacherApi;

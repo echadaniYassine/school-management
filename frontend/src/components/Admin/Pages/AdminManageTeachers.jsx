@@ -1,61 +1,121 @@
 // src/components/admin/Pages/AdminManageTeachers.jsx
-// Removed useUserContext as it wasn't used directly here
-import {
-  Tabs, TabsContent, TabsList, TabsTrigger
-} from "../../ui/tabs.jsx";
-import { Separator } from "../../ui/separator.jsx";
-import { ScrollArea, ScrollBar } from "../../ui/scroll-area.jsx"; // Keep if needed for other content
-import { useState } from "react";
-import AdminTeachersList from "../DataTable/AdminTeachersList.jsx"; // Corrected import
-import TeacherUpsertForm from "../Forms/TeachersUpsertForm.jsx";     // Corrected import
-import TeacherApi from "../../../Services/Api/TeacherApi.js"; // Corrected import
+
+import React, { useState, useEffect, useCallback } from "react";
+import { toast } from "sonner";
+import { Trash2Icon } from "lucide-react"; // For toast icon
+import TeacherApi from "../../../Services/Api/TeacherApi.js";
+
+// UI Components
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs.jsx";
+
+// Custom Components
+import AdminTeachersList from "../DataTable/AdminTeachersList.jsx";
+import TeacherUpsertForm from "../Forms/TeachersUpsertForm.jsx"; // Note the renamed form
 
 export default function AdminManageTeachers() {
+  const [teachers, setTeachers] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [currentTeacher, setCurrentTeacher] = useState(null); // For editing
   const [activeTab, setActiveTab] = useState("items_list");
 
-  const handleTeacherCreated = (newTeacher) => {
-     // Optionally, you could update the list here, but AdminTeachersList refetches.
-     // This callback is mainly to switch the tab.
-     setActiveTab("items_list");
+  // --- The SINGLE data fetching function ---
+  const fetchTeachers = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const response = await TeacherApi.all();
+      setTeachers(response.data.data || []);
+    } catch (error) {
+      toast.error(
+        error?.response?.data?.message || error?.message || "Failed to fetch teachers."
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  // Fetch data once on component mount
+  useEffect(() => {
+    fetchTeachers();
+  }, [fetchTeachers]);
+
+  // --- API handlers defined in the parent ---
+  const handleTeacherSubmit = async (teacherData) => {
+    // This is passed as the `onSubmit` prop to the form.
+    // It must return the promise from the API call.
+    if (currentTeacher?.id) {
+      return await TeacherApi.update(currentTeacher.id, teacherData);
+    } else {
+      return await TeacherApi.create(teacherData);
+    }
+  };
+
+  const handleDelete = async (teacherId) => {
+    const toastId = toast.loading("Deleting teacher...");
+    try {
+      await TeacherApi.delete(teacherId);
+      toast.success("Teacher deleted successfully!", { id: toastId, icon: <Trash2Icon /> });
+      // FIX: Refresh the list from the single source of truth after deletion
+      fetchTeachers();
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Error while deleting teacher.", { id: toastId });
+    }
+  };
+
+  // --- UI handlers defined in the parent ---
+  const handleSuccess = () => {
+    // This is passed as the `onSuccess` prop to the form.
+    setCurrentTeacher(null); // Clear editing state
+    setActiveTab("items_list"); // Switch back to the list view
+    fetchTeachers();           // Refresh the list to show changes
+  };
+
+  const handleOpenEditTab = (teacher) => {
+    setCurrentTeacher(teacher);
+    // src/components/admin/Forms/TeachersUpsertForm.jsx
+    setActiveTab('add_item');
+  };
+
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+    // When switching to the 'Add' tab manually, clear any existing data
+    if (tab === 'add_item') {
+      setCurrentTeacher(null);
+    }
   };
 
   return (
-    <div className="relative"> {/* Removed overflow-x-auto, DataTable handles its own scrolling */}
-      {/* Removed outer hidden md:block and extra divs for simplicity, can be added back if specific layout needs it */}
-      <div className="h-full px-4 py-6 lg:px-8">
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="h-full space-y-6">
-          <div className="flex items-center justify-between"> {/* Ensure TabsList is part of a flex container if needed for alignment */}
-            <TabsList>
-              <TabsTrigger value="items_list">Teachers List</TabsTrigger>
-              <TabsTrigger value="add_item">Add New Teacher</TabsTrigger>
-            </TabsList>
-          </div>
+    <div className="h-full px-4 py-6 lg:px-8">
+      <Tabs value={activeTab} onValueChange={handleTabChange} className="h-full space-y-6">
+        <TabsList>
+          <TabsTrigger value="items_list">All Teachers</TabsTrigger>
+          <TabsTrigger value="add_item">Add New Teacher</TabsTrigger>
+        </TabsList>
 
-          <TabsContent value="items_list" className="border-none p-0 outline-none mt-0!"> {/* Remove default margin-top of TabsContent */}
-            <div className="space-y-1 w-full">
-              <div className="flex items-center justify-between mb-4"> {/* Added margin-bottom */}
-                 <h2 className="text-2xl font-semibold tracking-tight">All Teachers</h2>
-                 {/* You could add a total count here if pagination provides it */}
-              </div>
-              <AdminTeachersList />
-            </div>
-            {/* Separator and ScrollArea below might not be needed if DataTable handles scrolling */}
-            {/* <Separator className="my-4" /> */}
-            {/* <div className="relative">...</div> */}
-          </TabsContent>
+        <TabsContent value="items_list" className="border-none p-0 outline-none">
+          <h2 className="text-2xl font-semibold tracking-tight mb-4">Teacher Roster</h2>
+          {/* Pass data and handlers down as props to the "dumb" list component */}
+          <AdminTeachersList
+            teachers={teachers}
+            isLoading={isLoading}
+            onEdit={handleOpenEditTab}
+            onDelete={handleDelete}
+          />
+        </TabsContent>
 
-          <TabsContent value="add_item" className="mt-0!">
-             <div className="max-w-2xl mx-auto"> {/* Center the form */}
-                 <h2 className="text-2xl font-semibold tracking-tight mb-4">Create New Teacher</h2>
-                 <TeacherUpsertForm
-                     handleSubmit={(values) => TeacherApi.create(values)}
-                     onSuccess={handleTeacherCreated} // Switch tab on success
-                 />
-             </div>
-            {/* <Separator className="my-4" /> */}
-          </TabsContent>
-        </Tabs>
-      </div>
+        <TabsContent value="add_item" className="border-none p-0 outline-none">
+          <h2 className="text-2xl font-semibold tracking-tight mb-4">
+            {currentTeacher ? `Edit Teacher: ${currentTeacher.name}` : 'Create New Teacher'}
+          </h2>
+          {/* The form is part of a tab, rendering based on activeTab */}
+          {/* Add a key to ensure the form fully resets when switching between create/edit */}
+          <TeacherUpsertForm
+            key={currentTeacher ? currentTeacher.id : 'create'}
+            initialData={currentTeacher}
+            onSubmit={handleTeacherSubmit}
+            onSuccess={handleSuccess}
+          />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }

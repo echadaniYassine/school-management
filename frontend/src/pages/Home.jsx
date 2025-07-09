@@ -111,12 +111,6 @@ export default function Home() {
         </section>
 
       </main>
-
-      <footer className="bg-gray-100 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
-        <div className="container mx-auto py-6 px-6 text-center text-gray-500 dark:text-gray-400">
-          © {new Date().getFullYear()} YourCompany. All Rights Reserved.
-        </div>
-      </footer>
     </div>
   );
 }

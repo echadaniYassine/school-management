@@ -17,7 +17,6 @@ Route::middleware('role:teacher')->prefix('teacher')->name('teacher.')->group(fu
     Route::apiResource('activities', ActivityController::class);
     Route::apiResource('assignments', AssignmentController::class);
     Route::apiResource('blog-posts', BlogPostController::class);
-    Route::apiResource('class-types', ClassTypeController::class);
     Route::apiResource('teams', TeamController::class);
     Route::apiResource('exams', ExamController::class);
 
