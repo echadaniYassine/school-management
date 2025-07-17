@@ -7,6 +7,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { AlertCircle, Newspaper } from 'lucide-react';
 // --- FIX #1: Correct the import name from BlogPostApi to BlogApi ---
 import BlogApi from "../../../Services/Api/Blog";
+import BlogPostDetailView from '../views/BlogPostDetailView'; // <-- Import
 
 const StudentBlogLoadingSkeleton = () => {
     // ... (This component is perfect, no changes needed)
@@ -31,6 +32,12 @@ export default function StudentBlog() {
     const [error, setError] = useState(null);
     const userRole = 'student';
 
+    const [selectedPost, setSelectedPost] = useState(null);
+    const [isViewOpen, setIsViewOpen] = useState(false);
+
+
+
+
     const fetchBlogs = useCallback(async () => {
         setIsLoading(true);
         setError(null);
@@ -50,6 +57,11 @@ export default function StudentBlog() {
     useEffect(() => {
         fetchBlogs();
     }, [fetchBlogs]);
+
+    const handleViewBlog = (post) => {
+        setSelectedPost(post);
+        setIsViewOpen(true);
+    };
 
     // --- The rest of your return/JSX is perfectly fine, no changes needed ---
     return (
@@ -81,7 +93,7 @@ export default function StudentBlog() {
                     ) : (
                         <div className="space-y-4">
                             {blogs.map(blog => (
-                                <Card key={blog.id} className="hover:shadow-md transition-shadow">
+                                <Card key={blog.id} onClick={() => handleViewBlog(blog)} className="hover:shadow-md transition-shadow">
                                     <CardHeader>
                                         <CardTitle className="text-lg">{blog.title || "Untitled Post"}</CardTitle>
                                     </CardHeader>
@@ -102,6 +114,7 @@ export default function StudentBlog() {
                     )}
                 </CardContent>
             </Card>
+            <BlogPostDetailView post={selectedPost} isOpen={isViewOpen} onOpenChange={setIsViewOpen} />
         </div>
     );
 }

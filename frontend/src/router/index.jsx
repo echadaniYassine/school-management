@@ -7,11 +7,10 @@ import AuthGuard from '../components/Auth/AuthGuard'; // Adjust path if needed
 
 // --- LAYOUTS ---
 // Layouts wrap groups of routes and provide shared UI and protection logic.
-import AdminDashboardLayout from '../Layouts/AdminDashboardLayout';
+import DashboardLayout from '../Layouts/DashboardLayout';
 import GuestLayout from '../Layouts/GuestLayout';
 import Layout from '../Layouts/Layout';
-import StudentDashboardLayout from '../Layouts/StudentDashboardLayout';
-import TeacherDashboardLayout from '../Layouts/TeacherDashboardLayout';
+
 // import ParentDashboardLayout from '../Layouts/ParentDashboardLayout';
 
 // --- PUBLIC PAGES ---
@@ -111,7 +110,7 @@ export const router = createBrowserRouter([
     // --- PROTECTED ROUTES ---
     {
         path: ADMIN_BASE,
-        element: <AdminDashboardLayout />,
+        element: <DashboardLayout allowedRole="admin" />,
         children: [
             { path: '', element: <Navigate to={ADMIN_DASHBOARD} replace /> },
             { path: 'dashboard', element: <AdminDashboard /> },
@@ -121,13 +120,13 @@ export const router = createBrowserRouter([
             { path: 'manage-teachers', element: <AdminManageTeachers /> },
             { path: 'courses', element: <ManageCoursesPage userRole="admin" /> },
             { path: 'activities', element: <ManageActivitiesPage userRole="admin"/> },
-            { path: 'blog-posts', element: <ManageBlogPostsPage userRole="admin" /> },
+            { path: 'blogs', element: <ManageBlogPostsPage userRole="admin" /> },
             { path: 'assignments', element: <ManageAssignmentsPage userRole="admin" /> },
         ]
     },
     {
         path: STUDENT_BASE,
-        element: <StudentDashboardLayout />,
+        element: <DashboardLayout allowedRole="student" />,
         children: [
             { path: '', element: <Navigate to={STUDENT_DASHBOARD} replace /> },
             { path: 'dashboard', element: <StudentDashboard /> },
@@ -141,7 +140,7 @@ export const router = createBrowserRouter([
     },
     {
         path: TEACHER_BASE,
-        element: <TeacherDashboardLayout />,
+        element: <DashboardLayout allowedRole="teacher" />,
         children: [
             { path: '', element: <Navigate to={TEACHER_DASHBOARD} replace /> },
             { path: 'dashboard', element: <TeacherDashboard /> },

@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 // import { Home, Newspaper, Info, LogIn } from 'lucide-react';
-import { ModeToggle } from "../components/mode-toggle";
+import { ModeToggle } from "@/theme/mode-toggle";
 
 export default function Header() {
   return (

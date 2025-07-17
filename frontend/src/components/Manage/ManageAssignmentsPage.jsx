@@ -16,6 +16,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import AssignmentApi from '../../Services/Api/Assignment';
 import AssignmentsList from '../Admin/Assignments/AssignmentsList';
 import UpsertAssignmentForm from '../Admin/Forms/UpsertAssignmentForm';
+import AssignmentDetailView from '../admin/assignments/AssignmentDetailView';
 
 // Constants and Skeleton (You can keep these as they are)
 const COURSE_OPTIONS = ["All Courses", "Mathematics 101", "World History", "Physics 201", "English Literature", "Computer Science Basics"];
@@ -41,6 +42,7 @@ export default function ManageAssignmentsPage({ userRole }) {
     const [filters, setFilters] = useState({ searchTerm: '', course: COURSE_OPTIONS[0], status: STATUS_OPTIONS[0] });
     const [isUpsertModalOpen, setIsUpsertModalOpen] = useState(false);
     const [currentAssignment, setCurrentAssignment] = useState(null);
+    const [isViewModalOpen, setIsViewModalOpen] = useState(false);
 
     const fetchAssignments = useCallback(async (page = 1) => {
         setIsLoading(true);
@@ -76,10 +78,10 @@ export default function ManageAssignmentsPage({ userRole }) {
             const action = currentAssignment?.id
                 ? AssignmentApi.update({ role: userRole, id: currentAssignment.id, formData })
                 : AssignmentApi.create({ role: userRole, formData });
-            
+
             await action;
             toast.success(`Assignment ${currentAssignment?.id ? 'updated' : 'created'} successfully!`);
-            
+
             setIsUpsertModalOpen(false);
             fetchAssignments(currentAssignment ? pagination.currentPage : 1);
         } catch (error) {
@@ -101,6 +103,10 @@ export default function ManageAssignmentsPage({ userRole }) {
             toast.error(err.response?.data?.message || "Failed to delete assignment.");
         }
     };
+    const handleViewAssignment = (assignment) => {
+        setCurrentAssignment(assignment); // Set the assignment to be viewed
+        setIsViewModalOpen(true);
+    };
 
     const pageTitle = userRole === 'admin' ? 'Manage All Assignments' : 'My Assignments';
 
@@ -118,22 +124,30 @@ export default function ManageAssignmentsPage({ userRole }) {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 items-end">
                         <div className="relative md:col-span-1">
                             <Search className="absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                            <Input placeholder="Search..." value={filters.searchTerm} onChange={(e) => setFilters(p => ({...p, searchTerm: e.target.value}))} className="pl-8"/>
+                            <Input placeholder="Search..." value={filters.searchTerm} onChange={(e) => setFilters(p => ({ ...p, searchTerm: e.target.value }))} className="pl-8" />
                         </div>
-                        <Select value={filters.course} onValueChange={(value) => setFilters(p => ({...p, course: value}))}>
+                        <Select value={filters.course} onValueChange={(value) => setFilters(p => ({ ...p, course: value }))}>
                             <SelectTrigger><SelectValue placeholder="Filter by course" /></SelectTrigger>
                             <SelectContent>{COURSE_OPTIONS.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
                         </Select>
-                        <Select value={filters.status} onValueChange={(value) => setFilters(p => ({...p, status: value}))}>
+                        <Select value={filters.status} onValueChange={(value) => setFilters(p => ({ ...p, status: value }))}>
                             <SelectTrigger><SelectValue placeholder="Filter by status" /></SelectTrigger>
                             <SelectContent>{STATUS_OPTIONS.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
                         </Select>
                     </div>
 
                     {isLoading ? <AssignmentsLoadingSkeleton />
-                     : error ? <Alert variant="destructive"><AlertCircle className="h-4 w-4" /><AlertTitle>Error</AlertTitle><AlertDescription>{error}</AlertDescription></Alert>
-                     : assignments.length === 0 ? <div className="text-center py-12 border-2 border-dashed rounded-lg"><p className="text-xl text-muted-foreground">No assignments match your criteria.</p></div>
-                     : <AssignmentsList assignments={assignments} onEditAssignment={(a) => { setCurrentAssignment(a); setIsUpsertModalOpen(true); }} onDeleteAssignment={handleDeleteAssignment} onDownloadInstructions={() => toast.info("Download not implemented yet.")} onViewSubmissions={() => toast.info("View submissions not implemented yet.")}/>
+                        : error ? <Alert variant="destructive"><AlertCircle className="h-4 w-4" /><AlertTitle>Error</AlertTitle><AlertDescription>{error}</AlertDescription></Alert>
+                            : assignments.length === 0 ? <div className="text-center py-12 border-2 border-dashed rounded-lg"><p className="text-xl text-muted-foreground">No assignments match your criteria.</p></div>
+                                : <AssignmentsList
+                                    assignments={assignments}
+                                    onEditAssignment={(a) => { setCurrentAssignment(a); setIsUpsertModalOpen(true); }}
+                                    onDeleteAssignment={handleDeleteAssignment}
+                                    onDownloadInstructions={() => toast.info("Download not implemented yet.")}
+                                    onViewSubmissions={() => toast.info("View submissions not implemented yet.")}
+                                    onViewAssignment={handleViewAssignment}
+
+                                />
                     }
                 </CardContent>
             </Card>
@@ -153,8 +167,15 @@ export default function ManageAssignmentsPage({ userRole }) {
                     onSubmit={handleSaveAssignment}
                     initialData={currentAssignment}
                     isSending={isSending}
+
                 />
             )}
+
+             <AssignmentDetailView
+                assignment={currentAssignment}
+                isOpen={isViewModalOpen}
+                onOpenChange={setIsViewModalOpen}
+            />
         </div>
     );
 }

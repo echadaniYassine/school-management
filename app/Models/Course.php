@@ -44,13 +44,6 @@ class Course extends Model
         return $this->hasMany(Exam::class);
     }
     
-    public function classTypes(): BelongsToMany
-    {
-        return $this->belongsToMany(ClassType::class, 'class_type_courses')
-            ->withPivot('coef')
-            ->withTimestamps();
-    }
-
     /**
      * --- FIX: Renamed relationship to 'author()' and specified the foreign key for clarity. ---
      */

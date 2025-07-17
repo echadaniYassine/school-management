@@ -14,6 +14,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import ActivityApi from '../../Services/Api/Activity';
 import ActivitiesList from '../Admin/Activities/ActivitiesList'; // Re-use the same list component
 import UpsertActivityForm from '../Admin/Forms/UpsertActivityForm'; // Re-use the same form component
+import ActivityDetailView from '../admin/Activities/ActivityDetailView';
 
 const ActivitiesLoadingSkeleton = () => (
     <div className="space-y-4">
@@ -39,6 +40,7 @@ export default function ManageActivitiesPage({ userRole }) {
     const [error, setError] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [currentActivity, setCurrentActivity] = useState(null);
+    const [isViewModalOpen, setIsViewModalOpen] = useState(false);
 
     const fetchActivities = useCallback(async () => {
         setIsLoading(true);
@@ -68,6 +70,13 @@ export default function ManageActivitiesPage({ userRole }) {
     };
 
     const handleCloseModal = () => setIsModalOpen(false);
+
+    const handleViewActivity = (activity) => {
+        // We set the same `currentActivity` because both modals need it,
+        // but we open the *view* modal, not the edit one.
+        setCurrentActivity(activity);
+        setIsViewModalOpen(true);
+    };
 
     const handleSaveActivity = async (formData) => {
         setIsSending(true);
@@ -132,6 +141,8 @@ export default function ManageActivitiesPage({ userRole }) {
                             activities={activities}
                             onEditActivity={handleOpenEditModal}
                             onDeleteActivity={handleDeleteActivity}
+                            onViewActivity={handleViewActivity}
+
                         />
                     )}
                 </CardContent>
@@ -146,6 +157,13 @@ export default function ManageActivitiesPage({ userRole }) {
                     isSending={isSending}
                 />
             )}
+
+            {/* --- ADD THE NEW Detail View modal --- */}
+            <ActivityDetailView
+                activity={currentActivity}
+                isOpen={isViewModalOpen}
+                onOpenChange={setIsViewModalOpen}
+            />
         </div>
     );
 }

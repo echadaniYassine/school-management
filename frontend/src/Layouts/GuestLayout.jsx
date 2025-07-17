@@ -1,14 +1,14 @@
 // src/Layouts/GuestLayout.jsx
 import { Navigate, Outlet } from 'react-router-dom';
 import { useUserContext } from '../context/UserContext'; // Adjust path if needed
-import Header from '../components/Header'
-import Footer from '../components/Admin/Footer/Footer';
+import Header from '../components/navigation/Header'
+import Footer from '../components/navigation/Footer';
 
 export default function GuestLayout() {
   const { authenticated, isLoading } = useUserContext();
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div>Loadinmg...</div>;
   }
 
   if (authenticated) {
@@ -21,8 +21,7 @@ export default function GuestLayout() {
       <main>
         <Outlet />
       </main>
-      <Footer />
-
+      {/* <Footer /> */}
     </div>
   );
 }

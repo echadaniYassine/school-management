@@ -1,7 +1,7 @@
 // src/components/admin/courses/CoursesList.jsx
 import CourseItem from './CourseItem';
 
-export default function CoursesList({ courses, onEditCourse, onDeleteCourse, onManageCourseContent }) {
+export default function CoursesList({ courses, onEditCourse, onDeleteCourse, onViewCourse }) {
     if (!courses || courses.length === 0) {
         return (
             <div className="text-center py-12">
@@ -19,7 +19,7 @@ export default function CoursesList({ courses, onEditCourse, onDeleteCourse, onM
                     course={course}
                     onEdit={onEditCourse}
                     onDelete={onDeleteCourse}
-                    onManageContent={onManageCourseContent}
+                    onView={onViewCourse} 
                 />
             ))}
         </div>

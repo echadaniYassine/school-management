@@ -14,11 +14,11 @@ const getStatusBadgeClass = (status) => {
     return statusStyles[status] || statusStyles.draft; // Default to draft style if status is unknown
 };
 
-export default function CourseItem({ course, onEdit, onDelete, onManageContent }) {
+export default function CourseItem({ course, onEdit, onDelete, onView  }) {
     return (
         <Card className="hover:shadow-lg transition-shadow flex flex-col">
             {course.thumbnailUrl && (
-                 <div className="aspect-video w-full overflow-hidden rounded-t-lg">
+                <div className="aspect-video w-full overflow-hidden rounded-t-lg">
                     <img src={course.thumbnailUrl} alt={course.title || 'Course thumbnail'} className="w-full h-full object-cover" />
                 </div>
             )}
@@ -49,13 +49,13 @@ export default function CourseItem({ course, onEdit, onDelete, onManageContent }
             </CardContent>
             <CardFooter className="flex flex-col sm:flex-row justify-between items-center gap-2 p-4 border-t">
                 <Button
-                    variant="outline"
+                    variant="ghost"
                     size="sm"
-                    onClick={() => onManageContent(course)}
+                    onClick={() => onView(course)} // <-- CORRECTED: Calls the onView prop
                     className="flex items-center gap-1 w-full sm:w-auto"
                 >
                     <Settings2 className="h-4 w-4" />
-                    Manage Content
+                    View
                 </Button>
                 <div className="flex gap-2 w-full sm:w-auto justify-end">
                     <Button

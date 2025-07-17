@@ -6,6 +6,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { AlertCircle, ListChecks } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import ActivityApi from "../../../Services/Api/Activity";
+import ActivityDetailView from '../views/ActivityDetailView'; // <-- Import
 
 const StudentActivitiesLoadingSkeleton = () => {
     return (
@@ -31,6 +32,9 @@ export default function StudentActivities() {
     const [error, setError] = useState(null);
     const userRole = 'student';
 
+    const [selectedActivity, setSelectedActivity] = useState(null);
+    const [isViewOpen, setIsViewOpen] = useState(false);
+
     const fetchActivities = useCallback(async () => {
         setIsLoading(true);
         setError(null);
@@ -49,6 +53,11 @@ export default function StudentActivities() {
     useEffect(() => {
         fetchActivities();
     }, [fetchActivities]);
+
+    const handleViewActivity = (activity) => {
+        setSelectedActivity(activity);
+        setIsViewOpen(true);
+    };
 
     return (
         <div className="space-y-6 p-4 md:p-6">
@@ -81,7 +90,7 @@ export default function StudentActivities() {
                     ) : !error && activities.length > 0 ? (
                         <div className="space-y-4">
                             {activities.map(activity => (
-                                <Card key={activity.id} className="hover:shadow-md transition-shadow">
+                                <Card key={activity.id} onClick={() => handleViewActivity(activity)} className="hover:shadow-md transition-shadow">
                                     <CardHeader>
                                         <CardTitle className="text-lg">{activity.title || "Untitled Activity"}</CardTitle>
                                     </CardHeader>
@@ -99,6 +108,8 @@ export default function StudentActivities() {
                     ) : null}
                 </CardContent>
             </Card>
+            <ActivityDetailView activity={selectedActivity} isOpen={isViewOpen} onOpenChange={setIsViewOpen} />
+
         </div>
     );
 }

@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Calendar, Edit2, MapPin, Trash2, Users } from 'lucide-react';
+import { Eye } from 'lucide-react'; // Import the Eye icon for viewing
 
 const getStatusBadgeClass = (status) => {
     const statusStyles = {
@@ -30,7 +31,7 @@ const getCategoryBadgeClass = (category) => {
     return categoryStyles[key] || categoryStyles.default;
 };
 
-export default function ActivityItem({ activity, onEdit, onDelete }) {
+export default function ActivityItem({ activity, onEdit, onDelete, onView }) {
     // **DEBUGGING: Log the activity object to see its structure**
     // console.log("ActivityItem received activity:", JSON.stringify(activity, null, 2));
 
@@ -83,6 +84,15 @@ export default function ActivityItem({ activity, onEdit, onDelete }) {
                         </div>
                     </div>
                     <div className="flex items-center gap-2 sm:ml-4">
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => onView(activity)}
+                            className="flex items-center gap-1"
+                        >
+                            <Eye className="h-4 w-4" />
+                            View
+                        </Button>
                         <Button
                             variant="outline"
                             size="sm"

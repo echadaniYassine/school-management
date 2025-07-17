@@ -1,13 +1,13 @@
-// src/components/DashboardHeader.jsx
+// src/Layouts/DashboardHeader.jsx
 
 import { Button } from '@/components/ui/button';
 import { LogOut } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { ModeToggle } from '../components/mode-toggle';
-import NotificationBell from '../components/Notification/NotificationBell';
+import { ModeToggle } from "@/theme/mode-toggle";
+import NotificationBell from '../Notification/NotificationBell';
 
 // --- IMPORT THE NEW CHAT COMPONENT ---
-import ChatPanel from '../components/Chat/ChatPanel';
+import ChatPanel from '../Chat/ChatPanel';
 
 export default function DashboardHeader({
   logoLink = '/',

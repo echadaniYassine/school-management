@@ -6,6 +6,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Skeleton } from "@/components/ui/skeleton";
 import { BookOpen, AlertCircle } from 'lucide-react';
 import CoursesApi from "../../../Services/Api/Courses"; // Make sure path is correct
+import CourseDetailView from '../views/CourseDetailView'; // <-- Import the new view
 
 // A dedicated component for the loading state.
 const StudentCoursesLoadingSkeleton = () => {
@@ -30,7 +31,11 @@ export default function StudentCourses() {
   const [courses, setCourses] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  
+
+  const [selectedCourse, setSelectedCourse] = useState(null);
+  const [isViewOpen, setIsViewOpen] = useState(false);
+
+
   // The role is hard-coded because this is a student-specific page.
   const userRole = 'student';
 
@@ -41,7 +46,7 @@ export default function StudentCourses() {
       // --- THE FIX ---
       // We now call the API with a single object containing the 'role' and optional 'params'.
       const response = await CoursesApi.getAll({ role: userRole });
-      
+
       // Ensure we have an array, even if the API response is unexpected.
       setCourses(Array.isArray(response.data?.data) ? response.data.data : []);
 
@@ -60,6 +65,12 @@ export default function StudentCourses() {
     // This effect runs once on component mount to fetch the initial data.
     fetchCourses();
   }, [fetchCourses]);
+
+  const handleViewCourse = (course) => {
+    setSelectedCourse(course);
+    setIsViewOpen(true);
+  };
+
 
   return (
     <div className="space-y-6 p-4 md:p-6">
@@ -92,7 +103,7 @@ export default function StudentCourses() {
           ) : (
             <div className="space-y-4">
               {courses.map(course => (
-                <Card key={course.id} className="hover:shadow-lg transition-shadow duration-300">
+                <Card key={course.id} onClick={() => handleViewCourse(course)} className="hover:shadow-lg transition-shadow duration-300">
                   <CardHeader>
                     <CardTitle className="text-lg">{course.title || "Untitled Course"}</CardTitle>
                   </CardHeader>
@@ -101,12 +112,15 @@ export default function StudentCourses() {
                       {course.description || "No description available."}
                     </p>
                     <div className="flex justify-between items-center text-xs text-gray-500 dark:text-gray-400">
-                        <span>Category: <strong>{course.category?.name || 'N/A'}</strong></span>
-                        <span>Created: <strong>{new Date(course.created_at).toLocaleDateString()}</strong></span>
+                      <span>Category: <strong>{course.category?.name || 'N/A'}</strong></span>
+                      <span>Created: <strong>{new Date(course.created_at).toLocaleDateString()}</strong></span>
                     </div>
                   </CardContent>
                 </Card>
+
               ))}
+              <CourseDetailView course={selectedCourse} isOpen={isViewOpen} onOpenChange={setIsViewOpen} />
+
             </div>
           )}
         </CardContent>

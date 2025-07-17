@@ -1,6 +1,6 @@
-import { ChartAreaInteractive } from "../../chart-area-interactive";
-import { DataTable } from "../../data-table";
-import { SectionCards } from "../../section-cards";
+import { ChartAreaInteractive } from "../../ui/chart-area-interactive";
+import { DataTable } from "../../ui/data-table";
+import { SectionCards } from "../DataTable/section-cards";
 import data from "./data.json";
 
 export default function AdminDashboard() {

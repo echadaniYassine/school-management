@@ -7,6 +7,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { AlertCircle, Download, FileText } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import AssignmentApi from "../../../Services/Api/Assignment";
+import AssignmentDetailView from '../views/AssignmentDetailView'; // <-- Import
+
 
 const StudentAssignmentsLoadingSkeleton = () => {
     return (
@@ -37,6 +39,11 @@ export default function StudentAssignments() {
     const [error, setError] = useState(null);
     const [downloadError, setDownloadError] = useState(null);
     const userRole = 'student';
+    const [selectedAssignment, setSelectedAssignment] = useState(null);
+    const [isViewOpen, setIsViewOpen] = useState(false);
+
+
+
 
     const fetchAssignments = useCallback(async () => {
         setIsLoading(true);
@@ -65,7 +72,7 @@ export default function StudentAssignments() {
             const blob = new Blob([response.data], { type: response.headers['content-type'] });
             const link = document.createElement('a');
             link.href = window.URL.createObjectURL(blob);
-            
+
             const contentDisposition = response.headers['content-disposition'];
             let filename = `${assignmentTitle || 'assignment'}-instructions.file`; // Default filename
             if (contentDisposition) {
@@ -85,6 +92,11 @@ export default function StudentAssignments() {
             // Optionally, use a toast notification system here instead of an alert
             // alert(message); 
         }
+    };
+
+    const handleViewAssignment = (assignment) => {
+        setSelectedAssignment(assignment);
+        setIsViewOpen(true);
     };
 
     return (
@@ -109,7 +121,7 @@ export default function StudentAssignments() {
                         </Alert>
                     )}
                     {downloadError && (
-                         <Alert variant="destructive" className="mb-4">
+                        <Alert variant="destructive" className="mb-4">
                             <AlertCircle className="h-4 w-4" />
                             <AlertTitle>Download Error</AlertTitle>
                             <AlertDescription>{downloadError}</AlertDescription>
@@ -126,7 +138,7 @@ export default function StudentAssignments() {
                     ) : !error && assignments.length > 0 ? (
                         <div className="space-y-4">
                             {assignments.map(assignment => (
-                                <Card key={assignment.id} className="hover:shadow-md transition-shadow">
+                                <Card key={assignment.id} onClick={() => handleViewAssignment(assignment)} className="hover:shadow-md transition-shadow">
                                     <CardHeader>
                                         <CardTitle className="text-lg">{assignment.title || "Untitled Assignment"}</CardTitle>
                                         {assignment.course?.title && (
@@ -166,6 +178,12 @@ export default function StudentAssignments() {
                     ) : null}
                 </CardContent>
             </Card>
+            <AssignmentDetailView
+                assignment={selectedAssignment}
+                isOpen={isViewOpen}
+                onOpenChange={setIsViewOpen}
+                onDownload={handleDownloadInstructions} // Pass the download handler
+            />
         </div>
     );
 }

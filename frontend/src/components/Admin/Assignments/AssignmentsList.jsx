@@ -6,7 +6,9 @@ export default function AssignmentsList({
     onViewSubmissions,
     onEditAssignment,    // New prop
     onDeleteAssignment,  // New prop
-    onDownloadInstructions // New prop
+    onDownloadInstructions, // New prop
+    onViewAssignment // <-- New prop
+
 }) {
     if (!assignments || assignments.length === 0) {
         return (
@@ -26,6 +28,8 @@ export default function AssignmentsList({
                     onEdit={onEditAssignment}         // Pass down
                     onDelete={onDeleteAssignment}       // Pass down
                     onDownload={onDownloadInstructions} // Pass down
+                    onView={onViewAssignment}
+
                 />
             ))}
         </div>

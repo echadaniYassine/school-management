@@ -6,7 +6,7 @@ import { axiosClient } from "../../Api/axios";
 const getPrefix = (role) => {
     if (role === 'admin') return '/admin';
     if (role === 'teacher') return '/teacher';
-    return ''; // Public view
+    return ''; // Default for public/guest access if any
 };
 
 const ActivityApi = {
@@ -27,12 +27,15 @@ const ActivityApi = {
     },
 
     /**
-     * @param {object} options - { role, id, formData }
-     */
-    update: ({ role, id, formData }) => {
+    * NOTE: If your UpsertActivityForm sends files, you will need to
+    * use the FormData with _method override trick here as well.
+    * For simplicity, this example assumes JSON data for PUT.
+    *
+    * @param {object} options - { role, id, payload }
+    */
+    update: ({ role, id, payload }) => {
         const prefix = getPrefix(role);
-        // Note: If your form sends files, you'll need the _method override trick
-        return axiosClient.put(`${prefix}/activities/${id}`, formData);
+        return axiosClient.put(`${prefix}/activities/${id}`, payload);
     },
 
     /**

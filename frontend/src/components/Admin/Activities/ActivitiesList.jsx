@@ -3,7 +3,7 @@
 // Assuming ActivityItem.jsx is in src/components/admin/activities/
 import ActivityItem from '../activities/ActivityItem';
 
-export default function ActivitiesList({ activities, onEditActivity, onDeleteActivity }) {
+export default function ActivitiesList({ activities, onEditActivity, onDeleteActivity, onViewActivity }) {
     if (!activities || activities.length === 0) { // Added a check for !activities
         return (
             <div className="text-center py-8">
@@ -20,6 +20,7 @@ export default function ActivitiesList({ activities, onEditActivity, onDeleteAct
                     activity={activity}
                     onEdit={onEditActivity}
                     onDelete={onDeleteActivity}
+                    onView={onViewActivity}
                 />
             ))}
         </div>

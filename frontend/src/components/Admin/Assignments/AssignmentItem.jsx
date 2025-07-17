@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { BookOpen, CalendarDays, Download, Edit2, FileText, Trash2, Users } from 'lucide-react';
+import { Eye } from 'lucide-react'; // Make sure this is imported
 
 const getStatusBadgeClass = (status) => {
     const statusStyles = {
@@ -16,13 +17,16 @@ const getStatusBadgeClass = (status) => {
     return statusStyles[status?.toLowerCase()] || "bg-indigo-100 text-indigo-800 border-indigo-200";
 };
 
-export default function AssignmentItem({ assignment, onViewSubmissions, onEdit, onDelete, onDownload }) {
+export default function AssignmentItem({ assignment, onViewSubmissions, onEdit, onDelete, onDownload, onView }) {
     return (
         <Card className="hover:shadow-md transition-shadow">
             <CardContent className="p-6">
                 <div className="flex flex-col sm:flex-row justify-between items-start mb-3">
                     <div className="flex-1 mb-3 sm:mb-0">
                         <div className="flex items-center gap-3 mb-2 flex-wrap">
+                            <h3 className="text-lg font-semibold hover:text-indigo-600 transition-colors">
+                                {assignment.title}
+                            </h3>
                             <h3 className="text-lg font-semibold">{assignment.title}</h3>
                             <Badge className={getStatusBadgeClass(assignment.status)}>
                                 {assignment.status?.charAt(0).toUpperCase() + assignment.status?.slice(1) || 'N/A'}
@@ -41,7 +45,7 @@ export default function AssignmentItem({ assignment, onViewSubmissions, onEdit, 
                     </div>
                     <div className="flex flex-wrap gap-2 items-start">
                         {onViewSubmissions && (
-                             <Button
+                            <Button
                                 variant="outline"
                                 size="sm"
                                 onClick={() => onViewSubmissions(assignment.id)}
@@ -50,7 +54,7 @@ export default function AssignmentItem({ assignment, onViewSubmissions, onEdit, 
                                 Submissions
                             </Button>
                         )}
-                         {assignment.hasInstructionsFile && onDownload && (
+                        {assignment.hasInstructionsFile && onDownload && (
                             <Button variant="outline" size="sm" onClick={() => onDownload(assignment.id, assignment.title)}>
                                 <Download className="h-4 w-4 mr-2" />
                                 Instructions
@@ -60,7 +64,7 @@ export default function AssignmentItem({ assignment, onViewSubmissions, onEdit, 
                 </div>
 
                 <div className="mt-3 pt-3 border-t">
-                     <p className="text-sm text-muted-foreground mb-2">
+                    <p className="text-sm text-muted-foreground mb-2">
                         <Users className="h-4 w-4 inline mr-1" />
                         Assigned to: {assignment.assignedTo || 'N/A'}
                     </p>
@@ -71,6 +75,15 @@ export default function AssignmentItem({ assignment, onViewSubmissions, onEdit, 
                     )}
 
                     <div className="flex justify-end gap-2">
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => onView(assignment)}
+                            className="flex items-center gap-1"
+                        >
+                            <Eye className="h-4 w-4" />
+                            View
+                        </Button>
                         <Button
                             variant="outline"
                             size="sm"
