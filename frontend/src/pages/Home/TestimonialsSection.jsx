@@ -41,16 +41,16 @@ export default function TestimonialsSection() {
                 >
                     <h2 className="text-4xl font-bold text-gray-900 dark:text-white">Loved by Educators Worldwide</h2>
                     <p className="mt-4 text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-                        Don't just take our word for it. Here's what leaders in education are saying about EduGate.
+                        Don't just take our word for it. Here's what leaders in education are saying about our platform.
                     </p>
                 </motion.div>
                 <div className="relative mt-12 max-w-3xl mx-auto h-80 flex items-center justify-center">
-                    <AnimatePresence initial={false}>
+                    <AnimatePresence initial={false} mode="wait">
                         <motion.div 
                             key={testimonialIndex} 
-                            initial={{ x: 300, opacity: 0 }} 
+                            initial={{ x: 200, opacity: 0 }} 
                             animate={{ x: 0, opacity: 1 }} 
-                            exit={{ x: -300, opacity: 0 }} 
+                            exit={{ x: -200, opacity: 0 }} 
                             transition={{ type: 'spring', stiffness: 200, damping: 25 }} 
                             className="absolute w-full p-8 rounded-2xl shadow-2xl bg-white dark:bg-slate-800 border border-gray-200 dark:border-gray-700"
                         >
@@ -71,13 +71,15 @@ export default function TestimonialsSection() {
                 </div>
                 <div className="mt-8 flex justify-center gap-4">
                     <button 
-                        onClick={() => paginateTestimonials(-1)} 
+                        onClick={() => paginateTestimonials(-1)}
+                        aria-label="Previous testimonial"
                         className="p-3 rounded-full bg-white dark:bg-slate-700 hover:bg-gray-100 dark:hover:bg-slate-600 transition shadow-md text-gray-700 dark:text-gray-300"
                     >
                         <ArrowLeft className="w-5 h-5" />
                     </button>
                     <button 
                         onClick={() => paginateTestimonials(1)} 
+                        aria-label="Next testimonial"
                         className="p-3 rounded-full bg-white dark:bg-slate-700 hover:bg-gray-100 dark:hover:bg-slate-600 transition shadow-md text-gray-700 dark:text-gray-300"
                     >
                         <ArrowRight className="w-5 h-5" />

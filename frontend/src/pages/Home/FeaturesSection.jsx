@@ -22,11 +22,7 @@ export default function FeaturesSection() {
     ];
 
     return (
-        <section className="py-24 relative overflow-hidden">
-            <div className="absolute inset-0 -z-10 opacity-40">
-                <div className="absolute -top-1/2 left-0 w-full h-[500px] bg-gradient-to-r from-purple-600/30 to-transparent filter blur-3xl transform -rotate-12" />
-                <div className="absolute -bottom-1/2 right-0 w-full h-[500px] bg-gradient-to-l from-pink-500/20 to-transparent filter blur-3xl transform rotate-12" />
-            </div>
+        <section id="features" className="py-24 relative overflow-hidden bg-gray-50 dark:bg-gray-900/50">
             <div className="container mx-auto px-6 relative z-10">
                 <motion.div 
                     initial={{ opacity: 0, y: 30 }} 

@@ -1,18 +1,16 @@
 // src/Layouts/DashboardLayout.jsx
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import { useUserContext } from '../context/UserContext';
 
-// Import shared components
+// Import the final, refactored components
 import Sidebar from './Sidebar';
 import DashboardHeader from '../components/navigation/DashboardHeader';
 import LoadingSpinner from './LoadingSpinner';
+import { USER_LOGIN } from '../router/routes';
 
-// Import route constants
-import { USER_LOGIN } from '../router/routes'; // <-- Import from dedicated routes file
-
-// This config object is a great pattern, no changes needed.
+// Configuration object for titles based on user role
 const layoutConfig = {
   admin: { title: "Admin Portal" },
   teacher: { title: "Teacher Portal" },
@@ -20,46 +18,67 @@ const layoutConfig = {
 };
 
 /**
- * A single, reusable layout for all authenticated user dashboards.
- * @param {{ allowedRole: 'admin' | 'teacher' | 'student' }} props
+ * The main application shell for all authenticated users.
+ * This layout establishes the relationship between the fixed sidebar,
+ * the fixed header, and the main scrollable content area.
  */
 export default function DashboardLayout({ allowedRole }) {
   const { user, authenticated, isLoading, logout } = useUserContext();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+  // Display a loading state while verifying the user session
   if (isLoading) {
     return <LoadingSpinner text="Verifying Session..." />;
   }
 
+  // Redirect to login if the user is not authenticated
   if (!authenticated) {
     return <Navigate to={USER_LOGIN} replace />;
   }
 
-  // This robust role check is excellent.
+  // Redirect to a safe page if the user's role doesn't match
   if (user?.role !== allowedRole) {
     return <Navigate to="/" replace />;
   }
 
+  // Get the specific configuration for the current user's role
   const config = layoutConfig[user.role] || {};
 
-  // --- FIX: Use CSS Grid for a modern and stable app shell ---
   return (
-    <div className="grid min-h-screen w-full md:grid-cols-[280px_1fr]">
-      
-      {/* 1. Sidebar Column (hidden on mobile) */}
-      <aside className="hidden border-r bg-muted/40 md:block">
-        {/* The Sidebar no longer needs to be 'fixed' because the grid holds it in place */}
-        <Sidebar userRole={user.role} />
-      </aside>
+    <div className="min-h-screen w-full bg-background">
+      {/* 
+        The Sidebar is rendered here. Its internal styling makes it fixed.
+        It is only visible on large screens (desktop-first approach).
+      */}
+      <Sidebar userRole={user.role} />
 
-      {/* 2. Main Content Column */}
-      <div className="flex flex-col">
+      {/*
+        The Mobile Sidebar Sheet is rendered here. It is controlled by state
+        and appears as an overlay on small screens.
+      */}
+      <Sidebar.MobileSheet 
+          userRole={user.role} 
+          isOpen={isMobileMenuOpen} 
+          onClose={() => setIsMobileMenuOpen(false)}
+      />
+      
+      {/*
+        This div wraps the main content. The KEY is the left padding on large screens,
+        which must match the sidebar's width (w-64 -> pl-64).
+      */}
+      <div className="lg:pl-64">
+        {/* The Header is also fixed internally and will position itself correctly within this padded container. */}
         <DashboardHeader
           title={config.title || "Dashboard"}
           onLogout={logout}
-          // The logoLink is now handled by the Sidebar's home link
+          onMenuToggle={() => setIsMobileMenuOpen(true)}
         />
         
-        <main className="flex-1 overflow-y-auto bg-background/95 p-4 md:p-6">
+        {/*
+          The main content for each page. The top padding prevents content
+          from being hidden underneath the fixed header. (h-16 + top-5 margin = ~21, pt-28 is safe)
+        */}
+        <main className="flex-1 bg-background/95 p-4 pt-20 sm:pt-24 lg:pt-15">
           <Outlet />
         </main>
       </div>

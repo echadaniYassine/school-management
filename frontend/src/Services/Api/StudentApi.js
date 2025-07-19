@@ -1,4 +1,4 @@
-// src/Services/Api/Admin/StudentApi.js
+// src/Services/Api/StudentApi.js
 import { axiosClient } from "../../Api/axios";
 
 const StudentApi = {

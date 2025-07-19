@@ -1,4 +1,4 @@
-// src/Services/Api/CoursesApi.js
+// src/Services/Api/Courses.js
 
 import { axiosClient } from "../../Api/axios";
 

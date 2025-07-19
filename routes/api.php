@@ -1,12 +1,13 @@
 <?php
 
-use App\Http\Controllers\Api\ActivityController;
-use App\Http\Controllers\Api\AssignmentController;
-use App\Http\Controllers\Api\BlogPostController;
-use App\Http\Controllers\Api\CourseController;
-use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
+use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\CourseController;
+use App\Http\Controllers\Api\ActivityController;
+use App\Http\Controllers\Api\BlogPostController;
+use App\Http\Controllers\Api\AssignmentController;
+use App\Http\Controllers\Admin\DashboardController;
 
 //======================================================================
 // PUBLIC ROUTES (No Authentication Required)
@@ -43,6 +44,8 @@ require __DIR__ . '/auth.php';
 Route::middleware('auth:sanctum')->group(function () {
     // Get the current authenticated user
     Route::get('/user', fn(Request $request) => new UserResource($request->user()))->name('me');
+    Route::get('/dashboard-stats', [DashboardController::class, 'getStats']);
+    Route::get('/attendance-over-time', [DashboardController::class, 'getUserRegistrationsOverTime']);
 
     // Load role-specific route files
     require __DIR__ . '/admin.php';

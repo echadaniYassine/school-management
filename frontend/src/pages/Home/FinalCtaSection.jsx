@@ -17,9 +17,10 @@ export default function FinalCtaSection() {
                 <p className="text-lg my-6 max-w-xl mx-auto">Join thousands of educators already transforming their teaching experience.</p>
                 <motion.a 
                     href="#contact" 
-                    whileHover={{ scale: 1.1, backgroundColor: '#ffffff', color: '#4f46e5' }} 
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.98 }}
                     transition={{ type: 'spring', stiffness: 300 }} 
-                    className="inline-block bg-white/20 backdrop-blur-sm border border-white/50 text-white font-bold rounded-full px-10 py-4 text-lg shadow-lg hover:bg-white hover:text-indigo-600"
+                    className="inline-block bg-white/20 backdrop-blur-sm border border-white/50 text-white font-bold rounded-full px-10 py-4 text-lg shadow-lg hover:bg-white hover:text-indigo-600 transition-all duration-300"
                 >
                     Contact Us Today!
                 </motion.a>
