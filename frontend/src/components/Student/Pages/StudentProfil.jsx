@@ -10,7 +10,7 @@ import { KeyRound, UserCog } from "lucide-react";
 
 const ProfileSkeleton = () => {
   return (
-    <div className="max-w-2xl mx-auto p-4 md:p-6">
+    <div className="h-full px-4 py-6 lg:px-8">
       <Card>
         <CardHeader className="items-center text-center border-b pb-6">
           <Skeleton className="w-24 h-24 rounded-full mb-4" />
@@ -63,14 +63,14 @@ export default function StudentProfile() {
   };
 
   const profileDetails = [
-      { label: "Student ID", value: user.id },
-      { label: "Full Name", value: user.name },
-      { label: "Email Address", value: user.email },
-      { label: "Enrolled Since", value: user.created_at ? new Date(user.created_at).toLocaleDateString() : null },
-      // Add other relevant fields from your user object if they exist
-      // { label: "Department", value: user.department }, 
-      // { label: "Level", value: user.level },
-      // { label: "Last Login", value: user.lastLogin ? new Date(user.lastLogin).toLocaleString() : null },
+    { label: "Student ID", value: user.id },
+    { label: "Full Name", value: user.name },
+    { label: "Email Address", value: user.email },
+    { label: "Enrolled Since", value: user.created_at ? new Date(user.created_at).toLocaleDateString() : null },
+    // Add other relevant fields from your user object if they exist
+    // { label: "Department", value: user.department }, 
+    // { label: "Level", value: user.level },
+    // { label: "Last Login", value: user.lastLogin ? new Date(user.lastLogin).toLocaleString() : null },
   ].filter(item => item.value !== null && item.value !== undefined);
 
 
@@ -90,13 +90,13 @@ export default function StudentProfile() {
           <h3 className="text-lg font-semibold mb-4 text-center sm:text-left">Student Information</h3>
           <div className="space-y-3">
             {profileDetails.map((item) => (
-                <div key={item.label} className="flex flex-col sm:flex-row sm:items-center">
-                  <span className="sm:w-1/3 text-sm font-medium text-gray-600 dark:text-gray-400">{item.label}:</span>
-                  <span className="sm:w-2/3 text-gray-800 dark:text-gray-200">{item.value}</span>
-                </div>
+              <div key={item.label} className="flex flex-col sm:flex-row sm:items-center">
+                <span className="sm:w-1/3 text-sm font-medium text-gray-600 dark:text-gray-400">{item.label}:</span>
+                <span className="sm:w-2/3 text-gray-800 dark:text-gray-200">{item.value}</span>
+              </div>
             ))}
             {profileDetails.length === 0 && (
-                <p className="text-muted-foreground text-center sm:text-left">No additional profile details available.</p>
+              <p className="text-muted-foreground text-center sm:text-left">No additional profile details available.</p>
             )}
           </div>
 

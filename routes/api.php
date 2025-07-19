@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\ChatController;
 use App\Http\Controllers\Api\CourseController;
 use App\Http\Controllers\Api\ActivityController;
 use App\Http\Controllers\Api\BlogPostController;
@@ -46,6 +47,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', fn(Request $request) => new UserResource($request->user()))->name('me');
     Route::get('/dashboard-stats', [DashboardController::class, 'getStats']);
     Route::get('/attendance-over-time', [DashboardController::class, 'getUserRegistrationsOverTime']);
+    Route::get('/chat/conversations', [ChatController::class, 'getConversations']);
+    Route::post('/chat/messages', [ChatController::class, 'sendMessage']);
+    Route::post('/chat/conversations/{conversation}/read', [ChatController::class, 'markAsRead']);
 
     // Load role-specific route files
     require __DIR__ . '/admin.php';

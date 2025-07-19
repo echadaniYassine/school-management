@@ -70,12 +70,12 @@ export default function AdminManageStudents() {
     setCurrentStudent(student);
     setActiveTab('add_item'); // Switch to the form tab for editing
   };
-  
+
   const handleTabChange = (tab) => {
-      setActiveTab(tab);
-      if (tab === 'add_item') {
-          setCurrentStudent(null); // Clear data for "create" mode
-      }
+    setActiveTab(tab);
+    if (tab === 'add_item') {
+      setCurrentStudent(null); // Clear data for "create" mode
+    }
   }
 
   return (
@@ -96,18 +96,18 @@ export default function AdminManageStudents() {
             onDelete={handleDelete}
           />
         </TabsContent>
-        
+
         <TabsContent value="add_item" className="border-none p-0 outline-none">
-           <h2 className="text-2xl font-semibold tracking-tight mb-4">
-             {currentStudent ? `Edit Student: ${currentStudent.name}` : 'Create New Student'}
-           </h2>
-           {/* The form is now part of a tab, no modal needed unless preferred */}
-           <StudentUpsertForm
-              key={currentStudent ? currentStudent.id : 'create'}
-              initialData={currentStudent}
-              onSubmit={handleStudentSubmit}
-              onSuccess={handleSuccess}
-            />
+          <h2 className="text-2xl font-semibold tracking-tight mb-4">
+            {currentStudent ? `Edit Student: ${currentStudent.name}` : 'Create New Student'}
+          </h2>
+          {/* The form is now part of a tab, no modal needed unless preferred */}
+          <StudentUpsertForm
+            key={currentStudent ? currentStudent.id : 'create'}
+            initialData={currentStudent}
+            onSubmit={handleStudentSubmit}
+            onSuccess={handleSuccess}
+          />
         </TabsContent>
       </Tabs>
     </div>

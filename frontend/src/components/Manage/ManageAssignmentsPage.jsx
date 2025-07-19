@@ -111,7 +111,7 @@ export default function ManageAssignmentsPage({ userRole }) {
     const pageTitle = userRole === 'admin' ? 'Manage All Assignments' : 'My Assignments';
 
     return (
-        <div className="space-y-6 p-4 md:p-6">
+        <div className="h-full px-4 py-6 lg:px-8">
             <Card>
                 <CardHeader className="flex flex-col md:flex-row items-center justify-between gap-4">
                     <CardTitle className="text-2xl font-bold">{pageTitle}</CardTitle>

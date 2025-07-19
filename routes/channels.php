@@ -13,9 +13,16 @@ use Illuminate\Support\Facades\Broadcast;
 |
 */
 
-// Example for a private channel (you will need this later)
-// Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
-//     return (int) $user->id === (int) $id;
-// });
+// This is a default channel that comes with Laravel
+Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
+    return (int) $user->id === (int) $id;
+});
 
-// For now, our 'notifications' channel is public, so this file can be simple.
+
+// ADD YOUR NEW CHANNEL AUTHORIZATION LOGIC HERE
+Broadcast::channel('conversation.{conversationId}', function ($user, $conversationId) {
+    // This callback checks if the logged-in user is part of the conversation
+    // they are attempting to listen to. If it returns true, they are authorized.
+    // If it returns false, they are denied access to the channel.
+    return $user->conversations()->where('id', $conversationId)->exists();
+});

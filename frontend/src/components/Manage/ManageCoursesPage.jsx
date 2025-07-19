@@ -133,7 +133,7 @@ export default function ManageCoursesPage({ userRole }) {
     const submitButtonText = isSubmitting ? (currentCourse ? "Saving..." : "Creating...") : (currentCourse ? "Save Changes" : "Create Course");
 
     return (
-        <div className="space-y-6 p-4 md:p-6">
+        <div className="h-full px-4 py-6 lg:px-8">
             <div className="flex flex-col md:flex-row justify-between items-start gap-4">
                 <div>
                     <h1 className="text-2xl md:text-3xl font-bold tracking-tight">{pageTitle}</h1>
@@ -182,7 +182,7 @@ export default function ManageCoursesPage({ userRole }) {
                 />
             )}
 
-              {/* --- Render the new Detail View modal --- */}
+            {/* --- Render the new Detail View modal --- */}
             {/* It will only show up when a course is selected and isViewModalOpen is true */}
             <CourseDetailView
                 course={currentCourse}

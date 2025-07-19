@@ -6,7 +6,7 @@ export default function TeacherDahboard() {
   const { user } = useUserContext();
 
   return (
-    <div className="text-gray-800 dark:text-gray-100">
+    <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
       {user && (
         <section className="mt-8">
           <h2 className="text-xl font-bold mb-4">User Information</h2>

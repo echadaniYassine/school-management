@@ -60,7 +60,7 @@ export default function StudentActivities() {
     };
 
     return (
-        <div className="space-y-6 p-4 md:p-6">
+        <div className="h-full px-4 py-6 lg:px-8">
             <Card>
                 <CardHeader>
                     <CardTitle className="text-2xl font-bold flex items-center">

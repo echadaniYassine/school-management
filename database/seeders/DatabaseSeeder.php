@@ -39,15 +39,15 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('password')
         ]);
 
-        // Create random users
-        User::factory(10)->withRole(UserRole::STUDENT)->create();
-        $teachers = User::factory(5)->withRole(UserRole::TEACHER)->create();
-        User::factory(5)->withRole(UserRole::PARENT)->create();
+        // // Create random users
+        // User::factory(10)->withRole(UserRole::STUDENT)->create();
+        // $teachers = User::factory(5)->withRole(UserRole::TEACHER)->create();
+        // User::factory(5)->withRole(UserRole::PARENT)->create();
 
         // Create content and associate with authors
-        Course::factory(20)->create();
-        Activity::factory(10)->create(['author_id' => $teachers->random()->id]);
-        Assignment::factory(15)->create(['author_id' => $teachers->random()->id]);
-        BlogPost::factory(8)->create(['author_id' => $admin->id]);
+        // Course::factory(20)->create();
+        // Activity::factory(10)->create(['author_id' => $teachers->random()->id]);
+        // Assignment::factory(15)->create(['author_id' => $teachers->random()->id]);
+        // BlogPost::factory(8)->create(['author_id' => $admin->id]);
     }
 }

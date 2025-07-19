@@ -27,6 +27,10 @@ return Application::configure(basePath: dirname(__DIR__))
             // 'verified' => \App\Http\Middleware\EnsureEmailIsVerified::class,
         ]);
     })
+    ->withBroadcasting(
+        __DIR__.'/../routes/channels.php', // <-- UNCOMMENT THIS LINE
+        ['prefix' => 'api', 'middleware' => ['api', 'auth:sanctum']] // <-- AND THIS ONE
+    )
     ->withExceptions(function (Exceptions $exceptions) {
         //
     })->create();

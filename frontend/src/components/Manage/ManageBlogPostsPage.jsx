@@ -130,7 +130,7 @@ export default function ManageBlogPostsPage({ userRole }) {
     const pageTitle = userRole === 'admin' ? 'Manage All Blog Posts' : 'My Blog Posts';
 
     return (
-        <div className="space-y-6 p-4 md:p-6">
+        <div className="h-full px-4 py-6 lg:px-8">
             <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-6">
                 <h1 className="text-3xl font-bold">{pageTitle}</h1>
                 <div className="flex gap-2 w-full md:w-auto">

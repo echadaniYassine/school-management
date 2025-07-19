@@ -66,9 +66,28 @@ class User extends Authenticatable
     {
         return $this->hasMany(ExamRecord::class, 'author_id');
     }
-    
+
     public function examRecordsAsStudent(): HasMany
     {
         return $this->hasMany(ExamRecord::class, 'user_id');
+    }
+    /**
+     * This is the method the ChatController needs.
+     * It checks if the user's role (which is an Enum object) matches the
+     * given role string.
+     *
+     * @param string $roleName The role to check (e.g., 'teacher', 'admin').
+     * @return bool
+     */
+    public function hasRole(string $roleName): bool
+    {
+        // $this->role is an instance of the UserRole Enum.
+        // We compare its value to the provided string.
+        return $this->role->value === $roleName;
+    }
+
+    public function conversations()
+    {
+        return $this->belongsToMany(Conversation::class)->withTimestamps();
     }
 }

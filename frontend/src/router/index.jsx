@@ -36,14 +36,11 @@ import ManageCoursesPage from '../components/Manage/ManageCoursesPage'; // Adjus
 import StudentActivities from '../components/student/Pages/StudentActivities';
 import StudentAssignments from '../components/student/Pages/StudentAssignments';
 import StudentBlog from '../components/student/Pages/StudentBlog';
-import StudentChat from '../components/student/Pages/StudentChat';
-import StudentCourses from '../components/student/Pages/StudentCourses';
 import StudentDashboard from '../components/student/Pages/StudentDahboard';
 import StudentProfile from '../components/student/Pages/StudentProfil';
 
 // --- TEACHER PAGES ---
 import ManageBlogPostsPage from '../components/Manage/ManageBlogPostsPage'; // Adjust path
-import TeacherChat from '../components/teacher/TeacherChat';
 import TeacherDashboard from '../components/teacher/TeacherDahboard';
 import TeacherProfile from '../components/teacher/TeacherProfil';
 
@@ -131,8 +128,6 @@ export const router = createBrowserRouter([
             { path: '', element: <Navigate to={STUDENT_DASHBOARD} replace /> },
             { path: 'dashboard', element: <StudentDashboard /> },
             { path: 'profile', element: <StudentProfile /> },
-            { path: 'chat', element: <StudentChat /> },
-            { path: 'courses', element: <StudentCourses /> },
             { path: 'activities', element: <StudentActivities /> },
             { path: 'blogs', element: <StudentBlog /> },
             { path: 'assignments', element: <StudentAssignments /> },
@@ -145,7 +140,6 @@ export const router = createBrowserRouter([
             { path: '', element: <Navigate to={TEACHER_DASHBOARD} replace /> },
             { path: 'dashboard', element: <TeacherDashboard /> },
             { path: 'profile', element: <TeacherProfile /> },
-            { path: 'chat', element: <TeacherChat /> },
             { path: 'courses', element: <ManageCoursesPage userRole="teacher" /> },
             { path: 'activities', element: <ManageActivitiesPage userRole="teacher"/> },
             { path: 'blog-posts', element: <ManageBlogPostsPage userRole="teacher" /> },

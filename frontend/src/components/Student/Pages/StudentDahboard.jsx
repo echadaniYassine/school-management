@@ -47,7 +47,7 @@ export default function StudentDashboard() {
   const { user } = useUserContext();
 
   return (
-    <div className="space-y-6">
+    <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
       {/* Header */}
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Welcome back, {user?.name?.split(' ')[0]}!</h1>
@@ -86,24 +86,24 @@ export default function StudentDashboard() {
               </div>
             </CardContent>
           </Card>
-          
+
           {/* Recent Grades Card */}
           <Card>
             <CardHeader className="flex flex-row items-center justify-between">
-                <CardTitle className="flex items-center gap-2"><GraduationCap className="h-5 w-5" />Recent Grades</CardTitle>
+              <CardTitle className="flex items-center gap-2"><GraduationCap className="h-5 w-5" />Recent Grades</CardTitle>
             </CardHeader>
             <CardContent>
-               <div className="space-y-4">
+              <div className="space-y-4">
                 {mockDashboardData.recentGrades.map((grade) => (
                   <div key={grade.id} className="flex items-center justify-between p-2 rounded-md">
-                     <div>
-                        <p className="font-semibold">{grade.assignment}</p>
-                        <p className="text-sm text-muted-foreground">{grade.course}</p>
-                      </div>
-                      <p className="text-lg font-bold text-primary">{grade.grade}</p>
+                    <div>
+                      <p className="font-semibold">{grade.assignment}</p>
+                      <p className="text-sm text-muted-foreground">{grade.course}</p>
+                    </div>
+                    <p className="text-lg font-bold text-primary">{grade.grade}</p>
                   </div>
                 ))}
-               </div>
+              </div>
             </CardContent>
           </Card>
         </div>
@@ -132,18 +132,18 @@ export default function StudentDashboard() {
 
           {/* Quick Actions Card */}
           <Card>
-             <CardHeader>
-               <CardTitle className="flex items-center gap-2"><Bolt className="h-5 w-5" />Quick Actions</CardTitle>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2"><Bolt className="h-5 w-5" />Quick Actions</CardTitle>
             </CardHeader>
             <CardContent className="flex flex-col space-y-2">
-                {mockDashboardData.quickActions.map((action) => (
-                    <Button asChild key={action.id} variant="outline" className="justify-start">
-                        <Link to={action.link}>
-                            <action.icon className="mr-2 h-4 w-4"/>
-                            {action.label}
-                        </Link>
-                    </Button>
-                ))}
+              {mockDashboardData.quickActions.map((action) => (
+                <Button asChild key={action.id} variant="outline" className="justify-start">
+                  <Link to={action.link}>
+                    <action.icon className="mr-2 h-4 w-4" />
+                    {action.label}
+                  </Link>
+                </Button>
+              ))}
             </CardContent>
           </Card>
         </div>

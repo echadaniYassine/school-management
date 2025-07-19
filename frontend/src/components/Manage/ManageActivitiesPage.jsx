@@ -114,7 +114,7 @@ export default function ManageActivitiesPage({ userRole }) {
     const pageTitle = userRole === 'admin' ? 'Manage All Activities' : 'My Activities';
 
     return (
-        <div className="space-y-6 p-4 md:p-6">
+        <div className="h-full px-4 py-6 lg:px-8">
             <Card>
                 <CardHeader className="flex flex-row items-center justify-between">
                     <CardTitle className="text-2xl font-bold">{pageTitle}</CardTitle>
