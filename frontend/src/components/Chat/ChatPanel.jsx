@@ -1,46 +1,41 @@
+// src/components/Chat/ChatPanel.jsx
+
 import React, { useState, useRef, useEffect } from 'react';
 import { MessageSquare, Send, ArrowLeft } from 'lucide-react';
 
-// Your UI component imports
+// UI component imports
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Skeleton } from "@/components/ui/skeleton"; // Use a real skeleton component
+import { Skeleton } from "@/components/ui/skeleton";
 
-// --- CONTEXT AND HOOK IMPORTS ---
-import { useUserContext } from '@/context/UserContext'; // Correct path to your context
-import { useChat } from '@/hooks/useChat'; // Correct path to your hook
+// Context and Hook imports
+import { useUserContext } from '@/context/UserContext'; // Make sure this path is correct
+import { useChat } from '@/hooks/useChat'; // Make sure this path is correct
 
+// A simple loading skeleton for the conversation list
 const ChatSkeleton = () => (
   <div className="p-4 space-y-4">
-    <div className="flex items-center space-x-4">
-      <Skeleton className="h-12 w-12 rounded-full" />
-      <div className="space-y-2">
-        <Skeleton className="h-4 w-[250px]" />
-        <Skeleton className="h-4 w-[200px]" />
+    {[...Array(3)].map((_, i) => (
+      <div className="flex items-center space-x-4" key={i}>
+        <Skeleton className="h-12 w-12 rounded-full" />
+        <div className="space-y-2">
+          <Skeleton className="h-4 w-[200px]" />
+          <Skeleton className="h-4 w-[150px]" />
+        </div>
       </div>
-    </div>
-    <div className="flex items-center space-x-4">
-      <Skeleton className="h-12 w-12 rounded-full" />
-      <div className="space-y-2">
-        <Skeleton className="h-4 w-[250px]" />
-        <Skeleton className="h-4 w-[200px]" />
-      </div>
-    </div>
+    ))}
   </div>
 );
-
 
 const getInitials = (name = '') => name?.split(' ').map(n => n[0]).join('').toUpperCase() || '';
 
 export default function ChatPanel() {
-  // 1. Get user and authentication state from your real context
   const { user, authenticated, isLoading: isAuthLoading } = useUserContext();
 
-  // 2. Pass the authenticated user to the useChat hook
   const {
     loading: isChatLoading,
     error,
@@ -50,35 +45,36 @@ export default function ChatPanel() {
     selectConversation,
     sendMessage,
     setActiveConversationId,
-  } = useChat(user);
+  } = useChat(user); // Pass the authenticated user to the hook
 
   const [newMessage, setNewMessage] = useState('');
-  const scrollAreaRef = useRef(null);
+  const scrollViewportRef = useRef(null);
 
+  // Effect to auto-scroll to the bottom of the chat
   useEffect(() => {
-    if (scrollAreaRef.current) {
-      scrollAreaRef.current.scrollTo({ top: scrollAreaRef.current.scrollHeight });
+    const viewport = scrollViewportRef.current;
+    if (viewport) {
+      viewport.scrollTop = viewport.scrollHeight;
     }
   }, [activeConversation?.messages?.length]);
 
   const handleSendMessage = (e) => {
     e.preventDefault();
+    if (!newMessage.trim()) return;
     sendMessage(newMessage);
     setNewMessage('');
   };
 
-  // Do not render the chat panel if the user is not authenticated.
+  // Don't render if user is not logged in.
   if (!authenticated) {
     return null;
   }
 
-  // Display a loading state while auth or chat data is being fetched.
   const isLoading = isAuthLoading || isChatLoading;
 
   return (
     <Sheet>
       <SheetTrigger asChild>
-        {/* ... SheetTrigger content remains the same ... */}
         <Button variant="ghost" size="icon" className="relative">
           <MessageSquare className="h-5 w-5" />
           {totalUnread > 0 && (
@@ -90,22 +86,20 @@ export default function ChatPanel() {
         </Button>
       </SheetTrigger>
 
-      <SheetContent className="flex flex-col p-0">
+      <SheetContent className="flex flex-col p-0 w-full sm:w-[400px] sm:max-w-[400px]">
         {!activeConversation ? (
           <>
-            <SheetHeader className="p-4">
+            <SheetHeader className="p-4 border-b">
               <SheetTitle>Recent Chats</SheetTitle>
             </SheetHeader>
-            <Separator />
             <ScrollArea className="flex-1">
               {isLoading && <ChatSkeleton />}
               {error && <div className="p-4 text-red-500">{error}</div>}
               {!isLoading && !error && conversations.map(convo => (
-                // ... Conversation list item remains the same ...
                 <div key={convo.id}>
                   <button
                     onClick={() => selectConversation(convo.id)}
-                    className="w-full text-left flex items-start gap-4 p-4 hover:bg-gray-50 dark:hover:bg-gray-800/50"
+                    className="w-full text-left flex items-start gap-4 p-4 hover:bg-muted"
                   >
                     <Avatar>
                       <AvatarImage src={convo.avatarUrl} />
@@ -118,7 +112,7 @@ export default function ChatPanel() {
                     <div className="text-right text-xs text-muted-foreground">
                       <p>{convo.timestamp}</p>
                       {convo.unreadCount > 0 && (
-                        <span className="mt-1 inline-block h-4 w-4 rounded-full bg-red-500 text-white text-[10px] leading-4">
+                        <span className="mt-1 inline-block h-4 min-w-4 px-1 flex items-center justify-center rounded-full bg-red-500 text-white text-[10px] leading-4">
                           {convo.unreadCount}
                         </span>
                       )}
@@ -131,7 +125,6 @@ export default function ChatPanel() {
           </>
         ) : (
           <>
-            {/* ... Active conversation header remains the same ... */}
             <SheetHeader className="p-4 border-b">
               <div className="flex items-center gap-4">
                 <Button variant="ghost" size="icon" className="-ml-2" onClick={() => setActiveConversationId(null)}>
@@ -144,27 +137,28 @@ export default function ChatPanel() {
                 <SheetTitle className="text-base">{activeConversation.name}</SheetTitle>
               </div>
             </SheetHeader>
-            <ScrollArea className="flex-1 bg-gray-50 dark:bg-gray-900/50 p-4" ref={scrollAreaRef}>
+            <ScrollArea className="flex-1 bg-muted/30 p-4" viewportRef={scrollViewportRef}>
               <div className="flex flex-col gap-4">
                 {activeConversation.messages.map(msg => (
                   <div
                     key={msg.id}
-                    className={`flex flex-col max-w-[75%] p-2 rounded-lg ${
-                      // 3. Use the real user's ID to check message sender
+                    className={`flex flex-col max-w-[75%] p-2 px-3 rounded-lg ${
+                      // This logic is now reliable because `msg.senderId` is consistent.
                       msg.senderId === user.id
                         ? 'bg-primary text-primary-foreground self-end'
-                        : 'bg-muted self-start'
+                        : 'bg-background border self-start'
                     }`}
                   >
+                    {/* This logic is now reliable because `msg.text` is consistent. */}
                     <p className="text-sm">{msg.text}</p>
                     <p className={`text-xs mt-1 ${msg.senderId === user.id ? 'text-primary-foreground/70' : 'text-muted-foreground'} self-end`}>
+                      {/* This logic is now reliable because `msg.timestamp` is consistent. */}
                       {msg.timestamp}
                     </p>
                   </div>
                 ))}
               </div>
             </ScrollArea>
-            {/* ... Message input form remains the same ... */}
             <div className="p-4 border-t">
               <form onSubmit={handleSendMessage} className="flex items-center gap-2">
                 <Input
