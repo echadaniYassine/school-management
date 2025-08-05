@@ -1,7 +1,7 @@
 <?php
+
 namespace App\Http\Requests;
 
-use App\Models\Course;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -9,22 +9,24 @@ class StoreCourseRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()->can('create', Course::class);
+        // Only Admins can create and assign courses.
+        return $this->user()->role->value === 'admin';
     }
-    
     public function rules(): array
     {
         return [
-            'title' => ['required', 'string', 'max:255'],
-            // 'code' => ['nullable', 'string', 'max:50', Rule::unique('courses', 'code')],
-            'description' => ['nullable', 'string'],
-            'instructor' => ['nullable', 'string', 'max:255'],
-            'category' => ['nullable', 'string', 'max:100'],
-            // 'level' => ['nullable', 'string', Rule::in(['Beginner', 'Intermediate', 'Advanced', 'All Levels'])],
-            // 'duration' => ['nullable', 'string', 'max:100'],
-            // 'status' => ['required', Rule::in(['draft', 'published', 'archived'])],
-            'thumbnail_url' => ['nullable', 'url', 'max:2048'],
-            // 'price' => ['nullable', 'numeric', 'min:0'],
+            'classroom_id' => 'required|exists:classrooms,id',
+            'subject_id' => [
+                'required',
+                'exists:subjects,id',
+                // This subject cannot already be assigned to this classroom for the current year.
+                Rule::unique('courses')->where(function ($query) {
+                    return $query->where('classroom_id', $this->input('classroom_id'));
+                }),
+            ],
+            'teacher_id' => ['required', Rule::exists('users', 'id')->where('role', 'teacher')],
+            'description_fr' => 'nullable|string',
+            'description_ar' => 'nullable|string',
         ];
     }
 }

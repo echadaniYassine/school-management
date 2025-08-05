@@ -11,16 +11,13 @@ class AssignmentResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'title' => $this->title,
-            'description' => $this->description,
-            'course' => $this->course,
-            'dueDate' => $this->due_date->format('Y-m-d'),
-            'status' => $this->status,
-            'assignedTo' => $this->assigned_to_description,
-            'hasInstructionsFile' => !empty($this->instructions_file_path),
-            'author' => new UserResource($this->whenLoaded('author')),
-            'createdAt' => $this->created_at->toIso8601String(),
-            'updatedAt' => $this->updated_at->toIso8601String(),
+            'titleFr' => $this->title_fr,
+            'titleAr' => $this->title_ar,
+            'descriptionFr' => $this->description_fr,
+            'descriptionAr' => $this->description_ar,
+            'dueDate' => $this->due_date->format('Y-m-d H:i'),
+            'filePath' => $this->file_path,
+            'course' => new CourseResource($this->whenLoaded('course')),
         ];
     }
 }

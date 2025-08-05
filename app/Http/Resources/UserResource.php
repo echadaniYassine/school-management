@@ -14,12 +14,8 @@ class UserResource extends JsonResource
             'name' => $this->name,
             'email' => $this->email,
             'role' => $this->role,
-            'dateOfBirth' => $this->date_of_birth?->format('Y-m-d'),
-            'gender' => $this->gender,
-            'address' => $this->address,
-            'phone' => $this->phone,
-            'createdAt' => $this->created_at->toIso8601String(),
-            'lastLoginAt' => $this->last_login_at?->toIso8601String(),
+            'phone' => $this->when($request->user()->role->value === 'admin', $this->phone), // Show phone only to admins
+            'createdAt' => $this->created_at,
         ];
     }
 }

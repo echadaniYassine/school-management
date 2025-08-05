@@ -1,31 +1,19 @@
 <?php
 namespace App\Http\Requests;
-
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
-
-class UpdateCourseRequest extends FormRequest
-{
-    public function authorize(): bool
-    {
-        return $this->user()->can('update', $this->route('course'));
+class UpdateCourseRequest extends FormRequest {
+    public function authorize(): bool {
+        // Only Admins can edit courses.
+        return $this->user()->role->value === 'admin';
     }
-    
-    public function rules(): array
-    {
-        $courseId = $this->route('course')->id;
-
+    public function rules(): array {
+        $course = $this->route('course'); // Get the course being updated
         return [
-            'title' => ['sometimes', 'required', 'string', 'max:255'],
-            // 'code' => ['nullable', 'string', 'max:50', Rule::unique('courses', 'code')->ignore($courseId)],
-            'description' => ['nullable', 'string'],
-            'instructor' => ['nullable', 'string', 'max:255'],
-            'category' => ['nullable', 'string', 'max:100'],
-            // 'level' => ['nullable', 'string', Rule::in(['Beginner', 'Intermediate', 'Advanced', 'All Levels'])],
-            // 'duration' => ['nullable', 'string', 'max:100'],
-            // 'status' => ['sometimes', 'required', Rule::in(['draft', 'published', 'archived'])],
-            'thumbnail_url' => ['nullable', 'url', 'max:2048'],
-            // 'price' => ['nullable', 'numeric', 'min:0'],
+            // You typically wouldn't change the classroom or subject, but you might change the teacher.
+            'teacher_id' => ['sometimes', 'required', Rule::exists('users', 'id')->where('role', 'teacher')],
+            'description_fr' => 'sometimes|nullable|string',
+            'description_ar' => 'sometimes|nullable|string',
         ];
     }
 }

@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use App\Enums\UserRole;
+use App\Enums\UserRole; // You would create this Enum
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -17,18 +18,16 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'role',
+        'role', // 'admin', 'teacher', 'student', 'parent'
+        'preferred_language', // 'ar', 'fr' - for UI preference
         'date_of_birth',
         'gender',
         'address',
         'phone',
-        'last_login_at', // FIXED: 'last_login_date' changed to match migration
+        'last_login_at',
     ];
 
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
+    protected $hidden = ['password', 'remember_token'];
 
     protected function casts(): array
     {
@@ -36,58 +35,36 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'date_of_birth' => 'date:Y-m-d',
-            'last_login_at' => 'datetime', // FIXED: 'last_login_date' changed to match migration
-            'role' => UserRole::class,
+            'last_login_at' => 'datetime',
+            'role' => UserRole::class, // Using an Enum is clean and reliable
         ];
     }
 
-    // ADDED: Relationships to content created by the user for a complete model definition.
-    public function activities(): HasMany
+    // NEW: Relationship for parents/guardians and their children
+    public function guardians(): BelongsToMany
     {
-        return $this->hasMany(Activity::class, 'author_id');
+        return $this->belongsToMany(User::class, 'guardian_student', 'student_id', 'guardian_id');
     }
 
-    public function assignments(): HasMany
+    public function children(): BelongsToMany
     {
-        return $this->hasMany(Assignment::class, 'author_id');
+        return $this->belongsToMany(User::class, 'guardian_student', 'guardian_id', 'student_id');
     }
 
-    public function blogPosts(): HasMany
+    // NEW: Student enrollments into specific classrooms
+    public function enrollments(): HasMany
     {
-        return $this->hasMany(BlogPost::class, 'author_id');
+        return $this->hasMany(Enrollment::class, 'student_id');
     }
 
-    public function createdExams(): HasMany
+    // Relationships for content creation (standardized)
+    public function createdCourses(): HasMany
     {
-        return $this->hasMany(Exam::class, 'author_id');
+        return $this->hasMany(Course::class, 'teacher_id');
     }
 
     public function gradedExamRecords(): HasMany
     {
-        return $this->hasMany(ExamRecord::class, 'author_id');
-    }
-
-    public function examRecordsAsStudent(): HasMany
-    {
-        return $this->hasMany(ExamRecord::class, 'user_id');
-    }
-    /**
-     * This is the method the ChatController needs.
-     * It checks if the user's role (which is an Enum object) matches the
-     * given role string.
-     *
-     * @param string $roleName The role to check (e.g., 'teacher', 'admin').
-     * @return bool
-     */
-    public function hasRole(string $roleName): bool
-    {
-        // $this->role is an instance of the UserRole Enum.
-        // We compare its value to the provided string.
-        return $this->role->value === $roleName;
-    }
-
-    public function conversations()
-    {
-        return $this->belongsToMany(Conversation::class)->withTimestamps();
+        return $this->hasMany(ExamRecord::class, 'grader_id');
     }
 }

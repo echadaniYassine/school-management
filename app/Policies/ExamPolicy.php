@@ -1,35 +1,37 @@
 <?php
+
 namespace App\Policies;
 
-use App\Enums\UserRole;
 use App\Models\Exam;
 use App\Models\User;
+use Illuminate\Auth\Access\HandlesAuthorization;
 
 class ExamPolicy
 {
-    private function isTeacherOrAdmin(User $user): bool
-    {
-        return in_array($user->role, [UserRole::ADMIN, UserRole::TEACHER]);
-    }
+    use HandlesAuthorization;
 
-    public function viewAny(User $user): bool
+    public function before(User $user, string $ability): bool|null
     {
-        return $this->isTeacherOrAdmin($user);
+        if ($user->role->value === 'admin') return true;
+        return null;
     }
 
     public function view(User $user, Exam $exam): bool
     {
-        return $this->isTeacherOrAdmin($user);
+        // Logic for viewing an exam would be similar to viewing a course.
+        return $user->id === $exam->course->teacher_id ||
+            $user->enrollments()->where('classroom_id', $exam->course->classroom_id)->exists();
     }
 
     public function create(User $user): bool
     {
-        return $this->isTeacherOrAdmin($user);
+        return $user->role->value === 'teacher';
     }
 
     public function update(User $user, Exam $exam): bool
     {
-        return $user->role === UserRole::ADMIN || $user->id === $exam->author_id;
+        // THE FIX: Check against the course's teacher_id
+        return $user->id === $exam->course->teacher_id;
     }
 
     public function delete(User $user, Exam $exam): bool

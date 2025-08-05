@@ -2,40 +2,37 @@
 
 namespace App\Policies;
 
-use App\Enums\UserRole;
 use App\Models\Exam;
 use App\Models\ExamRecord;
 use App\Models\User;
+use Illuminate\Auth\Access\HandlesAuthorization;
 
 class ExamRecordPolicy
 {
-    private function isTeacherOrAdmin(User $user): bool
+    use HandlesAuthorization;
+
+    public function before(User $user, string $ability): bool|null
     {
-        return in_array($user->role, [UserRole::ADMIN, UserRole::TEACHER]);
+        if ($user->role->value === 'admin') return true;
+        return null;
     }
 
-    // Must be a teacher/admin to view records for a given exam
-    public function viewAny(User $user, Exam $exam): bool
-    {
-        return $this->isTeacherOrAdmin($user);
-    }
-
-    // Must be a teacher/admin to view a single record
     public function view(User $user, ExamRecord $record): bool
     {
-        return $this->isTeacherOrAdmin($user);
+        // A teacher can view their own graded records. A student can view their own record.
+        return $user->id === $record->grader_id || $user->id === $record->student_id;
     }
 
-    // Must be a teacher/admin to create a record for a given exam
     public function create(User $user, Exam $exam): bool
     {
-        return $this->isTeacherOrAdmin($user);
+        // Only the teacher of the course can create a grade record for that exam.
+        return $user->id === $exam->course->teacher_id;
     }
 
-    // Only the original grader or an admin can update
     public function update(User $user, ExamRecord $record): bool
     {
-        return $user->role === UserRole::ADMIN || $user->id === $record->author_id;
+        // THE FIX: Check against grader_id, not author_id
+        return $user->id === $record->grader_id;
     }
 
     public function delete(User $user, ExamRecord $record): bool

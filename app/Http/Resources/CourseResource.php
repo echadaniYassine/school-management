@@ -11,18 +11,11 @@ class CourseResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'title' => $this->title,
-            // 'code' => $this->code,
-            'description' => $this->description,
-            'instructor' => $this->instructor,
-            'category' => $this->category,
-            // 'level' => $this->level,
-            // 'duration' => $this->duration,
-            // 'status' => $this->status,
-            'thumbnailUrl' => $this->thumbnail_url,
-            // 'price' => (float) $this->price,
-            'createdAt' => $this->created_at->toIso8601String(),
-            'updatedAt' => $this->updated_at->toIso8601String(),
+            'descriptionFr' => $this->description_fr,
+            'descriptionAr' => $this->description_ar,
+            'subject' => new SubjectResource($this->whenLoaded('subject')),
+            'teacher' => new UserResource($this->whenLoaded('teacher')),
+            'classroom' => new ClassroomResource($this->whenLoaded('classroom')),
         ];
     }
 }

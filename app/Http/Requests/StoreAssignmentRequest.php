@@ -1,28 +1,29 @@
 <?php
+
 namespace App\Http\Requests;
 
-use App\Models\Assignment;
+use App\Models\Course;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class StoreAssignmentRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()->can('create', Assignment::class);
+        $user = $this->user();
+        $course = Course::findOrFail($this->input('course_id'));
+        // Only the teacher of the course can create an assignment for it.
+        return $user->id === $course->teacher_id;
     }
-
     public function rules(): array
     {
-        $validStatuses = ['draft', 'published', 'archived', 'grading', 'graded'];
         return [
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'course' => 'nullable|string|max:255',
-            'due_date' => 'required|date_format:Y-m-d|after_or_equal:today',
-            'status' => ['required', 'string', Rule::in($validStatuses)],
-            'assigned_to_description' => 'nullable|string|max:500',
-            'instructions_file' => 'nullable|file|mimes:pdf,doc,docx,txt,zip|max:10240', // Max 10MB
+            'course_id' => 'required|exists:courses,id',
+            'title_fr' => 'required|string|max:255',
+            'title_ar' => 'required|string|max:255',
+            'description_fr' => 'nullable|string',
+            'description_ar' => 'nullable|string',
+            'due_date' => 'required|date|after:now',
+            'file_path' => 'nullable|string', // Or 'file|mimes:pdf,docx|max:2048' if uploading files
         ];
     }
 }

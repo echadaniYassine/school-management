@@ -2,44 +2,46 @@
 
 namespace App\Policies;
 
-use App\Enums\UserRole;
 use App\Models\Course;
 use App\Models\User;
+use Illuminate\Auth\Access\HandlesAuthorization;
 
 class CoursePolicy
 {
-    public function viewAny(?User $user): bool
-    {
-        return true;
-    }
+    use HandlesAuthorization;
 
-    public function view(?User $user, Course $course): bool
+    // Only an admin can perform any action on courses.
+    public function before(User $user, string $ability): bool|null
     {
-        return true;
-    }
-
-    public function create(User $user): bool
-    {
-        return in_array($user->role, [UserRole::ADMIN, UserRole::TEACHER]);
-    }
-
-    public function update(User $user, Course $course): bool
-    {
-        if ($user->role === UserRole::ADMIN) {
+        if ($user->role->value === 'admin') {
             return true;
         }
+        return null;
+    }
 
-        // --- FIX: Changed 'user_id' to 'author_id' to match the updated model and migration. ---
-        if ($user->role === UserRole::TEACHER) {
-            return $user->id === $course->author_id;
+    // A teacher can view a course if they teach it. A student if they are in its class.
+    public function view(User $user, Course $course): bool
+    {
+        if ($user->role->value === 'teacher') {
+            return $user->id === $course->teacher_id;
         }
-
+        if ($user->role->value === 'student') {
+            return $user->enrollments()->where('classroom_id', $course->classroom_id)->exists();
+        }
         return false;
     }
 
+    // Deny all other actions by default. The `before` method handles the admin case.
+    public function create(User $user): bool
+    {
+        return false;
+    }
+    public function update(User $user, Course $course): bool
+    {
+        return false;
+    }
     public function delete(User $user, Course $course): bool
     {
-        // This now correctly re-uses the updated logic from the 'update' method.
-        return $this->update($user, $course);
+        return false;
     }
 }

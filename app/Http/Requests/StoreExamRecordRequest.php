@@ -1,27 +1,28 @@
 <?php
 namespace App\Http\Requests;
-
-use App\Enums\UserRole;
-use App\Models\ExamRecord;
+use App\Models\Exam;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
-
-class StoreExamRecordRequest extends FormRequest
-{
-    public function authorize(): bool
-    {
-        // Pass the parent exam model to the policy check if needed for more complex rules
-        return $this->user()->can('create', [ExamRecord::class, $this->route('exam')]);
+class StoreExamRecordRequest extends FormRequest {
+    public function authorize(): bool {
+        $user = $this->user();
+        $exam = Exam::findOrFail($this->input('exam_id'));
+        // The grader must be the teacher of the course the exam belongs to.
+        return $user->id === $exam->course->teacher_id;
     }
-
-    public function rules(): array
-    {
+    public function rules(): array {
         return [
-            'user_id' => [
+            'exam_id' => 'required|exists:exams,id',
+            'student_id' => [
                 'required',
-                Rule::exists('users', 'id')->where('role', UserRole::STUDENT)
+                Rule::exists('users', 'id')->where('role', 'student'),
+                // Prevent duplicate grade entry for the same student in the same exam.
+                Rule::unique('exam_records')->where(function ($query) {
+                    return $query->where('exam_id', $this->input('exam_id'));
+                }),
             ],
-            'note' => 'required|numeric|min:0|max:100', // Adjust max as needed
+            // Grader ID is the authenticated user, set in the controller.
+            'score' => 'required|numeric|min:0|max:20', // Moroccan grading scale
             'comment' => 'nullable|string|max:1000',
         ];
     }

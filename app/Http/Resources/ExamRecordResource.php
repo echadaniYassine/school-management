@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
@@ -10,13 +11,11 @@ class ExamRecordResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'note' => (float) $this->note,
+            'score' => $this->score,
             'comment' => $this->comment,
             'exam' => new ExamResource($this->whenLoaded('exam')),
             'student' => new UserResource($this->whenLoaded('student')),
-            'grader' => new UserResource($this->whenLoaded('author')), // 'author' is the grader
-            'createdAt' => $this->created_at->toIso8601String(),
-            'updatedAt' => $this->updated_at->toIso8601String(),
+            'grader' => new UserResource($this->whenLoaded('grader')),
         ];
     }
 }
