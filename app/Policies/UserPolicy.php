@@ -3,6 +3,7 @@
 namespace App\Policies;
 
 use App\Models\User;
+use App\Enums\UserRole;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class UserPolicy
@@ -12,16 +13,24 @@ class UserPolicy
     // Admins can do anything.
     public function before(User $user, string $ability): bool|null
     {
-        if ($user->role->value === 'admin') {
+        // Handle both enum and string cases for admin check
+        if ($user->role instanceof UserRole) {
+            if ($user->role === UserRole::ADMIN) {
+                return true;
+            }
+        } elseif ($user->role === 'admin') {
             return true;
         }
+        
         return null;
     }
 
     // A user can always view their own profile.
-    public function view(User $user, User $model): bool
+    // This method is now only checked for non-admins.
+    public function viewAny(User $user): bool
     {
-        return $user->id === $model->id;
+        // For non-admins, deny access to view all users
+        return false;
     }
 
     public function create(User $user): bool

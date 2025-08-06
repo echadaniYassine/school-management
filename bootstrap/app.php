@@ -1,5 +1,6 @@
 <?php
 
+use App\Providers\AuthServiceProvider;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -27,9 +28,13 @@ return Application::configure(basePath: dirname(__DIR__))
             // 'verified' => \App\Http\Middleware\EnsureEmailIsVerified::class,
         ]);
     })
+    ->withProviders([
+        // Register your AuthServiceProvider here
+        AuthServiceProvider::class,
+    ])
     ->withBroadcasting(
-        __DIR__.'/../routes/channels.php', // <-- UNCOMMENT THIS LINE
-        ['prefix' => 'api', 'middleware' => ['api', 'auth:sanctum']] // <-- AND THIS ONE
+        __DIR__.'/../routes/channels.php', 
+        ['prefix' => 'api', 'middleware' => ['api', 'auth:sanctum']]
     )
     ->withExceptions(function (Exceptions $exceptions) {
         //

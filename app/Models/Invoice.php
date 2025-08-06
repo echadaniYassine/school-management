@@ -2,15 +2,17 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Invoice extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
+    protected $dates = ['deleted_at'];
     /**
      * The attributes that are mass assignable.
      *
@@ -52,5 +54,22 @@ class Invoice extends Model
     public function payments(): HasMany
     {
         return $this->hasMany(Payment::class);
+    }
+    public function scopeUnpaid($query)
+    {
+        return $query->where('status', 'unpaid');
+    }
+    public function getTotalPaidAttribute()
+    {
+        return $this->payments()->sum('amount_paid');
+    }
+    public function getRemainingBalanceAttribute()
+    {
+        return $this->amount - $this->total_paid;
+    }
+    public function scopeOverdue($query)
+    {
+        return $query->where('due_date', '<', now())
+            ->where('status', '!=', 'paid');
     }
 }

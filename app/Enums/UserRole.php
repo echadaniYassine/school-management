@@ -8,4 +8,10 @@ enum UserRole: string
     case TEACHER = 'teacher';
     case STUDENT = 'student';
     case PARENT = 'parent';
+
+    // Optional: Add a helper method for easier comparison
+    public function isAdmin(): bool
+    {
+        return $this === self::ADMIN;
+    }
 }

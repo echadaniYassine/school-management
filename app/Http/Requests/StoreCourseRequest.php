@@ -2,15 +2,16 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Models\Course;
 use Illuminate\Validation\Rule;
+use Illuminate\Foundation\Http\FormRequest;
 
 class StoreCourseRequest extends FormRequest
 {
     public function authorize(): bool
     {
         // Only Admins can create and assign courses.
-        return $this->user()->role->value === 'admin';
+        return $this->user()->can('create', Course::class);
     }
     public function rules(): array
     {

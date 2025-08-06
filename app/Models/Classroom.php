@@ -2,15 +2,18 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Classroom extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
+    protected $dates = ['deleted_at'];
+    
     protected $fillable = [
         'name', // e.g., "Classe A", "Classe B"
         'grade_id', // Links to a Grade level (e.g., "6ème Année Primaire")
@@ -32,13 +35,13 @@ class Classroom extends Model
     {
         return $this->belongsTo(User::class, 'main_teacher_id');
     }
-    
+
     // NEW: The courses taught in this classroom
     public function courses(): HasMany
     {
         return $this->hasMany(Course::class);
     }
-    
+
     // NEW: The students enrolled in this classroom
     public function enrollments(): HasMany
     {

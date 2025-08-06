@@ -123,5 +123,6 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    // Remove the providers array - it doesn't belong here in Laravel 11
 
 ];

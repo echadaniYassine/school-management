@@ -20,6 +20,23 @@ class AssignmentController extends Controller
         $assignment = Assignment::create($request->validated());
         return (new AssignmentResource($assignment->load('course.subject')))->response()->setStatusCode(Response::HTTP_CREATED);
     }
+    public function index()
+    {
+        $this->authorize('viewAny', Assignment::class);
+
+        $user = auth()->user();
+        $query = Assignment::with(['course.subject', 'course.classroom']);
+
+        // Filter based on user role
+        match ($user->role->value) {
+            'teacher' => $query->whereHas('course', fn($q) => $q->where('teacher_id', $user->id)),
+            'student' => $query->whereHas('course.enrollments', fn($q) => $q->where('student_id', $user->id)),
+            'parent' => $query->whereHas('course.enrollments.student.guardians', fn($q) => $q->where('guardian_id', $user->id)),
+            default => $query // admin sees all
+        };
+
+        return AssignmentResource::collection($query->latest('due_date')->paginate(15));
+    }
 
     public function show(Assignment $assignment)
     {

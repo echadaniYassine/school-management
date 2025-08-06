@@ -2,13 +2,16 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Enrollment extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
+
+    protected $dates = ['deleted_at'];
 
     /**
      * The table associated with the model.
@@ -50,5 +53,9 @@ class Enrollment extends Model
     public function schoolYear(): BelongsTo
     {
         return $this->belongsTo(SchoolYear::class);
+    }
+    public function scopeCurrentYear($query)
+    {
+        return $query->whereHas('schoolYear', fn($q) => $q->where('is_active', true));
     }
 }

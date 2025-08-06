@@ -17,10 +17,9 @@ class ClassroomController extends Controller
      */
     public function index()
     {
-        // Find the currently active school year to avoid showing old data.
-        $activeYear = SchoolYear::where('is_active', true)->firstOrFail();
+        $this->authorize('viewAny', Classroom::class);
 
-        // Eager-load the grade and mainTeacher relationships to prevent N+1 problems.
+        $activeYear = SchoolYear::where('is_active', true)->firstOrFail();
         $classrooms = Classroom::with(['grade', 'mainTeacher'])
             ->where('school_year_id', $activeYear->id)
             ->orderBy('name')

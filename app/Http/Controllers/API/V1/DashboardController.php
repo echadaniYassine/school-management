@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
@@ -8,9 +9,10 @@ use Illuminate\Support\Facades\Cache;
 
 class DashboardController extends Controller
 {
-    public function getStats() {
-        // Only admins should access this.
-        $this->authorize('admin');
+    public function getStats()
+    {
+        // Remove or comment out this line temporarily to test if it's the issue
+        $this->authorize('viewAny', User::class);
 
         return Cache::remember('dashboard_stats_v2', now()->addMinutes(10), function () {
             return response()->json([

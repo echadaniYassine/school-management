@@ -14,7 +14,7 @@ class UserResource extends JsonResource
             'name' => $this->name,
             'email' => $this->email,
             'role' => $this->role,
-            'phone' => $this->when($request->user()->role->value === 'admin', $this->phone), // Show phone only to admins
+            'phone' => $this->when(auth()->user()?->role->value === 'admin', $this->phone),
             'createdAt' => $this->created_at,
         ];
     }

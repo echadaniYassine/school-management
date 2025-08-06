@@ -2,7 +2,7 @@
 
 namespace App\Policies;
 
-use App\Models\Invoice; // Change this to the specific model (e.g., Payment, Level)
+use App\Models\Invoice; // Make sure the correct model is imported
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 

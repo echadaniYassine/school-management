@@ -1,16 +1,22 @@
 <?php
+
 namespace App\Http\Requests;
+
 use App\Models\Exam;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
-class StoreExamRecordRequest extends FormRequest {
-    public function authorize(): bool {
+
+class StoreExamRecordRequest extends FormRequest
+{
+    public function authorize(): bool
+    {
         $user = $this->user();
         $exam = Exam::findOrFail($this->input('exam_id'));
         // The grader must be the teacher of the course the exam belongs to.
         return $user->id === $exam->course->teacher_id;
     }
-    public function rules(): array {
+    public function rules(): array
+    {
         return [
             'exam_id' => 'required|exists:exams,id',
             'student_id' => [

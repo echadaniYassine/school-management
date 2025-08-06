@@ -11,74 +11,84 @@ use Illuminate\Http\Response;
 
 class AnnouncementController extends Controller
 {
-/**
-* Display a listing of the resource.
-* This is public, anyone can see announcements.
-*/
-public function index()
-{
-// Only show posts that have a 'published_at' date in the past.
-$announcements = Announcement::with('author')
-->whereNotNull('published_at')
-->where('published_at', '<=', now())
-->latest('published_at')
-->paginate(15);
+    /**
+     * Display a listing of the resource.
+     * This is public, anyone can see announcements.
+     */
+    public function index()
+    {
+        $query = Announcement::with('author');
 
-return AnnouncementResource::collection($announcements);
-}
+        // Start with a base query for published announcements
+        $query->where(function ($q) {
+            $q->whereNotNull('published_at')
+                ->where('published_at', '<=', now());
+        });
 
-/**
-* Store a newly created resource in storage.
-*/
-public function store(StoreAnnouncementRequest $request)
-{
-// The StoreAnnouncementRequest handles all validation and authorization.
-$validatedData = array_merge($request->validated(), [
-'author_id' => auth()->id()
-]);
+        // If the user is a teacher or admin, add their own drafts to the result set
+        if (auth()->check() && in_array(auth()->user()->role->value, ['admin', 'teacher'])) {
+            $query->orWhere(function ($q) {
+                $q->where('author_id', auth()->id())
+                    ->whereNull('published_at'); // Specifically look for drafts
+            });
+        }
 
-$announcement = Announcement::create($validatedData);
+        $announcements = $query->latest('published_at')->paginate(15);
+        return AnnouncementResource::collection($announcements);
+    }
 
-return (new AnnouncementResource($announcement->load('author')))
-->response()
-->setStatusCode(Response::HTTP_CREATED);
-}
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(StoreAnnouncementRequest $request)
+    {
+        // The StoreAnnouncementRequest handles all validation and authorization.
+        $validatedData = array_merge($request->validated(), [
+            'author_id' => auth()->id()
+        ]);
 
-/**
-* Display the specified resource.
-* This is public.
-*/
-public function show(Announcement $announcement)
-{
-// We will manually check if the post is published before showing it
-// to a non-authorized user (e.g., guest, student).
-// Admins and the author can see their own drafts.
-if (is_null($announcement->published_at) && (!auth()->check() || auth()->user()->cannot('update', $announcement))) {
-abort(404);
-}
+        $announcement = Announcement::create($validatedData);
 
-return new AnnouncementResource($announcement->load('author'));
-}
+        return (new AnnouncementResource($announcement->load('author')))
+            ->response()
+            ->setStatusCode(Response::HTTP_CREATED);
+    }
 
-/**
-* Update the specified resource in storage.
-*/
-public function update(UpdateAnnouncementRequest $request, Announcement $announcement)
-{
-// The UpdateAnnouncementRequest handles all validation and authorization.
-$announcement->update($request->validated());
-return new AnnouncementResource($announcement->fresh()->load('author'));
-}
+    /**
+     * Display the specified resource.
+     * This is public.
+     */
+    public function show(Announcement $announcement)
+    {
+        // We will manually check if the post is published before showing it
+        // to a non-authorized user (e.g., guest, student).
+        // Admins and the author can see their own drafts.
+        if (is_null($announcement->published_at) && (!auth()->check() || auth()->user()->cannot('update', $announcement))) {
+            abort(404);
+        }
 
-/**
-* Remove the specified resource from storage.
-*/
-public function destroy(Announcement $announcement)
-{
-// Use the AnnouncementPolicy to authorize the delete action.
-$this->authorize('delete', $announcement);
+        return new AnnouncementResource($announcement->load('author'));
+    }
 
-$announcement->delete();
-return response()->noContent(); // Returns a 204 No Content success status.
-}
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(UpdateAnnouncementRequest $request, Announcement $announcement)
+    {
+        // The UpdateAnnouncementRequest handles all validation and authorization.
+        $announcement->update($request->validated());
+        return new AnnouncementResource($announcement->fresh()->load('author'));
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Announcement $announcement)
+    {
+        // Use the AnnouncementPolicy to authorize the delete action.
+        $this->authorize('delete', $announcement);
+
+        $announcement->delete();
+        return response()->noContent(); // Returns a 204 No Content success status.
+    }
 }

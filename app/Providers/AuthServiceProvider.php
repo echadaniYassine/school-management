@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-// Import all your Models and Policies
 use App\Models\{
     Announcement,
     Assignment,
@@ -21,17 +20,13 @@ use App\Policies\{
     ExamRecordPolicy,
     UserPolicy
 };
+use App\Enums\UserRole;
 
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
 {
-    /**
-     * The model to policy mappings for the application.
-     *
-     * @var array<class-string, class-string>
-     */
     protected $policies = [
         Announcement::class => AnnouncementPolicy::class,
         Assignment::class   => AssignmentPolicy::class,
@@ -42,18 +37,23 @@ class AuthServiceProvider extends ServiceProvider
         User::class         => UserPolicy::class,
     ];
 
-    /**
-     * Register any authentication / authorization services.
-     */
     public function boot(): void
     {
-        // This is the line that reads the $policies array and makes them work.
-        // It is often here by default in new Laravel projects.
         $this->registerPolicies();
 
-        // This is the correct place to define your Gates.
         Gate::define('admin', function (User $user) {
-            return $user->role->value === 'admin';
+            // Option 1: Compare enum values
+            return $user->role instanceof UserRole && $user->role->value === 'admin';
+            
+            // Option 2: Compare enum instances (if you prefer this)
+            // return $user->role === UserRole::ADMIN;
+            
+            // Option 3: Use the helper method (if you added it)
+            // return $user->role instanceof UserRole && $user->role->isAdmin();
+        });
+
+        Gate::define('teacher', function (User $user) {
+            return $user->role instanceof UserRole && $user->role->value === 'teacher';
         });
     }
 }
