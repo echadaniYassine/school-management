@@ -20,9 +20,7 @@ class ExamRecordFactory extends Factory
     {
         return [
             'exam_id' => Exam::factory(),
-            // Important: Ensure the record is for a student
             'student_id' => User::factory(['role' => 'student']),
-            // Important: Ensure the grader is a teacher
             'grader_id' => User::factory(['role' => 'teacher']),
             'score' => fake()->randomFloat(2, 5, 20), // Moroccan grading scale
             'comment' => fake()->optional()->sentence(),

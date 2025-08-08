@@ -10,13 +10,20 @@ class AnnouncementFactory extends Factory
     public function definition(): array
     {
         return [
-            // Announcements are typically from admins or teachers
             'author_id' => User::factory(['role' => fake()->randomElement(['admin', 'teacher'])]),
-            'title_fr' => fake()->sentence(4),
-            'title_ar' => fake()->sentence(4),
-            'content_fr' => fake()->paragraphs(3, true),
-            'content_ar' => fake()->paragraphs(3, true),
-            'published_at' => fake()->randomElement([now(), null]),
+            'title' => [
+                'fr' => fake()->sentence(),
+                'ar' => fake()->sentence(),
+            ],
+            'content' => [
+                'fr' => fake()->paragraphs(3, true),
+                'ar' => fake()->paragraphs(3, true),
+            ],
+            'type' => fake()->randomElement(['general', 'urgent', 'academic', 'administrative']),
+            'audience' => fake()->randomElement(['all', 'students', 'teachers', 'parents']),
+            'published_at' => fake()->optional(0.8)->dateTimeBetween('-1 month', 'now'),
+            'expires_at' => fake()->optional(0.3)->dateTimeBetween('now', '+3 months'),
+            'is_active' => true,
         ];
     }
 }

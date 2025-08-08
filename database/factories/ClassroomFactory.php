@@ -12,11 +12,12 @@ class ClassroomFactory extends Factory
     public function definition(): array
     {
         return [
-            'grade_id' => Grade::factory(),
-            'school_year_id' => SchoolYear::factory(),
-            // Important: Ensure the main teacher is actually a teacher
-            'main_teacher_id' => User::factory(['role' => 'teacher']),
-            'name' => fake()->word() . ' ' . fake()->randomLetter(),
+        'grade_id' => Grade::factory(),
+        'school_year_id' => SchoolYear::factory(),
+        'main_teacher_id' => User::factory(['role' => 'teacher']),
+        'code' => strtoupper(fake()->bothify('G#-?')), // Generates something like G3-A
+        'name' => fake()->word() . ' ' . fake()->randomLetter(),
+        'is_active' => true,
         ];
     }
 }

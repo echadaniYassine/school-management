@@ -10,8 +10,9 @@ return new class extends Migration
     {
         Schema::create('levels', function (Blueprint $table) {
             $table->id();
-            $table->string('name_fr');
-            $table->string('name_ar');
+            $table->string('code')->unique(); // "PRIMARY", "MIDDLE", "HIGH" - system use
+            $table->json('name'); // {"fr": "Primaire", "ar": "الابتدائي"} - user facing
+            $table->integer('sort_order')->default(0);
             $table->timestamps();
         });
     }

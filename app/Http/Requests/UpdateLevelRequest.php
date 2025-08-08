@@ -15,8 +15,7 @@ class UpdateLevelRequest extends FormRequest
     {
         $levelId = $this->route('level')->id;
         return [
-            'name_fr' => ['sometimes', 'required', 'string', 'max:255', Rule::unique('levels')->ignore($levelId)],
-            'name_ar' => ['sometimes', 'required', 'string', 'max:255', Rule::unique('levels')->ignore($levelId)],
+            'name' => ['sometimes', 'required', 'string', 'max:255', Rule::unique('levels')->ignore($levelId)],
         ];
     }
 }

@@ -11,23 +11,21 @@ class Level extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $dates = ['deleted_at'];
-    /**
-     * The attributes that are mass assignable.
-     * Examples: 'Maternelle', 'Primaire', 'Collège', 'Lycée'
-     *
-     * @var array<int, string>
-     */
-    protected $fillable = [
-        'name_ar',
-        'name_fr',
+    protected $fillable = ['code', 'name', 'sort_order'];
+
+    protected $translatable = ['name'];
+
+    protected $casts = [
+        'name' => 'array',
     ];
 
-    /**
-     * A Level has many grades (e.g., Primaire has 1st Grade, 2nd Grade, etc.).
-     */
-    public function grades(): HasMany
+    public function grades()
     {
-        return $this->hasMany(Grade::class);
+        return $this->hasMany(Grade::class)->orderBy('sort_order');
+    }
+
+    public function scopeOrdered($query)
+    {
+        return $query->orderBy('sort_order');
     }
 }

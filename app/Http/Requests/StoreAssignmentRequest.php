@@ -18,10 +18,8 @@ class StoreAssignmentRequest extends FormRequest
     {
         return [
             'course_id' => 'required|exists:courses,id',
-            'title_fr' => 'required|string|max:255',
-            'title_ar' => 'required|string|max:255',
-            'description_fr' => 'nullable|string',
-            'description_ar' => 'nullable|string',
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
             'due_date' => 'required|date|after:now',
             'file_path' => 'nullable|string', // Or 'file|mimes:pdf,docx|max:2048' if uploading files
         ];

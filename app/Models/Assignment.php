@@ -12,36 +12,31 @@ class Assignment extends Model
     use HasFactory, SoftDeletes;
 
     protected $dates = ['deleted_at'];
-    /**
-     * The attributes that are mass assignable.
-     * Refactored for clarity, bilingual support, and proper relationships.
-     */
+
     protected $fillable = [
-        'course_id', // This is the proper foreign key.
-        'title_ar',
-        'title_fr',
-        'description_ar',
-        'description_fr',
+        'course_id',
+        'title',
+        'description',
         'due_date',
-        'file_path', // For uploading instruction sheets or templates.
+        'file_path',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     */
-    protected function casts(): array
-    {
-        return [
-            'due_date' => 'datetime',
-        ];
-    }
+    protected $translatable = ['title', 'description'];
 
-    /**
-     * Get the course this assignment belongs to.
-     * Through this relationship, you can access the teacher: $assignment->course->teacher
-     */
+    protected $casts = [
+        'title' => 'array',
+        'description' => 'array',
+        'due_date' => 'datetime',
+    ];
+
     public function course(): BelongsTo
     {
         return $this->belongsTo(Course::class);
+    }
+
+    public function scopeDueSoon($query, $days = 3)
+    {
+        return $query->where('due_date', '<=', now()->addDays($days))
+            ->where('due_date', '>=', now());
     }
 }

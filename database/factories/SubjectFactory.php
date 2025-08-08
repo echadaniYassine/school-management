@@ -8,10 +8,14 @@ class SubjectFactory extends Factory
 {
     public function definition(): array
     {
-        // The seeder provides specific names, so these are just placeholders.
         return [
-            'name_fr' => fake()->colorName(),
-            'name_ar' => fake()->colorName(),
+            'code' => fake()->unique()->lexify('????'),
+            'name' => [
+                'fr' => fake()->words(2, true),
+                'ar' => fake()->words(2, true),
+            ],
+            'color' => fake()->hexColor(),
+            'is_active' => true,
         ];
     }
 }

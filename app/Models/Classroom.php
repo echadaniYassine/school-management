@@ -13,12 +13,13 @@ class Classroom extends Model
     use HasFactory, SoftDeletes;
 
     protected $dates = ['deleted_at'];
-    
+
     protected $fillable = [
-        'name', // e.g., "Classe A", "Classe B"
-        'grade_id', // Links to a Grade level (e.g., "6ème Année Primaire")
-        'school_year_id', // Links to an academic year (e.g., "2024-2025")
-        'main_teacher_id', // The primary homeroom teacher
+        'name',
+        'code',
+        'grade_id',
+        'school_year_id',
+        'main_teacher_id',
     ];
 
     public function grade(): BelongsTo

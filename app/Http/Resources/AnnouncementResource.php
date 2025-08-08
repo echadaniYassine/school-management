@@ -11,10 +11,8 @@ class AnnouncementResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'titleFr' => $this->title_fr,
-            'titleAr' => $this->title_ar,
-            'contentFr' => $this->content_fr,
-            'contentAr' => $this->content_ar,
+            'title' => $this->title,
+            'content' => $this->content,
             'publishedAt' => $this->published_at?->format('Y-m-d H:i'),
             'author' => new UserResource($this->whenLoaded('author')),
         ];

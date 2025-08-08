@@ -65,22 +65,16 @@ Route::middleware('auth:sanctum')->group(function () {
     // --- Teacher & Admin Routes ---
     // These routes are accessible to both teachers and admins.
     // The specific permissions are handled by Policies.
-    Route::post('/announcements', [AnnouncementController::class, 'store'])->name('announcements.store');
-    Route::patch('/announcements/{announcement}', [AnnouncementController::class, 'update'])->name('announcements.update');
-    Route::delete('/announcements/{announcement}', [AnnouncementController::class, 'destroy'])->name('announcements.destroy');
-
+    Route::apiResource('/announcements', AnnouncementController::class);
     Route::apiResource('exams', ExamController::class);
-    Route::post('/exam-records', [ExamRecordController::class, 'store'])->name('exam-records.store');
-    Route::patch('/exam-records/{record}', [ExamRecordController::class, 'update'])->name('exam-records.update');
+    Route::apiResource('/exam-records', ExamRecordController::class);
 
 
     // --- Teacher-Only Routes ---
     Route::middleware('can:teacher')->prefix('teacher')->name('teacher.')->group(function () {
         // Example: Get all courses assigned to the currently authenticated teacher.
         // Route::get('/my-courses', [TeacherDashboardController::class, 'getMyCourses']);
-        Route::post('/assignments', [AssignmentController::class, 'store'])->name('assignments.store');
-        Route::patch('/assignments/{assignment}', [AssignmentController::class, 'update'])->name('assignments.update');
-        Route::delete('/assignments/{assignment}', [AssignmentController::class, 'destroy'])->name('assignments.destroy');
+        Route::apiResource('/assignments', AssignmentController::class);
     });
 
 
@@ -106,54 +100,54 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
 
-// Temporarily register the gate here for testing
-use Illuminate\Support\Facades\Gate;
-use App\Enums\UserRole;
+// // Temporarily register the gate here for testing
+// use Illuminate\Support\Facades\Gate;
+// use App\Enums\UserRole;
 
-Gate::define('admin', function (\App\Models\User $user) {
-    if ($user->role instanceof UserRole) {
-        return $user->role->value === 'admin';
-    }
-    return false;
-});
+// Gate::define('admin', function (\App\Models\User $user) {
+//     if ($user->role instanceof UserRole) {
+//         return $user->role->value === 'admin';
+//     }
+//     return false;
+// });
 
-// Add this temporary route to your api.php for debugging
-Route::middleware('auth:sanctum')->get('/debug-user', function (Request $request) {
-    $user = $request->user();
+// // Add this temporary route to your api.php for debugging
+// Route::middleware('auth:sanctum')->get('/debug-user', function (Request $request) {
+//     $user = $request->user();
 
-    return response()->json([
-        'user_id' => $user->id,
-        'user_email' => $user->email,
-        'role' => $user->role,
-        'role_value' => $user->role->value ?? 'NO_VALUE',
-        'role_type' => gettype($user->role),
-        'is_admin_gate' => $user->can('admin'),
-        'can_view_any_users' => $user->can('viewAny', \App\Models\User::class),
-        'raw_role' => $user->getRawOriginal('role'), // Get the actual DB value
-        'role_is_instance_of_enum' => $user->role instanceof \App\Enums\UserRole,
-        'role_equals_admin_string' => $user->role === 'admin',
-        'gate_exists_now' => Gate::has('admin'),
-    ]);
-});
+//     return response()->json([
+//         'user_id' => $user->id,
+//         'user_email' => $user->email,
+//         'role' => $user->role,
+//         'role_value' => $user->role->value ?? 'NO_VALUE',
+//         'role_type' => gettype($user->role),
+//         'is_admin_gate' => $user->can('admin'),
+//         'can_view_any_users' => $user->can('viewAny', \App\Models\User::class),
+//         'raw_role' => $user->getRawOriginal('role'), // Get the actual DB value
+//         'role_is_instance_of_enum' => $user->role instanceof \App\Enums\UserRole,
+//         'role_equals_admin_string' => $user->role === 'admin',
+//         'gate_exists_now' => Gate::has('admin'),
+//     ]);
+// });
 
-// Add this to your api.php routes file
-Route::middleware('auth:sanctum')->get('/debug-detailed', function (Request $request) {
-    $user = $request->user();
+// // Add this to your api.php routes file
+// Route::middleware('auth:sanctum')->get('/debug-detailed', function (Request $request) {
+//     $user = $request->user();
 
-    // Test the gate logic manually
-    $roleInstance = $user->role instanceof \App\Enums\UserRole;
-    $roleValue = $roleInstance ? $user->role->value : 'NO_VALUE';
-    $valueEquals = $roleValue === 'admin';
+//     // Test the gate logic manually
+//     $roleInstance = $user->role instanceof \App\Enums\UserRole;
+//     $roleValue = $roleInstance ? $user->role->value : 'NO_VALUE';
+//     $valueEquals = $roleValue === 'admin';
 
-    return response()->json([
-        'user_id' => $user->id,
-        'role' => $user->role,
-        'role_class' => get_class($user->role),
-        'role_is_instance_of_enum' => $roleInstance,
-        'role_value' => $roleValue,
-        'role_value_equals_admin' => $valueEquals,
-        'manual_gate_test' => $roleInstance && $valueEquals,
-        'laravel_gate_result' => $user->can('admin'),
-        'gate_exists' => \Illuminate\Support\Facades\Gate::has('admin'),
-    ]);
-});
+//     return response()->json([
+//         'user_id' => $user->id,
+//         'role' => $user->role,
+//         'role_class' => get_class($user->role),
+//         'role_is_instance_of_enum' => $roleInstance,
+//         'role_value' => $roleValue,
+//         'role_value_equals_admin' => $valueEquals,
+//         'manual_gate_test' => $roleInstance && $valueEquals,
+//         'laravel_gate_result' => $user->can('admin'),
+//         'gate_exists' => \Illuminate\Support\Facades\Gate::has('admin'),
+//     ]);
+// });

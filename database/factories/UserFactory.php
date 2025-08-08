@@ -8,9 +8,7 @@ use Illuminate\Support\Str;
 
 class UserFactory extends Factory
 {
-    /**
-     * The current password being used by the factory.
-     */
+
     protected static ?string $password;
 
     /**
@@ -25,14 +23,14 @@ class UserFactory extends Factory
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
-            'remember_token' => Str::random(10),
-            'role' => 'student', // Default role, will be overridden by the seeder.
-            'preferred_language' => fake()->randomElement(['fr', 'ar']),
-            'date_of_birth' => fake()->dateTimeBetween('-40 years', '-6 years'),
+            'role' => fake()->randomElement(['admin', 'teacher', 'student', 'parent']),
+            'preferred_language' => fake()->randomElement(['fr', 'ar']), // Morocco context
+            'date_of_birth' => fake()->dateTimeBetween('-50 years', '-5 years'),
             'gender' => fake()->randomElement(['male', 'female']),
             'address' => fake()->address(),
             'phone' => fake()->phoneNumber(),
-            'last_login_at' => fake()->dateTimeThisMonth(),
+            'is_active' => true,
+            'remember_token' => Str::random(10),
         ];
     }
 }

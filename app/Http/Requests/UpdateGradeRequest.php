@@ -16,8 +16,7 @@ class UpdateGradeRequest extends FormRequest
         $gradeId = $this->route('grade')->id;
         return [
             'level_id' => 'sometimes|required|exists:levels,id',
-            'name_fr' => ['sometimes', 'required', 'string', 'max:255', Rule::unique('grades')->ignore($gradeId)],
-            'name_ar' => ['sometimes', 'required', 'string', 'max:255', Rule::unique('grades')->ignore($gradeId)],
+            'name' => ['sometimes', 'required', 'string', 'max:255', Rule::unique('grades')->ignore($gradeId)],
         ];
     }
 }

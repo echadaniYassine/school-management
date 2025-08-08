@@ -19,10 +19,14 @@ class ExamFactory extends Factory
     {
         return [
             'course_id' => Course::factory(),
-            'name_fr' => 'Examen: ' . fake()->words(2, true),
-            'name_ar' => 'امتحان: ' . fake()->words(2, true),
-            'type' => fake()->randomElement(['Quiz', 'Midterm', 'Final']),
-            'exam_date' => fake()->dateTimeBetween('+2 weeks', '+3 months'),
+
+            'name' => [
+                'fr' => fake()->sentence(3),
+                'ar' => fake()->sentence(3),
+            ],
+            'type' => fake()->randomElement(['Quiz', 'Midterm', 'Final', 'Test']),
+            'exam_date' => fake()->dateTimeBetween('now', '+2 months'),
+            'duration_minutes' => fake()->randomElement([60, 90, 120, 180]),
         ];
     }
 }

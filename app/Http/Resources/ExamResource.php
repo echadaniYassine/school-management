@@ -11,8 +11,7 @@ class ExamResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'nameFr' => $this->name_fr,
-            'nameAr' => $this->name_ar,
+            'name' => $this->name,
             'type' => $this->type,
             'examDate' => $this->exam_date->format('Y-m-d H:i'),
             'course' => new CourseResource($this->whenLoaded('course')),

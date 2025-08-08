@@ -9,11 +9,14 @@ class GradeFactory extends Factory
 {
     public function definition(): array
     {
-        // The seeder provides specific names, so these are just placeholders.
         return [
             'level_id' => Level::factory(),
-            'name_fr' => fake()->words(3, true),
-            'name_ar' => fake()->words(3, true),
+            'code' => fake()->unique()->bothify('G#?'),
+            'name' => [
+                'fr' => fake()->words(3, true),
+                'ar' => fake()->words(3, true),
+            ],
+            'sort_order' => fake()->numberBetween(1, 10),
         ];
     }
 }

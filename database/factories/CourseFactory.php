@@ -14,10 +14,14 @@ class CourseFactory extends Factory
         return [
             'classroom_id' => Classroom::factory(),
             'subject_id' => Subject::factory(),
-            // Important: Ensure the course teacher is actually a teacher
             'teacher_id' => User::factory(['role' => 'teacher']),
-            'description_fr' => fake()->paragraph(),
-            'description_ar' => fake()->paragraph(),
+            'code' => fake()->unique()->bothify('????-###'),
+            'description' => [
+                'fr' => fake()->paragraph(),
+                'ar' => fake()->paragraph(),
+            ],
+            'hours_per_week' => fake()->numberBetween(1, 6),
+            'is_active' => true,
         ];
     }
 }

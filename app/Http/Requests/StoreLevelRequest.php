@@ -13,8 +13,7 @@ class StoreLevelRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name_fr' => 'required|string|max:255|unique:levels,name_fr',
-            'name_ar' => 'required|string|max:255|unique:levels,name_ar',
+            'name' => 'required|string|max:255|unique:levels,name',
         ];
     }
 }

@@ -9,6 +9,9 @@ class LevelResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
-        return ['id' => $this->id, 'nameFr' => $this->name_fr, 'nameAr' => $this->name_ar];
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+        ];
     }
 }

@@ -2,47 +2,74 @@
 
 namespace App\Policies;
 
-use App\Models\Invoice; // Make sure the correct model is imported
+use App\Models\Invoice;
 use App\Models\User;
+use App\Enums\UserRole;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class InvoicePolicy // Change this to the specific Policy name (e.g., PaymentPolicy)
+class InvoicePolicy
 {
     use HandlesAuthorization;
 
-    /**
-     * Perform pre-authorization checks.
-     * This method runs before any other method in the policy.
-     */
+    // Admins can do anything with invoices
     public function before(User $user, string $ability): bool|null
     {
-        // If the user is an admin, they are granted all permissions immediately.
-        if ($user->role->value === 'admin') {
+        if ($user->role instanceof UserRole) {
+            if ($user->role->value === 'admin') {
+                return true;
+            }
+        } elseif ($user->role === 'admin') {
             return true;
         }
-        return null; // Let other methods decide for non-admins.
+
+        return null;
     }
 
-    // By default, deny all actions for non-admins.
-    // The `before` method will have already granted access to admins.
+    // Who can view all invoices
     public function viewAny(User $user): bool
     {
-        return false;
+        $roleValue = $user->role instanceof UserRole ? $user->role->value : $user->role;
+
+        // Only admins can view all invoices
+        // Parents and students will have their own endpoints to view their invoices
+        return $roleValue === 'admin';
     }
+
+    // Who can view a specific invoice
     public function view(User $user, Invoice $invoice): bool
     {
-        return false;
-    } // Change Invoice to the model
-    public function create(User $user): bool
-    {
+        $roleValue = $user->role instanceof UserRole ? $user->role->value : $user->role;
+
+        if ($roleValue === 'student') {
+            return $user->id === $invoice->student_id;
+        }
+
+        if ($roleValue === 'parent') {
+            // Assuming there's a parent-child relationship
+            return $user->children()->where('id', $invoice->student_id)->exists();
+        }
+
         return false;
     }
+
+    // Who can create invoices
+    public function create(User $user): bool
+    {
+        // Only handled by admin in the before() method
+        return false;
+    }
+
+    // Who can update invoices
     public function update(User $user, Invoice $invoice): bool
     {
+        // Only handled by admin in the before() method
         return false;
-    } // Change Invoice to the model
+    }
+
+    // Who can delete invoices
     public function delete(User $user, Invoice $invoice): bool
     {
+        // Only handled by admin in the before() method
         return false;
-    } // Change Invoice to the model
+    }
 }

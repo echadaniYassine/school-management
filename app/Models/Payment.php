@@ -21,8 +21,8 @@ class Payment extends Model
         'invoice_id',
         'amount_paid',
         'payment_date',
-        'payment_method', // e.g., 'Credit Card', 'Cash', 'Bank Transfer'
-        'transaction_reference', // Optional: for online payment gateway reference
+        'payment_method', 
+        'transaction_reference',
     ];
 
     /**
@@ -38,9 +38,6 @@ class Payment extends Model
         ];
     }
 
-    /**
-     * Get the invoice this payment is for.
-     */
     public function invoice(): BelongsTo
     {
         return $this->belongsTo(Invoice::class);

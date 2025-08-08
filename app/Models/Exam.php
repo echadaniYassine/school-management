@@ -12,50 +12,38 @@ class Exam extends Model
 {
     use HasFactory, SoftDeletes;
 
-    /**
-     * The attributes that are mass assignable.
-     * Refactored to remove redundant fields and add bilingual support.
-     */
     protected $fillable = [
-        'course_id', // The only context needed.
-        'name_ar',
-        'name_fr',
-        'type', // e.g., 'Quiz', 'Midterm', 'Final'. Good candidate for an Enum.
+        'course_id',
+        'name',
+        'type',
         'exam_date',
+        'duration_minutes',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     */
-    protected function casts(): array
-    {
-        return [
-            'exam_date' => 'datetime',
-        ];
-    }
+    protected $translatable = ['name'];
 
-    /**
-     * Get the course this exam belongs to.
-     */
+    protected $casts = [
+        'name' => 'array',
+        'exam_date' => 'datetime',
+    ];
+
     public function course(): BelongsTo
     {
         return $this->belongsTo(Course::class);
     }
 
-    /**
-     * Get the classroom where this exam is taken, through the course.
-     * This is a "Has One Through" relationship.
-     */
     public function classroom(): \Illuminate\Database\Eloquent\Relations\HasOneThrough
     {
         return $this->hasOneThrough(Classroom::class, Course::class, 'id', 'id', 'course_id', 'classroom_id');
     }
 
-    /**
-     * Get all the records (student scores) for this exam.
-     */
     public function examRecords(): HasMany
     {
         return $this->hasMany(ExamRecord::class);
+    }
+    public function scopeUpcoming($query)
+    {
+        return $query->where('exam_date', '>', now())
+            ->where('status', 'scheduled');
     }
 }

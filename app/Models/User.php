@@ -19,16 +19,17 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
-        'preferred_language', // 'ar', 'fr' - for UI preference
+        'preferred_language',
         'date_of_birth',
         'gender',
         'address',
         'phone',
-        'last_login_at',
+        'is_active',
+
     ];
 
     protected $hidden = ['password', 'remember_token'];
-    protected $guarded = ['id', 'role']; // Prevent mass assignment of critical fields
+    protected $guarded = ['id', 'role'];
 
     protected function casts(): array
     {
@@ -37,28 +38,21 @@ class User extends Authenticatable
             'password' => 'hashed',
             'date_of_birth' => 'date:Y-m-d',
             'last_login_at' => 'datetime',
-            'role' => UserRole::class, // Using an Enum is clean and reliable
+            'role' => UserRole::class,
+            'is_active' => 'boolean',
+
         ];
     }
-    // Add table name if different from convention
     protected $table = 'users';
 
-    // Add date mutators
     protected $dates = ['date_of_birth', 'last_login_at', 'deleted_at'];
 
-    // Add accessor for full name
     public function getFullNameAttribute(): string
     {
         return $this->name;
     }
 
-    // Add scope for active users
-    public function scopeActive($query)
-    {
-        return $query->whereNotNull('email_verified_at');
-    }
 
-    // NEW: Relationship for parents/guardians and their children
     public function guardians(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'guardian_student', 'student_id', 'guardian_id');
@@ -69,13 +63,11 @@ class User extends Authenticatable
         return $this->belongsToMany(User::class, 'guardian_student', 'guardian_id', 'student_id');
     }
 
-    // NEW: Student enrollments into specific classrooms
     public function enrollments(): HasMany
     {
         return $this->hasMany(Enrollment::class, 'student_id');
     }
 
-    // Relationships for content creation (standardized)
     public function createdCourses(): HasMany
     {
         return $this->hasMany(Course::class, 'teacher_id');
@@ -85,7 +77,6 @@ class User extends Authenticatable
     {
         return $this->hasMany(ExamRecord::class, 'grader_id');
     }
-    // In User model, add:
     public function studentExamRecords(): HasMany
     {
         return $this->hasMany(ExamRecord::class, 'student_id');
@@ -95,10 +86,31 @@ class User extends Authenticatable
     {
         return $this->hasMany(Invoice::class, 'student_id');
     }
-
-    // In Subject model, consider adding:
     public function assignments(): HasManyThrough
     {
         return $this->hasManyThrough(Assignment::class, Course::class);
+    }
+
+    public function managedClassrooms()
+    {
+        return $this->hasMany(Classroom::class, 'main_teacher_id');
+    }
+
+    public function announcements()
+    {
+        return $this->hasMany(Announcement::class, 'author_id');
+    }
+
+
+
+    // Scopes
+    public function scopeRole($query, $role)
+    {
+        return $query->where('role', $role);
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true);
     }
 }

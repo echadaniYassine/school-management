@@ -11,10 +11,10 @@ return new class extends Migration
         Schema::create('exams', function (Blueprint $table) {
             $table->id();
             $table->foreignId('course_id')->constrained()->cascadeOnDelete();
-            $table->string('name_fr');
-            $table->string('name_ar');
-            $table->string('type')->comment('e.g., Quiz, Midterm, Final');
+            $table->json('name');
+            $table->string('type')->comment('Quiz, Midterm, Final');
             $table->timestamp('exam_date');
+            $table->integer('duration_minutes')->default(60);
             $table->timestamps();
             $table->softDeletes();
         });

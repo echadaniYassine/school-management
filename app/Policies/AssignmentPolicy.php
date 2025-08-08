@@ -28,6 +28,11 @@ class AssignmentPolicy
         }
         return false;
     }
+    public function viewAny(User $user): bool
+    {
+        return in_array($user->role->value, ['teacher', 'student', 'parent']);
+    }
+
 
     // Only the teacher of the course can create an assignment for it.
     public function create(User $user): bool

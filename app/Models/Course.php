@@ -12,15 +12,21 @@ class Course extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $dates = ['deleted_at'];
-
-    // REFACTORED: Fields are streamlined and focused
     protected $fillable = [
-        'classroom_id',     // The class where this course is taught
-        'subject_id',       // The subject being taught (e.g., Mathematics)
-        'teacher_id',       // The teacher responsible for this course
-        'description_ar',   // Bilingual support
-        'description_fr',
+        'classroom_id',
+        'subject_id',
+        'teacher_id',
+        'code',
+        'description',
+        'hours_per_week',
+        'is_active'
+    ];
+
+    protected $translatable = ['description'];
+
+    protected $casts = [
+        'description' => 'array',
+        'is_active' => 'boolean',
     ];
 
     public function classroom(): BelongsTo
@@ -38,7 +44,6 @@ class Course extends Model
         return $this->belongsTo(User::class, 'teacher_id');
     }
 
-    // A course has many assignments and exams
     public function assignments(): HasMany
     {
         return $this->hasMany(Assignment::class);
@@ -47,5 +52,9 @@ class Course extends Model
     public function exams(): HasMany
     {
         return $this->hasMany(Exam::class);
+    }
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true);
     }
 }

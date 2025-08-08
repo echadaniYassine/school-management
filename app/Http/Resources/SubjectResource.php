@@ -1,6 +1,3 @@
-php artisan make:resource SubjectResource
-```File Content (`app/Http/Resources/SubjectResource.php`):
-```php
 <?php
 
 namespace App\Http\Resources;
@@ -12,6 +9,9 @@ class SubjectResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
-        return ['id' => $this->id, 'nameFr' => $this->name_fr, 'nameAr' => $this->name_ar];
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+        ];
     }
 }

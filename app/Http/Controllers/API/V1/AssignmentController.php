@@ -58,8 +58,7 @@ class AssignmentController extends Controller
 
     public function destroy(Assignment $assignment)
     {
-        // ** THE REFACTOR IS HERE **
-        // Replace the manual `if` check with one line.
+
         $this->authorize('delete', $assignment);
 
         $assignment->delete();

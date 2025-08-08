@@ -26,8 +26,7 @@ class StoreCourseRequest extends FormRequest
                 }),
             ],
             'teacher_id' => ['required', Rule::exists('users', 'id')->where('role', 'teacher')],
-            'description_fr' => 'nullable|string',
-            'description_ar' => 'nullable|string',
+            'description' => 'nullable|string',
         ];
     }
 }

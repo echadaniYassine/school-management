@@ -11,23 +11,22 @@ class Subject extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $dates = ['deleted_at'];
-    /**
-     * The attributes that are mass assignable.
-     * Examples: 'Mathématiques', 'التربية الإسلامية'
-     *
-     * @var array<int, string>
-     */
-    protected $fillable = [
-        'name_ar',
-        'name_fr',
+    protected $fillable = ['code', 'name', 'color', 'is_active'];
+
+    protected $translatable = ['name'];
+
+    protected $casts = [
+        'name' => 'array',
+        'is_active' => 'boolean',
     ];
 
-    /**
-     * Get the courses that teach this subject.
-     */
-    public function courses(): HasMany
+    public function courses()
     {
         return $this->hasMany(Course::class);
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true);
     }
 }

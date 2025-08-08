@@ -22,17 +22,19 @@ class ClassroomSeeder extends Seeder
         }
 
         foreach ($grades as $grade) {
-            // Create 2 classrooms (A and B) for each grade level
             Classroom::factory()->create([
                 'grade_id' => $grade->id,
                 'school_year_id' => $activeYear->id,
                 'main_teacher_id' => $teachers->random()->id,
+                'code' => 'G' . $grade->id . '-A', // or any logic you want
                 'name' => $grade->name_fr . ' - Groupe A',
             ]);
+
             Classroom::factory()->create([
                 'grade_id' => $grade->id,
                 'school_year_id' => $activeYear->id,
                 'main_teacher_id' => $teachers->random()->id,
+                'code' => 'G' . $grade->id . '-B',
                 'name' => $grade->name_fr . ' - Groupe B',
             ]);
         }

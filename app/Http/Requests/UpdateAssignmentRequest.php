@@ -16,10 +16,8 @@ class UpdateAssignmentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title_fr' => 'sometimes|required|string|max:255',
-            'title_ar' => 'sometimes|required|string|max:255',
-            'description_fr' => 'sometimes|nullable|string',
-            'description_ar' => 'sometimes|nullable|string',
+            'title' => 'sometimes|required|string|max:255',
+            'description' => 'sometimes|nullable|string',
             'due_date' => 'sometimes|required|date|after:now',
             'file_path' => 'sometimes|nullable|string',
         ];

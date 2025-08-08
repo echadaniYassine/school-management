@@ -18,8 +18,7 @@ class UpdateCourseRequest extends FormRequest
         return [
             // You typically wouldn't change the classroom or subject, but you might change the teacher.
             'teacher_id' => ['sometimes', 'required', Rule::exists('users', 'id')->where('role', 'teacher')],
-            'description_fr' => 'sometimes|nullable|string',
-            'description_ar' => 'sometimes|nullable|string',
+            'description' => 'sometimes|nullable|string',
         ];
     }
 }

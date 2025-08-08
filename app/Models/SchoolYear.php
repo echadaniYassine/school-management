@@ -18,10 +18,10 @@ class SchoolYear extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',         // e.g., "2024-2025"
+        'name',    
         'start_date',
         'end_date',
-        'is_active',    // A flag to easily find the current academic year
+        'is_active',  
     ];
 
     /**
@@ -38,9 +38,6 @@ class SchoolYear extends Model
         ];
     }
 
-    /**
-     * Get all classrooms associated with this school year.
-     */
     public function classrooms(): HasMany
     {
         return $this->hasMany(Classroom::class);

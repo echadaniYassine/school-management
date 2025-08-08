@@ -17,8 +17,7 @@ class StoreExamRequest extends FormRequest
     {
         return [
             'course_id' => 'required|exists:courses,id',
-            'name_fr' => 'required|string|max:255',
-            'name_ar' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
             'type' => 'required|string|in:Quiz,Midterm,Final',
             'exam_date' => 'required|date|after:now',
         ];

@@ -13,8 +13,10 @@ return new class extends Migration
             $table->foreignId('classroom_id')->constrained()->cascadeOnDelete();
             $table->foreignId('subject_id')->constrained()->cascadeOnDelete();
             $table->foreignId('teacher_id')->constrained('users')->cascadeOnDelete();
-            $table->text('description_fr')->nullable();
-            $table->text('description_ar')->nullable();
+            $table->string('code')->unique(); // "MATH-G1A-2024" - system use
+            $table->json('description')->nullable(); // User-facing description - translate
+            $table->integer('hours_per_week')->default(1);
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
     }

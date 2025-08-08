@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\Models\Course;
 use App\Models\User;
+use App\Enums\UserRole;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class CoursePolicy
@@ -13,19 +14,36 @@ class CoursePolicy
     // Only an admin can perform any action on courses.
     public function before(User $user, string $ability): bool|null
     {
-        if ($user->role->value === 'admin') {
+        // Handle both enum and string cases for admin check
+        if ($user->role instanceof UserRole) {
+            if ($user->role->value === 'admin') {
+                return true;
+            }
+        } elseif ($user->role === 'admin') {
             return true;
         }
-        return null;
+
+        return null; // Continue to individual policy methods
+    }
+
+    // ADD THIS METHOD - it was missing!
+    public function viewAny(User $user): bool
+    {
+        // Teachers can view courses they teach
+        // Students can view courses in their enrolled classrooms
+        // Parents can view courses of their children's classrooms
+        return in_array($user->role->value ?? $user->role, ['teacher', 'student', 'parent']);
     }
 
     // A teacher can view a course if they teach it. A student if they are in its class.
     public function view(User $user, Course $course): bool
     {
-        if ($user->role->value === 'teacher') {
+        $roleValue = $user->role instanceof UserRole ? $user->role->value : $user->role;
+
+        if ($roleValue === 'teacher') {
             return $user->id === $course->teacher_id;
         }
-        if ($user->role->value === 'student') {
+        if ($roleValue === 'student') {
             return $user->enrollments()->where('classroom_id', $course->classroom_id)->exists();
         }
         return false;
@@ -36,10 +54,12 @@ class CoursePolicy
     {
         return false;
     }
+
     public function update(User $user, Course $course): bool
     {
         return false;
     }
+
     public function delete(User $user, Course $course): bool
     {
         return false;

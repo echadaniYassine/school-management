@@ -15,12 +15,13 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->string('role')->comment('admin, teacher, student, parent');
-            $table->string('preferred_language', 2)->default('fr');
+            $table->string('preferred_language', 3)->default('fr');
             $table->date('date_of_birth')->nullable();
             $table->string('gender')->nullable();
             $table->text('address')->nullable();
             $table->string('phone')->nullable();
             $table->timestamp('last_login_at')->nullable();
+            $table->boolean('is_active')->default(true);
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();

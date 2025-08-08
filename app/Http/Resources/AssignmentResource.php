@@ -11,10 +11,8 @@ class AssignmentResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'titleFr' => $this->title_fr,
-            'titleAr' => $this->title_ar,
-            'descriptionFr' => $this->description_fr,
-            'descriptionAr' => $this->description_ar,
+            'title' => $this->title,
+            'description' => $this->description,
             'dueDate' => $this->due_date->format('Y-m-d H:i'),
             'filePath' => $this->file_path,
             'course' => new CourseResource($this->whenLoaded('course')),

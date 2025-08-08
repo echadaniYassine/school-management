@@ -35,6 +35,7 @@ class AuthServiceProvider extends ServiceProvider
         Exam::class         => ExamPolicy::class,
         ExamRecord::class   => ExamRecordPolicy::class,
         User::class         => UserPolicy::class,
+        \App\Models\Invoice::class => \App\Policies\InvoicePolicy::class,
     ];
 
     public function boot(): void
@@ -42,18 +43,28 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
         Gate::define('admin', function (User $user) {
-            // Option 1: Compare enum values
-            return $user->role instanceof UserRole && $user->role->value === 'admin';
-            
-            // Option 2: Compare enum instances (if you prefer this)
-            // return $user->role === UserRole::ADMIN;
-            
-            // Option 3: Use the helper method (if you added it)
-            // return $user->role instanceof UserRole && $user->role->isAdmin();
+            \Log::info('Admin gate called', [
+                'user_id' => $user->id,
+                'role' => $user->role,
+                'role_value' => $user->role->value ?? 'NO_VALUE',
+                'is_instance' => $user->role instanceof UserRole,
+            ]);
+
+            if ($user->role instanceof UserRole) {
+                $result = $user->role->value === 'admin';
+                \Log::info('Admin gate result', ['result' => $result]);
+                return $result;
+            }
+
+            return false;
         });
 
         Gate::define('teacher', function (User $user) {
-            return $user->role instanceof UserRole && $user->role->value === 'teacher';
+            if ($user->role instanceof UserRole) {
+                return $user->role->value === 'teacher';
+            }
+
+            return false;
         });
     }
 }

@@ -11,31 +11,44 @@ class Announcement extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $dates = ['deleted_at'];
-
     protected $fillable = [
         'author_id',
-        'title_ar',
-        'title_fr',
-        'content_ar',
-        'content_fr',
+        'title',
+        'content',
+        'type',
+        'audience',
         'published_at',
-        // You can add 'target_role' (e.g., 'parents', 'teachers') or 'target_grade_id'
+        'expires_at',
+        'is_active'
     ];
 
-    protected $casts = ['published_at' => 'datetime'];
+    protected $translatable = ['title', 'content'];
+
+    protected $casts = [
+        'title' => 'array',
+        'content' => 'array',
+        'published_at' => 'datetime',
+        'expires_at' => 'datetime',
+        'is_active' => 'boolean',
+    ];
 
     public function author(): BelongsTo
     {
         return $this->belongsTo(User::class, 'author_id');
     }
-    public function scopeUpcoming($query)
-    {
-        return $query->where('due_date', '>', now());
-    }
     public function scopePublished($query)
     {
         return $query->whereNotNull('published_at')
-            ->where('published_at', '<=', now());
+            ->where('published_at', '<=', now())
+            ->where('is_active', true);
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true)
+            ->where(function ($q) {
+                $q->whereNull('expires_at')
+                    ->orWhere('expires_at', '>', now());
+            });
     }
 }

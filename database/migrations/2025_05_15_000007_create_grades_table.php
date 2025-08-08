@@ -11,8 +11,9 @@ return new class extends Migration
         Schema::create('grades', function (Blueprint $table) {
             $table->id();
             $table->foreignId('level_id')->constrained()->cascadeOnDelete();
-            $table->string('name_fr');
-            $table->string('name_ar');
+            $table->string('code')->unique(); 
+            $table->json('name'); 
+            $table->integer('sort_order')->default(0);
             $table->timestamps();
         });
     }

@@ -15,8 +15,7 @@ class UpdateExamRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name_fr' => 'sometimes|required|string|max:255',
-            'name_ar' => 'sometimes|required|string|max:255',
+            'name' => 'sometimes|required|string|max:255',
             'type' => 'sometimes|required|string|in:Quiz,Midterm,Final',
             'exam_date' => 'sometimes|required|date',
         ];

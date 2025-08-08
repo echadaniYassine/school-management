@@ -12,8 +12,6 @@ class ClassroomResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            // 'whenLoaded' ensures we only include relationships if they were
-            // eager-loaded in the controller, preventing N+1 query problems.
             'grade' => new GradeResource($this->whenLoaded('grade')),
             'mainTeacher' => new UserResource($this->whenLoaded('mainTeacher')),
             'students' => UserResource::collection($this->whenLoaded('students')),

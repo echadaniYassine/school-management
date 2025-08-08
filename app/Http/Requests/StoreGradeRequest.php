@@ -14,8 +14,7 @@ class StoreGradeRequest extends FormRequest
     {
         return [
             'level_id' => 'required|exists:levels,id',
-            'name_fr' => 'required|string|max:255|unique:grades,name_fr',
-            'name_ar' => 'required|string|max:255|unique:grades,name_ar',
+            'name' => 'required|string|max:255|unique:grades,name',
         ];
     }
 }

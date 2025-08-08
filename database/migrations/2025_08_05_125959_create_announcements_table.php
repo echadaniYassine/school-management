@@ -11,11 +11,13 @@ return new class extends Migration
         Schema::create('announcements', function (Blueprint $table) {
             $table->id();
             $table->foreignId('author_id')->constrained('users')->cascadeOnDelete();
-            $table->string('title_fr');
-            $table->string('title_ar');
-            $table->text('content_fr');
-            $table->text('content_ar');
+            $table->json('title');
+            $table->json('content');
+            $table->enum('type', ['general', 'urgent', 'academic', 'administrative'])->default('general');
+            $table->enum('audience', ['all', 'students', 'teachers', 'parents'])->default('all');
             $table->timestamp('published_at')->nullable();
+            $table->timestamp('expires_at')->nullable();
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
     }

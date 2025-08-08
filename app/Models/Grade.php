@@ -12,32 +12,26 @@ class Grade extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $dates = ['deleted_at'];
-    /**
-     * The attributes that are mass assignable.
-     * Examples: '1ère Année Primaire', 'Tronc Commun Scientifique'
-     *
-     * @var array<int, string>
-     */
-    protected $fillable = [
-        'name_ar',
-        'name_fr',
-        'level_id', // Foreign key to the Level model
+    protected $fillable = ['level_id', 'code', 'name', 'sort_order'];
+
+    protected $translatable = ['name'];
+
+    protected $casts = [
+        'name' => 'array',
     ];
 
-    /**
-     * Get the educational level that this grade belongs to (e.g., 'Primaire').
-     */
-    public function level(): BelongsTo
+    public function level()
     {
         return $this->belongsTo(Level::class);
     }
 
-    /**
-     * Get all the classrooms at this grade level.
-     */
-    public function classrooms(): HasMany
+    public function classrooms()
     {
         return $this->hasMany(Classroom::class);
+    }
+
+    public function scopeOrdered($query)
+    {
+        return $query->orderBy('sort_order');
     }
 }

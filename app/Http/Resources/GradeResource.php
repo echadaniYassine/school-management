@@ -11,8 +11,7 @@ class GradeResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'nameFr' => $this->name_fr,
-            'nameAr' => $this->name_ar,
+            'name' => $this->name,
             'level' => new LevelResource($this->whenLoaded('level')),
         ];
     }
