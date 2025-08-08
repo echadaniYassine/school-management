@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\V1;
+namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUserRequest;
@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
+
     public function index(Request $request)
     {
         // Logic from your old UserController was good. We keep it.
@@ -20,6 +21,7 @@ class UserController extends Controller
         }
         return UserResource::collection($query->latest()->paginate(25));
     }
+
     public function store(StoreUserRequest $request)
     {
         // ** THE REFACTOR IS HERE **
@@ -28,19 +30,33 @@ class UserController extends Controller
         $user = User::create($request->validated());
         return new UserResource($user);
     }
+
     public function show(User $user)
     {
         return new UserResource($user);
     }
+
     public function update(UpdateUserRequest $request, User $user)
     {
         $user->update($request->validated());
         return new UserResource($user->fresh());
     }
+
     public function destroy(User $user)
     {
         $this->authorize('delete', $user); // Manually authorize deletion
         $user->delete();
         return response()->noContent();
+    }
+
+    // Add these methods to UserController
+
+    public function getChildren(Request $request)
+    {
+        $this->authorize('parent');
+
+        $children = $request->user()->children()->with(['enrollments.classroom.grade'])->get();
+
+        return UserResource::collection($children);
     }
 }

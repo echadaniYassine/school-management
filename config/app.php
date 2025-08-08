@@ -125,4 +125,7 @@ return [
 
     // Remove the providers array - it doesn't belong here in Laravel 11
 
+    'supported_locales' => ['fr', 'ar'],
+
+
 ];

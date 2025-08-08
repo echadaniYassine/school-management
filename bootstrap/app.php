@@ -21,6 +21,8 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->api(prepend: [
             // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
+            \App\Http\Middleware\SetLocale::class,
+
         ]);
 
         $middleware->alias([
@@ -33,7 +35,7 @@ return Application::configure(basePath: dirname(__DIR__))
         AuthServiceProvider::class,
     ])
     ->withBroadcasting(
-        __DIR__.'/../routes/channels.php', 
+        __DIR__ . '/../routes/channels.php',
         ['prefix' => 'api', 'middleware' => ['api', 'auth:sanctum']]
     )
     ->withExceptions(function (Exceptions $exceptions) {

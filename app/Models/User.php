@@ -11,10 +11,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use App\Traits\HasTranslations; // ADD THIS
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
+    use HasApiTokens, HasFactory, Notifiable, SoftDeletes, HasTranslations;
 
     protected $fillable = [
         'name',
@@ -112,5 +113,49 @@ class User extends Authenticatable
     public function scopeActive($query)
     {
         return $query->where('is_active', true);
+    }
+
+    // Add to User model
+
+    public function hasRole(UserRole|string $role): bool
+    {
+        if ($this->role instanceof UserRole) {
+            $roleValue = is_string($role) ? $role : $role->value;
+            return $this->role->value === $roleValue;
+        }
+        return $this->role === $role;
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->hasRole('admin');
+    }
+
+    public function isTeacher(): bool
+    {
+        return $this->hasRole('teacher');
+    }
+
+    public function isStudent(): bool
+    {
+        return $this->hasRole('student');
+    }
+
+    public function isParent(): bool
+    {
+        return $this->hasRole('parent');
+    }
+
+    // Improve the courses relationship for students
+    public function enrolledCourses(): HasManyThrough
+    {
+        return $this->hasManyThrough(
+            Course::class,
+            Enrollment::class,
+            'student_id',
+            'classroom_id',
+            'id',
+            'classroom_id'
+        );
     }
 }

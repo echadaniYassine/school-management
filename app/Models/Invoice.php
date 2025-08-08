@@ -7,10 +7,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Traits\HasTranslations; // ADD THIS
 
 class Invoice extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, HasTranslations;
 
     protected $dates = ['deleted_at'];
     /**
@@ -26,6 +27,8 @@ class Invoice extends Model
         'due_date',
         'status',       // e.g., 'unpaid', 'paid', 'overdue'
     ];
+    protected $translatable = ['title', 'description'];
+
 
     /**
      * Get the attributes that should be cast.
@@ -35,6 +38,8 @@ class Invoice extends Model
     protected function casts(): array
     {
         return [
+            'title' => 'array',
+            'description' => 'array',
             'amount' => 'decimal:2',
             'due_date' => 'date',
         ];

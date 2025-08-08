@@ -2,47 +2,44 @@
 
 namespace App\Policies;
 
-use App\Models\Level; // Change this to the specific model (e.g., Payment, Level)
+use App\Models\Level;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class LevelPolicy // Change this to the specific Policy name (e.g., PaymentPolicy)
+class LevelPolicy
 {
     use HandlesAuthorization;
 
-    /**
-     * Perform pre-authorization checks.
-     * This method runs before any other method in the policy.
-     */
     public function before(User $user, string $ability): bool|null
     {
-        // If the user is an admin, they are granted all permissions immediately.
         if ($user->role->value === 'admin') {
             return true;
         }
-        return null; // Let other methods decide for non-admins.
+        return null;
     }
 
-    // By default, deny all actions for non-admins.
-    // The `before` method will have already granted access to admins.
     public function viewAny(User $user): bool
     {
-        return false;
+        return in_array($user->role->value, ['teacher', 'student']);
     }
-    public function view(User $user, Level $invoice): bool
+
+    public function view(User $user, Level $level): bool
     {
-        return false;
-    } // Change Invoice to the model
+        return in_array($user->role->value, ['teacher', 'student']);
+    }
+
     public function create(User $user): bool
     {
-        return false;
+        return false; // Only admins
     }
-    public function update(User $user, Level $invoice): bool
+
+    public function update(User $user, Level $level): bool
     {
-        return false;
-    } // Change Invoice to the model
-    public function delete(User $user, Level $invoice): bool
+        return false; // Only admins
+    }
+
+    public function delete(User $user, Level $level): bool
     {
-        return false;
-    } // Change Invoice to the model
+        return false; // Only admins
+    }
 }
