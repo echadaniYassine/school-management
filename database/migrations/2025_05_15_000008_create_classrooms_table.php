@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('name'); // "Grade 1 Section A" - simple name, no need to translate
             $table->integer('max_students')->default(30);
             $table->boolean('is_active')->default(true);
+            $table->softDeletes();
             $table->timestamps();
         });
     }

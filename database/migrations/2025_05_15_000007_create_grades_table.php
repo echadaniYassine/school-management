@@ -11,9 +11,10 @@ return new class extends Migration
         Schema::create('grades', function (Blueprint $table) {
             $table->id();
             $table->foreignId('level_id')->constrained()->cascadeOnDelete();
-            $table->string('code')->unique(); 
-            $table->json('name'); 
+            $table->string('code')->unique();
+            $table->json('name');
             $table->integer('sort_order')->default(0);
+            $table->softDeletes();
             $table->timestamps();
         });
     }

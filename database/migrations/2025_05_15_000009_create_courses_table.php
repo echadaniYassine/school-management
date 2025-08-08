@@ -17,6 +17,7 @@ return new class extends Migration
             $table->json('description')->nullable(); // User-facing description - translate
             $table->integer('hours_per_week')->default(1);
             $table->boolean('is_active')->default(true);
+            $table->softDeletes();
             $table->timestamps();
         });
     }

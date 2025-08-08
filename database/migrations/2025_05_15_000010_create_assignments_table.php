@@ -15,6 +15,7 @@ return new class extends Migration
             $table->json('description')->nullable();
             $table->timestamp('due_date')->nullable();
             $table->string('file_path')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

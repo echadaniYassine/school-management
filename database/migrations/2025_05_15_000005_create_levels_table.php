@@ -13,6 +13,8 @@ return new class extends Migration
             $table->string('code')->unique(); // "PRIMARY", "MIDDLE", "HIGH" - system use
             $table->json('name'); // {"fr": "Primaire", "ar": "الابتدائي"} - user facing
             $table->integer('sort_order')->default(0);
+            $table->softDeletes();
+
             $table->timestamps();
         });
     }

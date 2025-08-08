@@ -14,6 +14,7 @@ return new class extends Migration
             $table->json('name'); // {"fr": "Mathématiques", "ar": "الرياضيات"} - user facing
             $table->string('color', 7)->nullable(); // Hex color for UI
             $table->boolean('is_active')->default(true);
+            $table->softDeletes();
             $table->timestamps();
         });
     }
